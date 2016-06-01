@@ -1,0 +1,428 @@
+<?php 
+SESSION_START();
+
+//引用区 开始================================================
+include $_SESSION["APP_ROOT"].'/Lib/Class/Lee.class.php';                                 //加载辅助类库
+include $_SESSION["APP_ROOT"].'/Lib/wang/wx_class.php';                                 //加载微信类
+include $_SESSION["APP_ROOT"].'/Controller/HuaHua/Draw.Controller.php';      //加载List页面控制器
+include $_SESSION["APP_ROOT"].'/Inc/CssLoader.inc.php';                                 //加载CSS组件库
+include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                                   //加载JS组件库
+
+
+
+
+//公共变量 开始==============================================
+$_DrawCtrl = new DrawCtrl();                            //Main对象
+$openid = $_SESSION["openid"];                       //openid
+$q = $_GET["q"];                                               //answer题目号码
+$Title =$_GET["word"];                                      //设置页面Title
+
+//判断画主是否重新打开这个界面
+$arr = $_DrawCtrl->If_判断是否画主重新打开这个页面($q, $openid);
+$expire_time = $arr["expire_time"];                 //过期时间
+$shengyu_count = $arr["shengyu_count"];      //剩余红包数量
+$price = $arr['price'];                                      //单价
+$flag = 0;                                                      //能否修改的标识
+
+
+//微信类 开始==============================================
+$ko=new WX_INT();
+$signPackage = $ko->GetSignPackage();   //获取分享接口 相关信息
+
+  
+
+//逻辑开始==================================================
+if(count($arr))
+{
+    //用户回来修改数据、但允许修改的是满足其中一个前提：
+    //..1、当前时间大于过期时间
+    //..2、红包剩余金额为0
+    if(time() > $expire_time || $shengyu_count == 0)
+    {
+        $flag = 1;
+    }
+    else
+    {
+        $flag = 0;
+    }
+}
+
+?>
+
+
+<?php 	include $_SESSION["APP_ROOT"].'/Inc/Header.inc.php';?>
+
+<?php 
+       CssLoader::Jqm();      //加载jqm.css
+ ?>
+ 
+ 
+	<body>
+        	<div data-role="page">
+        	  	<!--<div data-role="header" class="ui-shadow" data-theme = 'a'>
+        	  	<a role="button" data-role="button"   data-rel="back" class="ui-btn-left ui-alt-icon ui-nodisc-icon ui-btn ui-icon-carat-l ui-btn-icon-notext ui-corner-all">Back</a>	
+        	        <h1><?php echo $Title ?></h1>
+        	    </div>--><!-- /header -->
+        	  
+        	    <div role="main" class="ui-content">
+        	    
+        	    
+        			<div class="ui-grid-solo" style="position:relative;">
+                     				<?php
+                     				       if(count($arr) && $flag == 0)
+                     				       {
+                     				?> 
+                     							<div class="ui-corner-all custom-corners"  style="margin:15px auto">
+                                                      <div class="ui-bar ui-bar-a">
+                                                        <h3>温馨提示</h3>
+                                                      </div>
+                                                      <div class="ui-body ui-body-a">
+                                                        	<p>目前本题处于冷却状态，需要满足以下其中一个条件即可重新发布</p>
+                                                        	<p>1、当前时间<span style="font-size:20px;color:#333">（<?php echo date('Y-m-d H:i:s',time()) ?>）<span>大于过期时间<span style="font-size:20px;color:#333">（<?php echo date('Y-m-d H:i:s',$expire_time) ?>）</span></p>
+                                                        	<p>2、红包发送完毕（剩余红包： <span style="font-size:20px;color:#333"><?php echo $shengyu_count ?></span>个，每个红包奖励 ：<span style="font-size:20px;color:#333">￥<?php echo round($price,1) ?></span>）</p>
+                                                        	<p>3、<a href="<?php echo $_SESSION["STATIC_ROOT"]."/Module/HuaHua/List.php" ?>">点击这里</a>，选择其他题目进行绘制</p>
+                                                      </div>
+                                            	</div>
+                                            	<a href="#" id="Share" onClick="DrawDir.ShareFriend()" class="ui-btn  ui-corner-all ui-shadow  ui-icon-action ui-btn-icon-right " style="text-indent: 30px;margin-top:20px;">分享到朋友圈</a>
+                                            	
+                     				<?php
+                     				       }
+                     				       else
+                     				       {
+        							?>			    
+            									<div id="replace_images">
+                    								<canvas id="canvas"  style="border:dashed 1px #333333;width:99.8%; "></canvas>
+                    							</div>
+												
+												
+                    							
+												<div id="k_hh" class="kedian"></div>
+													
+													
+													
+												</div>
+												
+												
+												<div style="clear:both"></div>                                                
+												   <div id='gongjuss' style="display:none" > <input name="radio-choice-b" id="radio-choice-c"  checked="checked" class="line_s" val="2" type="radio" >
+                                                    <label  for="radio-choice-c" >小</label>
+                                                    <input name="radio-choice-b" id="radio-choice-d"  class="line_b" val='6' type="radio" >
+                                                    <label for="radio-choice-d">大</label>
+                                                    <input name="radio-choice-b" id="radio-choice-e" value="xiangpicha" type="radio" class="xiangpicha">
+                                                    <label for="radio-choice-e">橡皮擦</label>
+                                                    <input name="radio-choice-b" id="radio-choice-f" value="clear_canvas" type="radio" class="clear_canvas">
+                                                    <label for="radio-choice-f">清除画布</label><br>
+													</div>
+                                  			 
+                            					<a href="#" id="KaiShiZhizuo" class="ui-btn  ui-corner-all ui-shadow  ui-icon-action ui-btn-icon-right " style="text-indent: 30px;margin-top:20px;">开始制作</a>
+        							<?php 
+                     				       }
+        							?>
+        			
+        			</div>
+        			<div id="gongju"  style="display:none">
+													<div id='k_hua'>
+														<div class="fl_left"><div id="k_h1"  ></div></div>
+														<div class="fl_left"><div id="k_h2"  val='8'></div></div>
+														<div class="fl_left"><div id="k_h3" val="2" ></div></div>
+														<div class="fl_left"><div id="k_h4" val="4" ></div></div>
+														<div class="fl_left"><div id="k_h5" val="6" ></div></div>
+															<div style="clear:both"></div>
+													</div>
+													<div id='k_color'>
+													<div class="fl_left"><div id="k_c1" ></div></div>
+													<div class="fl_left"><div id="k_c2" ></div></div>
+													<div class="fl_left"><div id="k_c3" ></div></div>
+													<div class="fl_left"><div id="k_c4" ></div></div>
+													<div class="fl_left"><div id="k_c5" ></div></div>
+														
+														<div style="clear:both"></div>
+													</div>
+        			
+        			
+        			
+                    <div data-role='popup' id='Cy-Tp-Alert' data-overlay-theme='b' data-theme='b' data-dismissible='false' style='min-width:300px;'>
+                        <a href='#' id='A1' data-rel='back' class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
+                	        <div data-role='header' data-theme='b'>
+                	        <h1 id='H1'  style='margin:0px; padding: 0.7em 0;'>温馨提示</h1>
+                	        </div>
+                	        <div role='main' class='ui-content'>
+                                    <div id='Cy-Tp-Alert-Content' style='text-align:center;margin:15px;font-size:16px;'></div>					          
+                                <p style='margin:0px auto;text-align:center;'>
+                		            <a href='#' id='A2' data-rel='back'  class='ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-check ui-btn-icon-left'  data-transition='flow'>确定</a>  
+                		        </p>
+                	        </div>
+               		 </div>
+                    <div data-role="popup" id="cy-tp-dialog" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="min-width:300px;" data-transition="pop"  >
+                        <a href="#" id="Cy-tp-CloseDialogBtn" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+        				    <div data-role="header" data-theme="b">
+        				    <h1 id="Cy-tp-PopupTitle"  style="margin:0px; padding: 0.7em 0;">请确认转出信息</h1>
+        				    </div>
+        				    <div role="main" class="ui-content">
+                                    <div id="Cy-tp-DialogInfo" style="margin:0px 15px;font-size:16px;">
+                                       
+                                        			<div class="ui-field-contain">
+                                        			    <label for="textinput-1">红包金额:（单位：￥）</label>
+                                        			    <input name="HongBaoJinE" id="HongBaoJinE" placeholder="请输入红包金额" value="1"  type="text">
+                                        			</div>
+                                        			
+                                        			<div class="ui-field-contain">
+                                        			    <label for="textinput-1">红包个数:（单位：个）</label>
+                                        			    <input name="HongBaoCount" id="HongBaoCount" placeholder="请输入红包个数" value="1"  type="text">
+                                        			</div>
+                                        			<div class="ui-field-contain">
+                                        			    <label for="textinput-1">道具金额:（单位：￥）</label>
+                                        			    <input name="DaoJuJinE" id="DaoJuJinE"  class="ui-state-disabled"  placeholder="请输入道具金额" value="0.1" type="text" readonly>
+                                        			</div>
+                                    </div>					          
+                                <p style="margin:0px auto;text-align:center;">
+        					        <a href="#" id="Cy-tp-DialogYes" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-check ui-btn-icon-left">确认</a> 
+        					        <a href="#" id="Cy-tp-DialogNo"  class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-delete ui-btn-icon-left" data-rel="back" data-transition="flow">取消</a>
+                                </p>
+        				    </div>
+        			</div>      
+        	    </div><!-- /content -->
+        	</div><!-- /page -->	
+    	</body>
+    </html>
+		
+<?php 
+	JsLoader::Jquery();    //加载jquery
+	JsLoader::Jqm();       //加载jqm
+	JsLoader::Layer();     //加载layer
+	JsLoader::weixin();   //加载微信官方JS
+	JsLoader::LoadDirective('HuaHua', 'Ajax.Directive.js');        //加载全局AJAX指令
+	JsLoader::LoadDirective('HuaHua', 'WeiXin.Directive.js');   //加载个人封装的微信JS指令
+	JsLoader::LoadDirective('HuaHua', 'Draw.Directive.js');     //加载本页核心指令
+?>
+
+<script>
+
+
+
+wx.config
+({
+    appId: '<?php echo $signPackage["appId"];?>',
+    timestamp:'<?php echo $signPackage["timestamp"];?>',
+    nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+    signature: '<?php echo $signPackage["signature"];?>',
+    jsApiList: ['onMenuShareAppMessage','onMenuShareTimeline','startRecord','stopRecord','uploadVoice','downloadVoice'
+        // 所有要调用的 API 都要加到这个列表中
+    ]
+});
+
+  
+
+</script>
+<style type="text/css">
+#k_hh
+{
+width:47px;
+height:47px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/hh.png);
+position:absolute;
+top:1px;
+margin-left:5px;
+margin-top:5px;
+
+}
+
+#k_h1
+{
+width:50px;
+height:19px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h1.png);
+margin:0 auto;}
+#k_h2
+{
+width:50px;
+height:19px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h2.png);
+margin:0 auto;}
+#k_h3
+{
+width:50px;
+height:19px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h3.png);
+margin:0 auto;}
+#k_h4
+{
+width:50px;
+height:19px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h4.png);
+margin:0 auto;}
+#k_h5
+{
+width:50px;
+height:19px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h5.png);
+margin:0 auto;}
+
+#k_c1
+{
+width:30px;
+height:42px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c1.png);
+margin:0 auto;}
+#k_c2
+{
+width:30px;
+height:42px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c2.png);
+margin:0 auto;}
+#k_c3
+{
+width:30px;
+height:42px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c3.png);
+margin:0 auto;}
+#k_c4
+{
+width:30px;
+height:42px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c4.png);
+margin:0 auto;}
+#k_c5
+{
+width:30px;
+height:42px;
+background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c5.png);
+margin:0 auto;}
+.fl_left
+{
+float:left;
+width:20%}
+#gongju
+{
+position:absolute;
+top:30%;
+border:solid 1px #999933;
+width:90%;
+margin:3%;
+padding:2%;
+border-radius:25px;
+}
+
+
+
+#k_color
+{
+margin-top:10px;}
+
+.ui-content
+{
+padding:1px;}
+
+#controlgroup .ui-controlgroup-controls{
+display:block}
+</style>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+				var n=1;
+	
+			$(".kedian").click(function()
+			{	
+				if(n)
+				{
+				$("#gongju").slideDown();
+					n=0;
+				}else
+				{
+				$("#gongju").slideUp();
+				n=1;
+				}
+				
+				return false;
+			})
+			
+			//点击其他按钮需要修改N
+			//橡皮擦
+		  $("#k_h2") .click(function() 
+		  {
+		  line_color = "#F9F9F9";
+			 // alert('huabu');
+			        //line_color = "#ffffff";
+					 $(".current").removeClass("current");
+	        $(this).addClass("current");
+					
+					n=1;
+					$("#gongju").hide();
+					
+		  })
+		    //清楚画布
+	   $("#k_h1").click(function() 
+		{
+		
+	        var ctx = $("#canvas")[0].getContext("2d");
+	        ctx.clearRect(0, 0, $("#canvas")[0].width, $("#canvas")[0].height);
+				n=1;
+					$("#gongju").hide();
+	    })
+		
+		//最小线
+		$("#k_h3").click(function()
+		{
+			// line_color = "#ff0000";
+			 $(".current").removeClass("current");
+	        $(this).addClass("current");
+			n=1;
+					$("#gongju").hide();
+		
+		})
+			$("#k_h4").click(function()
+		{
+			// line_color = "#ff0000";
+			 $(".current").removeClass("current");
+	        $(this).addClass("current");
+			n=1;
+					$("#gongju").hide();
+		
+		})
+			$("#k_h5").click(function()
+		{
+			// line_color = "#ff0000";
+			 $(".current").removeClass("current");
+	        $(this).addClass("current");
+			n=1;
+					$("#gongju").hide();
+		
+		})
+		$("#k_c1").click(function()
+		{
+			 line_color = "#000000";
+				n=1;
+					$("#gongju").hide();
+		
+		})
+		$("#k_c2").click(function()
+		{
+			 line_color = "#cc0000";
+				n=1;
+					$("#gongju").hide();
+		
+		})
+		$("#k_c3").click(function()
+		{
+			 line_color = "#ffcc00";
+				n=1;
+					$("#gongju").hide();
+		
+		})
+		$("#k_c4").click(function()
+		{
+			 line_color = "#0099ff";
+				n=1;
+					$("#gongju").hide();
+		
+		})
+		$("#k_c5").click(function()
+		{
+			 line_color = "#33cc66";
+				n=1;
+					$("#gongju").hide();
+		
+		})
+	
+	})
+</script>
