@@ -25,26 +25,23 @@ $(function()
 				   //发送请求前触发
 			        beforeSend: function (xhr)
 			        {
-			        	layer.load('0');
+			        	layer.open({type: 2});
 			        },
-					data:{
-						type:"UserYuE"
-					},
+					data:{ type:"UserYuE" },
 					success:function(data)
 					{
-						layer.closeAll();
-						$("#tixian").text("提现");
-						var obj = JSON.parse(data);
-						
+						layer.closeAll(); $("#tixian").text("提现"); var obj = JSON.parse(data);
 						if(obj.Status == "成功")
 						{
-							layer.open ({ type:0, title:"信息", content:obj.Msg, icon:6, closeBtn: 2, area:'300px',offset:"30%" ,btn1:function(index) { window.location.reload(); }, end:function() { window.location.reload(); } });
+							//layer.open ({ type:0, title:"信息", content:obj.Msg, icon:6, closeBtn: 0, area:'300px',offset:"30%" ,btn1:function(index) { window.location.reload(); }, end:function() { window.location.reload(); } });
+							layer.open({ title: '信息', content:obj.Msg, btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); } });
 						}
 						else
 						{
-							var content = obj.Msg["0"];
-							
-							layer.open ({ type:0, title:"信息", content:content, icon:2, closeBtn: 2, area:'300px',offset:"30%" , btn1:function(index) { layer.closeAll();} });
+							var content = obj.Msg;
+							if(typeof(obj.Msg) == "object") { content = content[0]; }
+							//layer.open ({ type:0, title:"信息",obj.Msg, icon:2, closeBtn: 2, area:'300px',offset:"30%" , btn1:function(index) { layer.closeAll();} });
+							layer.open({ title: '信息', content:content, btn: ['好的'], yes:function(index) { location.reload(); layer.close(index); } });
 						}
 					},
 					  //请求失败遇到异常触发

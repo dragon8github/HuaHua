@@ -7,6 +7,8 @@ GuessDir.ReadMe = function()
 {
 	console.log("避免污染全局空间，请开发者遵循我的做法");
 }
+
+//重新添加红包，重新添加红包，重新添加红包
 GuessDir.UpdateWxResult2 = function(res,myData)
 {
 	//alert("得到微信返回的对象是：" + res.err_msg); //获取微信返回结果
@@ -22,7 +24,7 @@ GuessDir.UpdateWxResult2 = function(res,myData)
 			{
 				//alert(Resultdata);
 				var json = JSON.parse(Resultdata);
-				if (json.Status == '成功') { $("#reputHongBao").addClass("ui-state-disabled").unbind("click"); layer.open ({ type: 0, title: "信息", content:json.Msg, icon: 6, closeBtn: 2, offset:'30%', btn1: function(index) { window.location.reload(); }, end: function() { window.location.reload(); } }); }
+				if (json.Status == '成功') { $("#reputHongBao").addClass("ui-state-disabled").unbind("click"); layer.open ({ title: "信息", content:json.Msg,btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); }  }); }
 				else { alert(json.Msg);  }
 			}
 		})
@@ -40,6 +42,7 @@ GuessDir.UpdateWxResult2 = function(res,myData)
 }
 
 
+//购买道具，购买道具，购买道具
 GuessDir.UpdateWxResult = function(res,myData)
 {
 	//	get_brand_wcpay_request：ok 支付成功 
@@ -49,21 +52,44 @@ GuessDir.UpdateWxResult = function(res,myData)
 	
 	if(res.err_msg.indexOf("ok") >= 0)
 	{
-		
 		//先关闭原来的弹窗
 		$("#cy-tp-dialog").popup('close');  
 		$.ajax
 		({
-			data: { type:"GouMaiDaoJu", order:myData.order,money:myData.money,uid:myData.uid },
-			success:function(Resultdata)
+			data: { type:"GouMaiDaoJu", order:myData.order,money:myData.money,uid:myData.uid,tips_index:myData.tips_index,tips:myData.tips },
+			success:function(Resultdata) 
 			{
-				//清空倒计时
+				//如果用户购买了道具，应该立即清空倒计时
 				for(var i = 0;i<GuessDir.SetTimeOutObj.length;i++) { clearTimeout(GuessDir.SetTimeOutObj[i]); }
-				//倒计时完成
+				//修改倒计时样式
 		    	$("title").text("你可以答题了"); $("#submit").text("提交").removeClass("ui-state-disabled");
-				//alert(Resultdata);
+				//正式后端数据
 				var json = JSON.parse(Resultdata);
-				if(json.Status == '成功') {$("#chengyutishi").show(); $("#panelbody").append("<p>"+myData.daan+ myData.tips +"</p>"); }
+				//成功
+				if (json.Status == '成功')
+				{
+					if (myData.tips != "") 
+					{
+						var tipsHtml = "";
+						var tipsArr =myData.tips.split("");
+						for(var j = 0;j<tipsArr.length;j++)
+						{
+							tipsHtml += "<span class='tipsFont'>" + tipsArr[j] +"</span>";
+						}
+						var tipsHtml = "<div class='tipsFontPanel'>" + tipsHtml + "</div>";
+						
+						$("#chengyutishi").show();
+						$("#panelbody").append(tipsHtml);
+						
+						//修改成语提示
+						var textlength = $("#panelbody").text().replace(/\s/g, "").length;
+						$("#chengyunum").text(textlength);
+						$("#chengyunum2").text(textlength/4);
+
+						
+					}
+				}
+				//失败
 				else { AjaxDir.JqmAlert(json.Msg); }
 			}
 		})
@@ -71,6 +97,7 @@ GuessDir.UpdateWxResult = function(res,myData)
 	else if(res.err_msg.indexOf("fail") >= 0)
 	{
 		//...失败
+		layer.open ({  title:"信息", content:"微信支付失败",yes:function(index) {  layer.close(index); } });
 		return false;   
 	}
 	else if(res.err_msg.indexOf("cancel") >= 0)
@@ -79,12 +106,7 @@ GuessDir.UpdateWxResult = function(res,myData)
 		return false;   
 	}
 }
-//KO新增 修改道具金额
-$("#HongBaoJinE").blur(function()
-								{
-									var val=$("#HongBaoJinE").val();
-									$("#DaoJuJinE").val($("#HongBaoJinE").val()*0.5);
-									})
+
 
 
 GuessDir.DialogYes2 = function()
@@ -94,17 +116,15 @@ GuessDir.DialogYes2 = function()
 	myData.HongBaoJinE = $("#HongBaoJinE").val();				//红包金额
 	myData.HongBaoCount = $("#HongBaoCount").val();		//红包个数
 	
-
-	
 	//数据验证
 	if(myData.HongBaoJinE.length == 0)
 	{
-		layer.tips("请输入整数型的数据",$("#HongBaoJinE"), { tips: [2, '#000'], time: 4000 }) 
+		//layer.tips("请输入整数型的数据",$("#HongBaoJinE"), { tips: [2, '#000'], time: 4000 }) 
 		return false;
 	}
 	else if(myData.HongBaoCount.length == 0)
 	{
-		layer.tips("请输入整数型的数据",$("#HongBaoCount"), { tips: [2, '#000'], time: 4000 })
+		//layer.tips("请输入整数型的数据",$("#HongBaoCount"), { tips: [2, '#000'], time: 4000 })
 		return false;
 	}
 	
@@ -112,46 +132,15 @@ GuessDir.DialogYes2 = function()
 	({     //KO 新增加红包个数
 			data: { type:"weixinzhifu2", price:myData.HongBaoJinE,cot:myData.HongBaoCount, stype:'1' },
 			success:function(dddddd)
-			{ 
+			{  
 				var obj = JSON.parse(dddddd);
 				var order = obj["Result"].order;			//流水订单号
 				var wxjson = obj["Result"].wxjson;		//微信核心json
 				myData.order = order;							//将流水号插入数据集中传递给回调函数
-				//alert(order + "|" + wxjson);
 				callpay(wxjson,myData,GuessDir.UpdateWxResult2);
 			}
 	})
 }
-
-
-
-//GuessDir.DialogYes = function()
-//{
-//	//...确定购买时触发的事件
-//	$.ajax
-//	({
-//			data: { type:"weixinzhifu" },
-//			success:function(jsonstrdata)
-//			{ 
-//				var obj = JSON.parse(jsonstrdata);
-//				var order = obj["Result"].order;			//流水订单号
-//				var wxjson = obj["Result"].wxjson;		//微信核心json
-//				var tips = obj["Result"].tips;				//提示1
-//				var tips2 = obj["Result"].tips2;			//提示2
-//				var money =  obj["Result"].money;	//价格
-//				
-//				alert("我是dialogYes:"+money);
-//				
-//				var myData = {};
-//				myData.order = order;							//将流水号插入数据集中传递给回调函数
-//				myData.tips = tips;
-//				myData.tips2 = tips2;
-//				myData.money = money;
-//				callpay(wxjson,myData,GuessDir.UpdateWxResult); 
-//			}
-//	})
-//}
-
 
 
 
@@ -199,7 +188,7 @@ function Send()
 	var v = $("#search").val();
 	if(v.length > 4 || v.length == 0 || !/^[\u4E00-\u9FA5]+$/.test(v))
 	{
-		layer.tips("请输入四字成语",$("#search"), { tips: [1, '#000'], time: 4000 })
+		//layer.tips("请输入四字成语",$("#search"), { tips: [1, '#000'], time: 4000 })
 		return false;
 	} 
 	else
@@ -220,12 +209,12 @@ function Send()
 					if(json.Result.flag == 0)
 					{
 						//...回答错误
-						layer.open ({ type:0, title:"信息", content:"回答错误 </br> 你可以购买并使用道具帮助你解决问题", icon:2, closeBtn: 2, offset:['30%','10%'], btn1:function(index) { window.location.reload(); }, end:function(){ window.location.reload(); } });
+						layer.open ({  title:"信息", content:"回答错误 </br> 你可以购买并使用道具帮助你解决问题",yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); }  });
 					}
 					else
 					{
 						//...回答正确
-						layer.open ({ type:0, title:"信息", content:"回答正确 </br>" + info, icon:6, closeBtn: 2, offset:['30%','10%'], btn1:function(index) { window.location.reload(); }, end:function() { window.location.reload(); } });
+						layer.open ({ title:"信息", content:"回答正确 </br>" + info,yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); } });
 					}
 				}
 			}
@@ -247,17 +236,16 @@ $(function()
 	{
 		//此处修改为 不弹出层在确定支付 改为直接支付
 		var val=$("#radio-choice-0a").attr("data-tipstype");
-		
 		$.ajax
 		({
 				data: { type:"weixinzhifu"},
 				success:function(jsonstrdata)
-				{ 
+				{  
 					var obj = JSON.parse(jsonstrdata);
 					var order = obj["Result"].order;			//流水订单号
 					var wxjson = obj["Result"].wxjson;		//微信核心json
 					var tips = obj["Result"].tips;	
-					var tips2 = obj["Result"].tips2;//提示
+					var tips_index = obj['Result'].tips_index;
 					var money =  obj["Result"].money;	//价格
 					var uid = obj['Result'].uid;				//uid
 					
@@ -265,35 +253,44 @@ $(function()
 					myData.order = order;	
 					myData.money = money;
 					myData.uid = uid;
-					
-					//将流水号插入数据集中传递给回调函数
-					if(val<1)
-					{
-						myData.tips = tips;
-						myData.daan="答案提示1：";
-						$("#radio-choice-0a").attr("data-tipstype","1");
-					}
-					else if(val<2)
-					{
-						myData.tips = tips2;
-						myData.daan="答案提示2：";
-						$("#radio-choice-0a").attr("data-tipstype","2");
-					}
-					else
-					{
-						myData.tips = "";
-						myData.daan="";
-					}
-					
-				
+					myData.tips = tips;
+					myData.tips_index = tips_index;  
+					    
 					callpay(wxjson,myData,GuessDir.UpdateWxResult); 
 				}
 		})
-		//$("#cy-tp-dialog").popup('open'); 
-		//$("#Cy-tp-DialogYes").bind("tap",GuessDir.DialogYes);
 	})
 	
 	//提交答案
 	$("#submit").bind("click",Send);
+	
+	
+	$("#share_hy").click(function() {
+		$("#zhezhaocheng").width($(document).width());
+		$("#zhezhaocheng").height($(document).height());
+		$("#zhezhaocheng").show();
+	})
+	$("#zhezhaocheng").click(function() {
+		$(this).hide();
+	})
+	
+	//KO新增 修改道具金额
+
+	$(".jsj").click(function()
+							 {	
+							 $(".crrtt").removeClass("crrtt");
+								 $(this).addClass("crrtt");
+								 var val= $(this).attr("val");
+								 $("#HongBaoJinE").val(val);
+								 $("#jinddd").text(val*$("#HongBaoCount").val());
+								 $("#DaoJuJinE").val(($("#HongBaoJinE").val()*3)/10);
+								
+								 })
+	
+	$("#HongBaoCount").blur(function()
+									  {
+										  var val=$("#HongBaoJinE").val();
+										   $("#jinddd").text(val*$("#HongBaoCount").val());
+										  })
 })
 

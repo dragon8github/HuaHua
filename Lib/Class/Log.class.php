@@ -6,7 +6,7 @@ ini_set('date.timezone','Asia/Shanghai');
 * PHP log 类  
 */
 
-class Log
+class mylog
 {
   
     private $LogFile;
@@ -19,6 +19,8 @@ class Log
     const ERROR   = 10;
     const CRITICAL = 5; 
     
+
+    
     private function __construct()
 	{  
         $this->logLevel = 100;
@@ -26,18 +28,34 @@ class Log
 	    $filename = date("Y-m-d").".txt";
 		if(!is_dir($filepath)) mkdir($filepath,'0777');
         $this->LogFile = @fopen($filepath.$filename,'a+');   
-    } 
+    }  
 
     public static function getInstance()
 	{
         static $obj;
         if(!isset($obj)){
-            $obj = new Log();
+            $obj = new mylog();
         }
         return $obj;
     }
+    
+    public static function WriteLog($msg,$module = null,$logLevel = "DEBUG")
+    {
+        $filepath = $_SESSION["APP_ROOT"]."/log/";
+        if(!is_dir($filepath)) mkdir($filepath,'0777');
+        $MyLogFile = @fopen($filepath.date("Y-m-d").".txt",'a+');     
+        
+        $time = date("Y-m-d H:i:s");
+        if(isset($module)){$module =  sprintf("\r\n归属模块：".$module."\r\n");}
+        $logLine = "\r\n-------------------------------  $time -------------------------------\r\n";
+        $logLine .= $module;
+        $logLine .= "\r\n异常信息：$msg\r\n";
+       $logLine .= "\r\n错误等级：$logLevel\r\n";
+        fwrite($MyLogFile,$logLine);        
+    }
+    
 
-    public function LogMessage($msg,$module = null,$logLevel = Log::DEBUG)
+    public  function LogMessage($msg,$module = null,$logLevel = mylog::DEBUG)
 	{
          $time = date("Y-m-d H:i:s");
          $strLogLevel = $this->levelToString($logLevel);
@@ -53,22 +71,22 @@ class Log
 	{
          $ret = '[unknow]';
          switch ($logLevel){
-                case LOG::DEBUG:
+                case mylog::DEBUG:
                      $ret = 'DEBUG';
                      break;
-                case LOG::INFO:
+                case mylog::INFO:
                      $ret = 'INFO';
                      break;
-                case LOG::NOTICE:
+                case mylog::NOTICE:
                      $ret = 'NOTICE';
                      break;
-                case LOG::WARNING:
+                case mylog::WARNING:
                      $ret = 'WARNING';
                      break;
-                case LOG::ERROR:
+                case mylog::ERROR:
                      $ret = 'ERROR';
                      break;
-                case LOG::CRITICAL:
+                case mylog::CRITICAL:
                      $ret = 'CRITICAL';
                      break;
          }
@@ -78,6 +96,9 @@ class Log
 ?>
 
 <?php 
-// $logIns = LOG::getInstance();
-// $logIns->LogMessage("test",log::INFO,'myTest');
+//     include $_SESSION["APP_ROOT"].'/Lib/Class/Log.class.php';
+//     $logIns = LOG::getInstance();
+//     $logIns->LogMessage("测试一下"); 
+//或者
+//      mylog::WriteLog("可以了");
 ?>

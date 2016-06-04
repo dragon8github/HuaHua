@@ -6,12 +6,12 @@
 
 
 
-function share(mylink,title,imgUrl)
+function share(mylink,title,imgUrl,des)
 {
 	// 在这里调用 API
     wx.onMenuShareAppMessage({
         title: title || '精彩活动入口', // 分享标题：猜画有奖，李钊鸿 画了一副成语画给你，大家一起来玩吧！
-        desc: '', // 分享描述
+        desc: des, // 分享描述
         link: mylink, // 分享链接
         imgUrl: imgUrl || 'http://www.nhcskx.com/nnnnnn.jpg', // 分享图标
         type: '', // 分享类型,music、video或link，不填默认为link

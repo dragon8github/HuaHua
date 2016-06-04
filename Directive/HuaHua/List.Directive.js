@@ -14,6 +14,7 @@ function ReadMe()
 
 function Send()
 {
+	
 	$.ajax
 	({
 		data:
@@ -24,13 +25,11 @@ function Send()
 		{
 				window.location.reload();
 		}
-	})
+	})	
 }
 
 function showtime(t)
-{ 
-	//隐藏刷新按钮
-	$("#box").slideUp("slow"); 				
+{ 	
 	//解除绑定事件
 	$("#refresh").unbind("tap",Send);		
 	//开始倒计时
@@ -42,15 +41,16 @@ function update_p(num,t)
 { 
     if(num == t) 
     { 
+	$("#refresh").removeClass("kk");
+		
     	//倒计时完成
     	$("title").text("可以刷新题库");
-    	//显示刷新按钮
-    	$("#box").slideDown('slow');		
     	//绑定事件
     	$("#refresh").bind("tap",Send);	
-    } 
+    }  
     else 
     { 
+		$("#refresh").addClass("kk");
         printnr = t-num; 
         var content =  printnr +"秒后可刷新题目"; 
         $("title").text(content);
@@ -61,7 +61,6 @@ function update_p(num,t)
 //页面逻辑============================================
 $(function()
 {
-	
 	
 })
 

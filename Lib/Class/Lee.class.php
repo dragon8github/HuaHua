@@ -52,6 +52,15 @@ header("Content-type: text/html; charset=utf-8");
           return $item;                                          
         }             
     
+        public static function Sub_截取字符串如果超出某位就省略号($str,$num)
+        {
+            if(mb_strlen($str) > $num)
+            {
+                $str = substr($str,0,$num)."...";
+            }
+            return $str;
+        }
+        
     
     public static function Is_遍历数组中所有的值判断是否有空值($arr)
     {
@@ -76,6 +85,7 @@ header("Content-type: text/html; charset=utf-8");
         }
     }
     
+    //$re = chunk_split($str,1,",");
     public static function shuffle_打散并且洗牌字符串($str)
     {
         $re = explode(",",$str);
@@ -83,7 +93,6 @@ header("Content-type: text/html; charset=utf-8");
         $newstr = implode($re);         //把数据转为字符串
         return $newstr;
     }
-    
 }
 
 

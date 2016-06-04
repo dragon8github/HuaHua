@@ -18,7 +18,12 @@ $nickname = $_SESSION["nickname"];              //昵称
 $headimgurl = $_SESSION["headimgurl"];        //头像
 $balance = 0;                                                   //余额
 
+         //openid
+ 
 
+
+//业务逻辑 开始=================================================
+$arr_ls = $_UserCtrl->get_获取流水列表();
  
 
 //判断openid是否存在用户表，没有的话先插入
@@ -30,9 +35,9 @@ if(!$_UserCtrl->Openid是否存在用户表中())
 else 
 {
     //老用户
-    $arr =  $_UserCtrl->get_获取用户资料();
-    $balance = $arr["balance"];  //余额
     $_UserCtrl->Is_如果用户存在过期的信息就归还金钱();
+    $arr =  $_UserCtrl->get_获取用户资料();
+    $balance = $arr["balance"];  //余额    
 }
 
 
@@ -55,22 +60,12 @@ CssLoader::LoadCss("Copy", "User.css");
 <body>
             <style type="text/css">
                   .ssyy i{display:inline-block;height:40px;text-indent:-999em;width:26px}
+                  .layermanim h3{margin:0px;}
+				        .ui-loader-default{ display:none}
+      .ui-mobile-viewport{ border:none;}
+      .ui-page {padding: 0; margin: 0; outline: 0} 
             </style>
-
-            <footer class="footer-navigate">
-              <a class="item active" href="javascript:;">
-                    <span class="ff icon"></span>
-                    <span class="title">用户中心</span>
-                </a>
-                <a class="item " href="UserList.php">
-                    <span class="ff icon"></span>
-                    <span class="title">收益流水</span>
-                </a>
-                <a class="item " href="UserHistory.php">
-                    <span class="ff icon"></span>
-                    <span class="title">历史列表</span>
-                </a>
-            </footer>
+			
             
             <div style="min-height: 638px;" class="content content-user-index">
                 <div class="banner">
@@ -89,31 +84,22 @@ CssLoader::LoadCss("Copy", "User.css");
                 
                 <div class="navigate clearfix">
                  
-                    <a class="item" href="UserHistory.php">
-                        <div class="ff icon"></div>
-            			<span class="des_tit">分享链接历史</span>
-                        <span class="tit">分享列表</span>
-                    </a>
-            
-                    <a class="item" href="UserList.php">
-                        <div class="ff icon"></div>
-            			<span class="des_tit">所有收益详情</span>
-                        <span class="tit">收益流水</span>
-            			
-                    </a>
-                    
-                    <a class="item" href="javascript:;">
-                        <div class="ff icon"></div>
-            			<span class="des_tit">所有提现详情</span>
-                        <span class="tit">提现记录</span>
-            		
-                    </a>
-                    
-                    <a class="item" href="javascript:;">
-                        <div class="ff icon"></div>
-            			<span class="des_tit">关注方便下次进入</span>
-                        <span class="tit">关注微信</span>
-                    </a>
+                   <?php 
+                     for($i = 0;$i<count($arr_ls);$i++)
+                     {
+                         $img = $_UserCtrl->get_根据不同的type获取不同的图片($arr_ls[$i]["realtype"]);
+                         $des_date = date('Y-m-d',$arr_ls[$i]["happen_time"]);
+                         $zhengfu = $_UserCtrl->get_根据不同的type获取正负($arr_ls[$i]["realtype"]);
+                         $jine = $arr_ls[$i]["price"];
+                 ?>
+                       	   <a class="item" href="javascript:;">
+                        		<div class="ff icon"></div>
+                    			<span class="des_tit"><?php echo $des_date; ?></span>
+                                <span class="tit"><?php echo $zhengfu; ?> ￥ <?php echo $jine / 100; ?></span>
+                            </a>
+                 <?php 
+                    }
+                 ?>           
                 </div>
             </div>
 </body>
@@ -122,7 +108,8 @@ CssLoader::LoadCss("Copy", "User.css");
 <?php 
 	JsLoader::Jquery();    //加载jquery
 	JsLoader::Jqm();       //加载jqm
-	JsLoader::Layer();     //加载layer
+	//JsLoader::Layer();     //加载layer
+	JsLoader::Layermobile();
 	JsLoader::weixin();   //加载微信官方JS
 	JsLoader::LoadDirective('HuaHua', 'Ajax.Directive.js');
 	JsLoader::LoadDirective('HuaHua', 'WeiXin.Directive.js');   //加载个人封装的微信JS指令

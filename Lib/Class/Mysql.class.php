@@ -170,6 +170,8 @@ class Mysql{
 			if($type != 0){
 				$this->pre->execute($data);
 			}
+			//重置各种条件
+			$this->reset();
 			//返回最新主键
 			return self::$SQL->lastinsertid();
 		}catch(PDOException $e){
@@ -196,11 +198,12 @@ class Mysql{
 				$count++;
 			}
 			$s = "update {$this->table} set {$bind} {$this->opt['where']}";  
-			
 			//发送语句
 			$this->pre = self::$SQL->prepare($s);
 			//执行语句
 			$this->pre->execute($data);
+			//重置各种条件
+			$this->reset();
 			//返回受影响行
 			return $this->pre->rowCount();
 		}catch(PDOException $e){
@@ -276,6 +279,29 @@ class Mysql{
 	       exit("错误：".$e->getMessage());
 	    }
 	}
+	
+	/*
+	 * Lee函数：
+	 * 只推荐不存在任何参数的sql语句使用该函数
+	 * */
+	public  function send($str)
+	{
+	    try
+	    {
+	        $s = $str;
+	        //发送语句
+	        $this->pre = self::$SQL->prepare($s);
+	        //执行语句
+	        $this->pre->execute();
+	        //重置各种条件
+	        $this->reset();
+	    }
+	    catch(PDOException $e)
+	    {
+	        exit("错误：".$e->getMessage());
+	    }
+	}
+	
 	
 	/**
 	 * 取数据集(返回符合条件的所有数据)

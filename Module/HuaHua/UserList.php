@@ -54,10 +54,9 @@ $arr = $_UserListCtrl->get_获取流水列表();
                  <?php 
                      for($i = 0;$i<count($arr);$i++)
                      {
-                         
-                         $img = $_UserListCtrl->get_根据不同的type获取不同的图片($arr[$i]["type"]);
+                         $img = $_UserListCtrl->get_根据不同的type获取不同的图片($arr[$i]["realtype"]);
                          $des_date = date('Y-m-d',$arr[$i]["happen_time"]);
-                         $zhengfu = $_UserListCtrl->get_根据不同的type获取正负($arr[$i]["type"]);
+                         $zhengfu = $_UserListCtrl->get_根据不同的type获取正负($arr[$i]["realtype"]);
                          $jine = $arr[$i]["price"];
                  ?>
                        	   <a class="item" href="javascript:;">

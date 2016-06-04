@@ -7,7 +7,8 @@ class CssLoader
     public static function Jqm()
     {
         //...
-        echo sprintf("<link rel='stylesheet' href='%s'  />","https://cdn.bootcss.com/jquery-mobile/1.4.4/jquery.mobile.min.css");
+       // echo sprintf("<link rel='stylesheet' href='%s'  />","https://cdn.bootcss.com/jquery-mobile/1.4.4/jquery.mobile.min.css");
+        echo sprintf("<link rel='stylesheet' href='%s'  />",$_SESSION["STATIC_ROOT"]."/Css/jqm/jquery.mobile-1.4.5.min.css");
     }
     
     public static function LoadCss($folder,$name)

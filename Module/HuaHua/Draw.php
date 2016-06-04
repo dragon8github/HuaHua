@@ -23,7 +23,7 @@ $expire_time = $arr["expire_time"];                 //过期时间
 $shengyu_count = $arr["shengyu_count"];      //剩余红包数量
 $price = $arr['price'];                                      //单价
 $flag = 0;                                                      //能否修改的标识
-
+$nickname = $_SESSION["nickname"];  
 
 //微信类 开始==============================================
 $ko=new WX_INT();
@@ -211,217 +211,88 @@ wx.config
     ]
 });
 
-  
+ wx.ready(function ()  
+{
+	var mylink = "<?php echo $_SESSION["STATIC_ROOT"].'/home.php?p=list';?>";	
+	var wxshare_title = "猜画有奖，<?php echo $nickname ?>邀请您一起来玩";	
+	var wxshare_imgUrl = "<?php echo $_SESSION["STATIC_ROOT"].'/Img/ic.jpg';?>";
+	var des="猜画有奖，乐在其中";	
+	share(mylink,wxshare_title,wxshare_imgUrl,des);
+});
 
 </script>
 <style type="text/css">
-#k_hh
-{
-width:47px;
-height:47px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/hh.png);
-position:absolute;
-top:1px;
-margin-left:5px;
-margin-top:5px;
-
-}
-
-#k_h1
-{
-width:50px;
-height:19px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h1.png);
-margin:0 auto;}
-#k_h2
-{
-width:50px;
-height:19px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h2.png);
-margin:0 auto;}
-#k_h3
-{
-width:50px;
-height:19px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h3.png);
-margin:0 auto;}
-#k_h4
-{
-width:50px;
-height:19px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h4.png);
-margin:0 auto;}
-#k_h5
-{
-width:50px;
-height:19px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h5.png);
-margin:0 auto;}
-
-#k_c1
-{
-width:30px;
-height:42px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c1.png);
-margin:0 auto;}
-#k_c2
-{
-width:30px;
-height:42px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c2.png);
-margin:0 auto;}
-#k_c3
-{
-width:30px;
-height:42px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c3.png);
-margin:0 auto;}
-#k_c4
-{
-width:30px;
-height:42px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c4.png);
-margin:0 auto;}
-#k_c5
-{
-width:30px;
-height:42px;
-background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c5.png);
-margin:0 auto;}
-.fl_left
-{
-float:left;
-width:20%}
-#gongju
-{
-position:absolute;
-top:30%;
-border:solid 1px #999933;
-width:90%;
-margin:3%;
-padding:2%;
-border-radius:25px;
-}
-
-
-
-#k_color
-{
-margin-top:10px;}
-
-.ui-content
-{
-padding:1px;}
-
-#controlgroup .ui-controlgroup-controls{
-display:block}
+#k_hh { width:47px; height:47px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/hh.png); position:absolute; top:1px; margin-left:5px; margin-top:5px;  }
+ #k_h1 { width:50px; height:19px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h1.png); margin:0 auto;}
+#k_h2 { width:50px; height:19px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h2.png); margin:0 auto;}
+#k_h3 { width:50px; height:19px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h3.png); margin:0 auto;}
+#k_h4 { width:50px; height:19px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h4.png); margin:0 auto;}
+#k_h5 { width:50px; height:19px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h5.png); margin:0 auto;}
+ #k_c1 { width:30px; height:42px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c1.png); margin:0 auto;}
+#k_c2 { width:30px; height:42px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c2.png); margin:0 auto;}
+#k_c3 { width:30px; height:42px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c3.png); margin:0 auto;}
+#k_c4 { width:30px; height:42px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c4.png); margin:0 auto;}
+#k_c5 { width:30px; height:42px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c5.png); margin:0 auto;}
+.fl_left { float:left; width:20%}
+#gongju { position:absolute; top:30%; border:solid 1px #999933; width:90%; margin:3%; padding:2%; border-radius:25px; }
+#k_color { margin-top:10px;}
+ .ui-content { padding:1px;}
+ #controlgroup .ui-controlgroup-controls{ display:block}
 </style>
 <script type="text/javascript">
 	$(document).ready(function()
 	{
-				var n=1;
-	
+			var n=1;
 			$(".kedian").click(function()
-			{	
-				if(n)
-				{
-				$("#gongju").slideDown();
-					n=0;
-				}else
-				{
-				$("#gongju").slideUp();
-				n=1;
-				}
-				
-				return false;
-			})
+			{ if(n) { $("#gongju").slideDown(); n=0; } else { $("#gongju").slideUp(); n=1; } return false; })
 			
 			//点击其他按钮需要修改N
 			//橡皮擦
 		  $("#k_h2") .click(function() 
 		  {
-		  line_color = "#F9F9F9";
-			 // alert('huabu');
-			        //line_color = "#ffffff";
-					 $(".current").removeClass("current");
-	        $(this).addClass("current");
-					
-					n=1;
-					$("#gongju").hide();
-					
+				 // alert('huabu'); //line_color = "#ffffff";
+		 		 line_color = "#F9F9F9";  $(".current").removeClass("current"); $(this).addClass("current");  n=1; $("#gongju").hide(); 
 		  })
+		  
 		    //清楚画布
 	   $("#k_h1").click(function() 
-		{
-		
-	        var ctx = $("#canvas")[0].getContext("2d");
-	        ctx.clearRect(0, 0, $("#canvas")[0].width, $("#canvas")[0].height);
-				n=1;
-					$("#gongju").hide();
-	    })
+		{  var ctx = $("#canvas")[0].getContext("2d"); ctx.clearRect(0, 0, $("#canvas")[0].width, $("#canvas")[0].height); n=1; $("#gongju").hide(); })
 		
 		//最小线
 		$("#k_h3").click(function()
 		{
 			// line_color = "#ff0000";
-			 $(".current").removeClass("current");
-	        $(this).addClass("current");
-			n=1;
-					$("#gongju").hide();
-		
+			 $(".current").removeClass("current"); $(this).addClass("current"); n=1; $("#gongju").hide();
 		})
 			$("#k_h4").click(function()
 		{
 			// line_color = "#ff0000";
-			 $(".current").removeClass("current");
-	        $(this).addClass("current");
-			n=1;
-					$("#gongju").hide();
-		
+			 $(".current").removeClass("current"); $(this).addClass("current"); n=1; $("#gongju").hide();		
 		})
 			$("#k_h5").click(function()
 		{
 			// line_color = "#ff0000";
-			 $(".current").removeClass("current");
-	        $(this).addClass("current");
-			n=1;
-					$("#gongju").hide();
-		
+			 $(".current").removeClass("current"); $(this).addClass("current"); n=1; $("#gongju").hide(); 
 		})
 		$("#k_c1").click(function()
 		{
-			 line_color = "#000000";
-				n=1;
-					$("#gongju").hide();
-		
+			 line_color = "#000000"; n=1; $("#gongju").hide(); 
 		})
 		$("#k_c2").click(function()
 		{
-			 line_color = "#cc0000";
-				n=1;
-					$("#gongju").hide();
-		
+			 line_color = "#cc0000"; n=1; $("#gongju").hide(); 
 		})
 		$("#k_c3").click(function()
 		{
-			 line_color = "#ffcc00";
-				n=1;
-					$("#gongju").hide();
-		
+			 line_color = "#ffcc00"; n=1; $("#gongju").hide(); 
 		})
 		$("#k_c4").click(function()
 		{
-			 line_color = "#0099ff";
-				n=1;
-					$("#gongju").hide();
-		
+			 line_color = "#0099ff"; n=1; $("#gongju").hide(); 
 		})
 		$("#k_c5").click(function()
 		{
-			 line_color = "#33cc66";
-				n=1;
-					$("#gongju").hide();
-		
+			 line_color = "#33cc66"; n=1; $("#gongju").hide(); 
 		})
 	
 	})

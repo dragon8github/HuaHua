@@ -84,6 +84,7 @@ class DrawCtrl
     
     
     
+    
     public function Get_生成tips答案提示()
     {
         //选择表
@@ -102,11 +103,11 @@ class DrawCtrl
                $word = $_GET["word"];
                $tips1  = mb_substr($word, 0,1,"utf-8") . "," .mb_substr($word, 1,1,"utf-8").","; 
                $tips2  = mb_substr($word, 2,1,"utf-8") . "," .mb_substr($word, 3,1,"utf-8").","; 
-               for($i = 0;$i< 56;$i++)
+               for($i = 0;$i< 40;$i++)
                {            
                    $rand =  rand(0, $len - 1);   
                    $word = mb_substr($txt, $rand,1,"utf-8");
-                   if($i<=28)
+                   if($i<=20)
                    {
                        $tips1 .= $word . ",";
                    }

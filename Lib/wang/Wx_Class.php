@@ -10,8 +10,8 @@ require_once    $_SESSION["APP_ROOT"]."/Lib/wang/wxpay/api_test.php";  //用户�
 class WX_INT  
 {  
 
-	public $appid = "wx0b62213ee8ee0c90";  
-	public $secret= "1a3a559cbe8892f9c17e916d9266f0ed";
+	public $appid = "wx92ea69e479013e3d";  
+	public $secret= "814dcdacf3d9c92dd72bfab7914c1bd9";
 	//服务号页面授权获取openid
 	public function getOpenid($code) {
 			$appid=$this->appid;  
@@ -94,7 +94,7 @@ class WX_INT
 	{
 			//echo "<br/>"."-----".$openids."*****";
 			$mch_appid=$this->appid;
-			$mchid='1328920801';//商户号
+			$mchid='1330867001';//商户号
 			$nonce_str='qyzf'.rand(100000, 999999);//随机数
 			$partner_trade_no='HW'.time().rand(10000, 99999);//商户订单号
 			$openid=$openid;//用户唯一标识
@@ -182,7 +182,7 @@ if(@$code != null && @$_SESSION["openid"] == null)
     //微信名称
     $_SESSION["nickname"] =  $user_message['nickname'];
     //微信头像
-    $_SESSION["headimgurl"] = $user_message['headimgurl'];
+    $_SESSION["headimgurl"] = substr($user_message['headimgurl'], 0,-1)."64"; 
     //openid
     $_SESSION["openid"] = $openid;
     //code

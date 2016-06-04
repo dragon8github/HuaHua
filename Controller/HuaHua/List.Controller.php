@@ -3,6 +3,8 @@
 ini_set('date.timezone','Asia/Shanghai');
 
 
+
+
 class ListCtrl
 {
 	 private  $Sql;	          //Mysql类的全局对象
@@ -201,10 +203,27 @@ class ListCtrl
 	        else
 	        {
 	            //条件语句
-	            $where = sprintf(" id Not IN (%s) AND id NOT IN (SELECT distinct(answer) FROM question where uid = '%s')",$question,$this->Openid);
-	           
+	            $asql = sprintf(" SELECT 
+										* 
+									FROM 
+										  question_library						
+									WHERE	
+										  id 
+								   Not IN 
+										  (%s) 
+									  AND 
+									      id 
+								   NOT IN 
+										  (SELECT distinct(answer) FROM question where uid = '%s')
+								 order by 
+										   rand() 
+									limit 
+										   10	  
+								 ",$question,$this->Openid);
+							    
+	             
 	            //根据id，获取随机并且不包含上一次历史题库的十条题并且未发布过的题目、
-	            $arr  = $this->Sql->where($where)->limit("10")->select();
+	            $arr  = $this->Sql->query($asql);
 	        }
 	        
 	        //取id字符串集

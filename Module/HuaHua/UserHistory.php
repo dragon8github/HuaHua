@@ -35,20 +35,6 @@ $arr = $_UserHistoryCtrl->get_获取分享列表();
                   .ssyy i{display:inline-block;height:40px;text-indent:-999em;width:26px}
             </style>
 
-            <footer class="footer-navigate">
-              <a class="item " href="User.php">
-                    <span class="ff icon"></span>
-                    <span class="title">用户中心</span>
-                </a>
-                <a class="item " href="UserList.php">
-                    <span class="ff icon"></span>
-                    <span class="title">收益流水</span>
-                </a>
-                <a class="item active" href="javascript:;">
-                    <span class="ff icon"></span>
-                    <span class="title">历史列表</span>
-                </a>
-            </footer>
             
             <div style="min-height: 638px;" class="content content-user-index">
                 	<div class="navigate clearfix">
@@ -75,7 +61,7 @@ $arr = $_UserHistoryCtrl->get_获取分享列表();
 
 <?php 
 	JsLoader::Jquery();    //加载jquery
-	JsLoader::Jqm();       //加载jqm
+	
 	JsLoader::LoadDirective('HuaHua', 'Ajax.Directive.js');
 	JsLoader::LoadDirective('HuaHua', 'UserHistory.Directive.js');
 ?>

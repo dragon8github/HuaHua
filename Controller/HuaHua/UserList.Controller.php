@@ -84,10 +84,10 @@ class UserListCtrl
     {
         //选择表
         $this->Sql->table = 'statements';
-        //条件语句
-        $where = sprintf("uid = '%s' OR bid = '%s' AND flag = '1'  ",$this->Openid,$this->Openid);
+        //查询语句
+        $mysql = sprintf("select *,if(bid <> '',3,type) AS realtype  from statements where uid = '%s' OR bid = '%s' AND flag = '1'",$this->Openid,$this->Openid);
         //发送语句
-        return $this->Sql->where($where)->select();
+        return $this->Sql->query($mysql); 
     }
 }
 

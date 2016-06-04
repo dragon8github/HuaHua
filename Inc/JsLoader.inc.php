@@ -30,6 +30,11 @@ class JsLoader
         echo  sprintf("<script type='text/javascript' src='%s'></script>",$_SESSION["STATIC_ROOT"].'/Src/Layer/layer/layer.js');
     }
     
+    public static function Layermobile()
+    {
+        echo  sprintf("<script type='text/javascript' src='%s'></script>",$_SESSION["STATIC_ROOT"].'/Src/Layermobile/layer.js');
+    }    
+    
     public static function weixin()
     {
         echo  sprintf("<script type='text/javascript' src='%s'></script>","http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
