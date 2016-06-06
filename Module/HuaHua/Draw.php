@@ -55,8 +55,10 @@ if(count($arr))
 <?php 
        CssLoader::Jqm();      //加载jqm.css
  ?>
+ <style type="text/css">
+ #KaiShiZhizuo{background-color:#2ED146;color:#fff;max-width:45%;border-color:#ddd;text-shadow:0 1px 0 #f3f3f3;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto;text-shadow:0 0 0 #000;text-decoration:none}
  
- 
+ </style>
 	<body>
         	<div data-role="page">
         	  	<!--<div data-role="header" class="ui-shadow" data-theme = 'a'>
@@ -65,7 +67,24 @@ if(count($arr))
         	    </div>--><!-- /header -->
         	  
         	    <div role="main" class="ui-content">
-        	    
+        	    		<div id="gongju" >
+													<div id='k_hua'>
+														<div class="fl_left"><div id="k_h1" >清屏</div></div>
+														<div class="fl_left"><div id="k_h2"  val='8'>橡皮</div></div>
+														<div class="fl_left"><div id="k_h3" val="2" >细</div></div>
+														<div class="fl_left"><div id="k_h4" val="4" class="cjjssll" >中</div></div>
+														<div class="fl_left"><div id="k_h5" val="6" >粗</div></div>
+															<div style="clear:both"></div>
+													</div>
+													<div id='k_color'>
+													<div class="fl_left_n"><div id="k_c1" ></div></div>
+													<div class="fl_left_n"><div id="k_c2" class="cjjssll22" ></div></div>
+													<div class="fl_left_n"><div id="k_c3" ></div></div>
+													<div class="fl_left_n"><div id="k_c4" ></div></div>
+													<div class="fl_left_n"><div id="k_c5" ></div></div>
+														
+														<div style="clear:both"></div>
+													</div>
         	    
         			<div class="ui-grid-solo" style="position:relative;">
                      				<?php
@@ -96,48 +115,18 @@ if(count($arr))
 												
 												
                     							
-												<div id="k_hh" class="kedian"></div>
-													
-													
-													
-												</div>
 												
 												
-												<div style="clear:both"></div>                                                
-												   <div id='gongjuss' style="display:none" > <input name="radio-choice-b" id="radio-choice-c"  checked="checked" class="line_s" val="2" type="radio" >
-                                                    <label  for="radio-choice-c" >小</label>
-                                                    <input name="radio-choice-b" id="radio-choice-d"  class="line_b" val='6' type="radio" >
-                                                    <label for="radio-choice-d">大</label>
-                                                    <input name="radio-choice-b" id="radio-choice-e" value="xiangpicha" type="radio" class="xiangpicha">
-                                                    <label for="radio-choice-e">橡皮擦</label>
-                                                    <input name="radio-choice-b" id="radio-choice-f" value="clear_canvas" type="radio" class="clear_canvas">
-                                                    <label for="radio-choice-f">清除画布</label><br>
-													</div>
+												
+											
                                   			 
-                            					<a href="#" id="KaiShiZhizuo" class="ui-btn  ui-corner-all ui-shadow  ui-icon-action ui-btn-icon-right " style="text-indent: 30px;margin-top:20px;">开始制作</a>
+                            					<a href="#" data-role="none" id="KaiShiZhizuo" style="margin-top:20px;">生成作品</a>
         							<?php 
                      				       }
         							?>
         			
         			</div>
-        			<div id="gongju"  style="display:none">
-													<div id='k_hua'>
-														<div class="fl_left"><div id="k_h1"  ></div></div>
-														<div class="fl_left"><div id="k_h2"  val='8'></div></div>
-														<div class="fl_left"><div id="k_h3" val="2" ></div></div>
-														<div class="fl_left"><div id="k_h4" val="4" ></div></div>
-														<div class="fl_left"><div id="k_h5" val="6" ></div></div>
-															<div style="clear:both"></div>
-													</div>
-													<div id='k_color'>
-													<div class="fl_left"><div id="k_c1" ></div></div>
-													<div class="fl_left"><div id="k_c2" ></div></div>
-													<div class="fl_left"><div id="k_c3" ></div></div>
-													<div class="fl_left"><div id="k_c4" ></div></div>
-													<div class="fl_left"><div id="k_c5" ></div></div>
-														
-														<div style="clear:both"></div>
-													</div>
+        	
         			
         			
         			
@@ -222,20 +211,68 @@ wx.config
 
 </script>
 <style type="text/css">
-#k_hh { width:47px; height:47px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/hh.png); position:absolute; top:1px; margin-left:5px; margin-top:5px;  }
- #k_h1 { width:50px; height:19px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h1.png); margin:0 auto;}
-#k_h2 { width:50px; height:19px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h2.png); margin:0 auto;}
-#k_h3 { width:50px; height:19px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h3.png); margin:0 auto;}
-#k_h4 { width:50px; height:19px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h4.png); margin:0 auto;}
-#k_h5 { width:50px; height:19px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h5.png); margin:0 auto;}
- #k_c1 { width:30px; height:42px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c1.png); margin:0 auto;}
-#k_c2 { width:30px; height:42px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c2.png); margin:0 auto;}
-#k_c3 { width:30px; height:42px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c3.png); margin:0 auto;}
-#k_c4 { width:30px; height:42px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c4.png); margin:0 auto;}
-#k_c5 { width:30px; height:42px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c5.png); margin:0 auto;}
-.fl_left { float:left; width:20%}
-#gongju { position:absolute; top:30%; border:solid 1px #999933; width:90%; margin:3%; padding:2%; border-radius:25px; }
-#k_color { margin-top:10px;}
+ #k_h1 {  height:26px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h1.png); margin:0 auto; background-repeat: no-repeat; padding: 5px 5px 5px 35px; background-position: 5px center;float:left;}
+#k_h2 {  height:26px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h2.png); margin:0 auto; background-repeat: no-repeat; padding: 5px 5px 5px 35px; background-position: 5px center;float:left;}
+#k_h3 {  height:26px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h3.png); margin:0 auto; background-repeat: no-repeat; padding: 5px 5px 5px 15px; background-position: 5px center;float:left;}
+#k_h4 {height:26px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h4.png); margin:0 auto; background-repeat: no-repeat; padding: 5px 5px 5px 21px; background-position: 5px center;float:left;}
+#k_h5 {  height:26px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h5.png); margin:0 auto; background-repeat: no-repeat; padding: 5px 5px 5px 27px; background-position: 5px center;float:left;}
+
+
+.cjjssll
+{
+background-color:#FFFFFF;
+border:solid 1px #DBDBEA;
+-moz-border-radius: 5px; 
+-webkit-border-radius: 5px; 
+
+border-radius: 5px; 
+}
+
+.cjjssll22
+{
+background-color:#FFFFFF;
+border:solid 1px #DBDBEA;
+-moz-border-radius: 5px; 
+-webkit-border-radius: 5px; 
+
+border-radius: 5px; 
+}
+ #k_c1 { width:40px; height:40px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c1.png); margin:0 auto;background-repeat: no-repeat;padding:5px;background-position:center;}
+#k_c2 { width:40px; height:40px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c2.png); margin:0 auto;background-repeat: no-repeat;padding:5px;background-position:center;}
+#k_c3 { width:40px; height:40px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c3.png); margin:0 auto;background-repeat: no-repeat;padding:5px;background-position:center;}
+#k_c4 { width:40px; height:40px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c4.png); margin:0 auto;background-repeat: no-repeat;padding:5px;background-position:center;}
+#k_c5 { width:40px; height:40px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c5.png); margin:0 auto;background-repeat: no-repeat;padding:5px;background-position:center;}
+.fl_left { float:left;
+height:38px }
+
+.fl_left:nth-of-type(1){
+	width:25%
+}
+.fl_left:nth-of-type(2){
+	width:25%
+}
+.fl_left:nth-of-type(3){
+	width:15%
+}
+.fl_left:nth-of-type(4){
+	width:15%
+}
+.fl_left:nth-of-type(5){
+	width:20%
+}
+
+.fl_left_n
+{
+float:left;
+width:20%;
+height:50px;
+}
+#gongju { background-color: #f0f0f0; }
+#k_color { padding:10px 0;}
+#k_hua
+{
+border-bottom:dashed 1px #DBDBEA;
+padding:10px 0;}
  .ui-content { padding:1px;}
  #controlgroup .ui-controlgroup-controls{ display:block}
 </style>
@@ -250,49 +287,135 @@ wx.config
 			//橡皮擦
 		  $("#k_h2") .click(function() 
 		  {
+		  		$(".cjjssll22").removeClass("cjjssll22");
+				$(".cjjssll").removeClass("cjjssll");
+		  	//$("#k_h4").addClass("cjjssll");
+		$(this).addClass("cjjssll");
 				 // alert('huabu'); //line_color = "#ffffff";
-		 		 line_color = "#F9F9F9";  $(".current").removeClass("current"); $(this).addClass("current");  n=1; $("#gongju").hide(); 
+		 		 line_color = "#F9F9F9";  $(".current").removeClass("current"); $(this).addClass("current");  n=1; 
 		  })
 		  
 		    //清楚画布
 	   $("#k_h1").click(function() 
-		{  var ctx = $("#canvas")[0].getContext("2d"); ctx.clearRect(0, 0, $("#canvas")[0].width, $("#canvas")[0].height); n=1; $("#gongju").hide(); })
+		{  
+		//$(".cjjssll22").removeClass("cjjssll22");
+		//$(".cjjssll").removeClass("cjjssll");
+		//$("#k_h4").addClass("cjjssll");
+		//$("#k_c2").addClass("cjjssll22");
+		//$(this).addClass("cjjssll");
+		var ctx = $("#canvas")[0].getContext("2d"); 
+		//修改清除画布 
+		ctx.fillStyle="ffffff";//白色为例子；
+
+   　ctx.fillRect(0, 0, $("#canvas")[0].width, $("#canvas")[0].height);
+
 		
+		//ctx.clearRect(0, 0, $("#canvas")[0].width, $("#canvas")[0].height); 
+		n=1; 
+		 })
 		//最小线
 		$("#k_h3").click(function()
 		{
+			if(!$(".cjjssll22").length)
+			{
+			$("#k_c2").addClass("cjjssll22");
+			}
+			$(".cjjssll").removeClass("cjjssll");
+		$(this).addClass("cjjssll");
 			// line_color = "#ff0000";
-			 $(".current").removeClass("current"); $(this).addClass("current"); n=1; $("#gongju").hide();
+			 $(".current").removeClass("current"); $(this).addClass("current"); n=1;
 		})
 			$("#k_h4").click(function()
 		{
+		if(!$(".cjjssll22").length)
+			{
+			$("#k_c2").addClass("cjjssll22");
+			}
+			$(".cjjssll").removeClass("cjjssll");
+		$(this).addClass("cjjssll");
 			// line_color = "#ff0000";
-			 $(".current").removeClass("current"); $(this).addClass("current"); n=1; $("#gongju").hide();		
+			 $(".current").removeClass("current"); $(this).addClass("current"); n=1;
 		})
 			$("#k_h5").click(function()
 		{
+		if(!$(".cjjssll22").length)
+			{
+			$("#k_c2").addClass("cjjssll22");
+			}
+			$(".cjjssll").removeClass("cjjssll");
+		$(this).addClass("cjjssll");
 			// line_color = "#ff0000";
-			 $(".current").removeClass("current"); $(this).addClass("current"); n=1; $("#gongju").hide(); 
+			 $(".current").removeClass("current"); $(this).addClass("current"); n=1; 
 		})
 		$("#k_c1").click(function()
 		{
-			 line_color = "#000000"; n=1; $("#gongju").hide(); 
+			var ztz=$(".cjjssll").text();
+			if(ztz=="橡皮"||ztz=="清屏")
+			{
+				$(".cjjssll").removeClass("cjjssll");
+				$("#k_h4").addClass("cjjssll");
+				 $(".current").removeClass("current");
+				$("k_h3").addClass("current");
+			}
+			$(".cjjssll22").removeClass("cjjssll22");
+			$(this).addClass("cjjssll22");
+			 line_color = "#000000"; n=1; 
 		})
 		$("#k_c2").click(function()
 		{
-			 line_color = "#cc0000"; n=1; $("#gongju").hide(); 
+		var ztz=$(".cjjssll").text();
+			if(ztz=="橡皮"||ztz=="清屏")
+			{
+				$(".cjjssll").removeClass("cjjssll");
+				$("#k_h4").addClass("cjjssll");
+				 $(".current").removeClass("current");
+				$("k_h3").addClass("current");
+			}
+		$(".cjjssll22").removeClass("cjjssll22");
+			$(this).addClass("cjjssll22");
+			 line_color = "#cc0000"; n=1; 
 		})
 		$("#k_c3").click(function()
 		{
-			 line_color = "#ffcc00"; n=1; $("#gongju").hide(); 
+		var ztz=$(".cjjssll").text();
+			if(ztz=="橡皮"||ztz=="清屏")
+			{
+				$(".cjjssll").removeClass("cjjssll");
+				$("#k_h4").addClass("cjjssll");
+				 $(".current").removeClass("current");
+				$("k_h3").addClass("current");
+			}
+		$(".cjjssll22").removeClass("cjjssll22");
+			$(this).addClass("cjjssll22");
+			 line_color = "#ffcc00"; n=1;
 		})
 		$("#k_c4").click(function()
 		{
-			 line_color = "#0099ff"; n=1; $("#gongju").hide(); 
+		var ztz=$(".cjjssll").text();
+			if(ztz=="橡皮"||ztz=="清屏")
+			{
+				$(".cjjssll").removeClass("cjjssll");
+				$("#k_h4").addClass("cjjssll");
+				 $(".current").removeClass("current");
+				$("k_h3").addClass("current");
+			}
+		$(".cjjssll22").removeClass("cjjssll22");
+			$(this).addClass("cjjssll22");
+			 line_color = "#0099ff"; n=1; 
 		})
 		$("#k_c5").click(function()
 		{
-			 line_color = "#33cc66"; n=1; $("#gongju").hide(); 
+		var ztz=$(".cjjssll").text();
+			if(ztz=="橡皮"||ztz=="清屏")
+			{
+				$(".cjjssll").removeClass("cjjssll");
+				$("#k_h4").addClass("cjjssll");
+				 $(".current").removeClass("current");
+				$("k_h3").addClass("current");
+			}
+		$(".cjjssll22").removeClass("cjjssll22");
+			$(this).addClass("cjjssll22");
+			 line_color = "#33cc66"; n=1; 
 		})
 	
 	})

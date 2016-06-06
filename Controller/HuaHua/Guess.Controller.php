@@ -2,6 +2,7 @@
 
 ini_set('date.timezone','Asia/Shanghai');
 
+
 //控制器专用累
 class GuessCtrl
 {
@@ -23,6 +24,22 @@ class GuessCtrl
         //返回数据库对象
         $this->Sql =  Mysql::start($dsn);
     }
+    
+    //根据传入的id，找到用户的余额，然后根据
+    public function get_根据用户id获取余额($uid)
+    {
+            //选择表
+            $this->Sql->table = 'user';
+            //重置
+            $this->Sql->reset();
+            //条件语句
+            $where = sprintf("openid = '%s' ",$uid);
+            //发送语句
+            $arr =  $this->Sql->field("balance")->where($where)->find();
+            //返回余额
+            return $arr["balance"];
+    }
+    
     
     public function Openid是否存在用户表中()
     {
@@ -50,7 +67,7 @@ class GuessCtrl
         //条件语句
         $where = sprintf(" question_id = '%s' ",$_GET["q"]); 
         //发送语句
-        $arr = $this->Sql->where($where)->field('wx_litpic,flag')->select();
+        $arr = $this->Sql->where($where)->field('wx_litpic,flag,daojuflag')->order("visitime desc")->select();
         //返回结果
         return $arr;
     }
@@ -86,8 +103,8 @@ class GuessCtrl
 	
 	public function get_获取道具比例()
     {
-	   $this->Sql->reset();
 	   $this->Sql->table = "setting";
+	   $this->Sql->reset();
 	   $dd=$this->Sql->where("id=1")->select();
 	   $prop =  @$dd[0]["prop"]; 
 	   return $prop;
@@ -117,24 +134,24 @@ class GuessCtrl
         //插入语句
         $this->Sql->add($data);
         
-        //获取道具比例 
-        $DaoJuBiLi = $this->get_获取道具比例();
         
-         
+        //这是个bug
+        //获取道具比例 
+        //$DaoJuBiLi = $this->get_获取道具比例();      
         //选择question表
-		$this->Sql->table = "question";
-		//重置
-		$this->Sql->reset();
-        //条件语句
-        $where = sprintf("id = '%s' ",$_GET['q']);
-        //生成数据       
-        $data2["prop"] =$this->C_金额转换($money)*floatval($DaoJuBiLi);
-		$data2["price"] =$this->C_金额转换($money);
-		$data2["price_count"] =$prict_count;
-		$data2["hongbao_count"]=$cot;
-		$data2["shengyu_count"]=$cot;
-        //sql语句发送
-        $this->Sql->where($where)->save($data2);
+// 		$this->Sql->table = "question";
+// 		//重置
+// 		$this->Sql->reset();
+//         //条件语句
+//         $where = sprintf("id = '%s' ",$_GET['q']);
+//         //生成数据       
+//         $data2["prop"] =$this->C_金额转换($money)*floatval($DaoJuBiLi);
+// 		$data2["price"] =$this->C_金额转换($money);
+// 		$data2["price_count"] =$prict_count;
+// 		$data2["hongbao_count"]=$cot;
+// 		$data2["shengyu_count"]=$cot;
+//         //sql语句发送
+//         $this->Sql->where($where)->save($data2);
 		//************************************ko博 新增加道具金额问题**************************//
 		
         $ko=new WX_INT();
@@ -222,17 +239,17 @@ class GuessCtrl
         //选择数据库
 	    $this->Sql->table = 'answer_details';
 	    //获取与当前相减的差
-	    $sql = sprintf(" SELECT TIMESTAMPDIFF( SECOND , FROM_UNIXTIME( `answer_time`) , NOW( )) - (SELECT answer_limit_time as S from setting) AS ShengYuTime FROM answer_details WHERE `user_id` = '%s' order by answer_time  desc limit 1 ",$this->Openid);
+	    $sql = sprintf(" SELECT TIMESTAMPDIFF( SECOND , FROM_UNIXTIME( `answer_time`) , NOW( )) - (SELECT answer_limit_time as S from setting) AS ShengYuTime FROM answer_details WHERE `user_id` = '%s' AND question_id = '%s' order by answer_time  desc limit 1 ",$this->Openid,$_GET['q']);
 	    //发送语句
 	    $ShengYuTime = $this->Sql->query($sql);
 	    //返回结果(有可能返回空，所以会报错，手动避免)
 	    $ShengYuTime =  @$ShengYuTime[0]["ShengYuTime"];   
-	    
+	    //有可能为空
 	    if($ShengYuTime == "")
 	    {
 	        return "0";
 	    }
-	    
+	     
 	    return $ShengYuTime;
     }
     
@@ -279,6 +296,23 @@ class GuessCtrl
               $str2.= sprintf("<span class='tipsFont'>%s</span>",$re[$i]); 
         }
         return $str2;
+    }
+    
+    public function Is_是否为回答正确但没有获取红包的用户()
+    {     
+        //选择表
+        $this->Sql-> table = 'statements';
+        //条件语句
+        $where = sprintf(" uid = '%s' AND question_id = '%s' AND type = '5' ",$this->Openid,$_GET["q"]);
+        //获取总数
+        $count = $this->Sql->where($where)->getCount();
+        
+        if($count == 0)
+        {
+            return true;
+        }
+        
+        return false;
     }
     
     public function Is_是否用户已经回答正确过()
@@ -363,10 +397,16 @@ class GuessCtrl
        {
            //减少红包
            $this->Sql->where($where)->sum('shengyu_count',-1); 
+                      
+           
+           //获取用户余额
+           $statements_balance =   $this-> get_根据用户id获取余额($this->Openid);
+           
            
            //猜主添加收益流水
-           //选择表
            $this->Sql->table = 'statements';
+           //重置
+           $this->Sql->reset();
            //数据结构
            $data["id"] = uniqid();
            $data["type"] = '5';
@@ -375,6 +415,7 @@ class GuessCtrl
            $data["uid"] = $this->Openid;
            $data["flag"] = "1";
            $data["question_id"] = $_GET["q"];
+           $data["balance"] = $statements_balance + $price; //回来
            //发送语句
            $this->Sql->add($data);
            
@@ -395,9 +436,7 @@ class GuessCtrl
             return 0;
        }
        
-       
        return $price;
-       
    }
    
 
@@ -540,7 +579,7 @@ class GuessCtrl
                                                     a.id = b.answer 
                                     WHERE 
                                                     b.id = '%s' 
-                               ",$id); 
+					   ",$id); 
         //发送语句
         $readContent = $this->Sql->field("answer")->query($myql);
         $readContent = $readContent[0]["answer"];
@@ -582,6 +621,18 @@ class GuessCtrl
         exit(json_encode($arr));  
     }
     
+    public function Daoju_添加访客道具购买标识()
+    {
+        //选择流水表
+        $this->Sql->table = 'visitor';
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf(" openid = '%s' AND question_id = '%s' ",$this->Openid,$_GET['q']);
+        //更新语句
+        $this->Sql->where($where)->sum("daojuflag",1);
+    }
+    
     public function Daoju_添加道具购买标识($index,$tips)
     {
         //选择流水表
@@ -611,24 +662,54 @@ class GuessCtrl
         //发送语句
         $this->Sql->send($mysql); 
     } 
+	
+	
+	//写死300哦
+	public function Update_更新用户冷却时间()
+	{
+		//选择流水表
+        $this->Sql->table = 'answer_details';
+		//重置
+        $this->Sql->reset();
+		//条件语句
+		$where = sprintf(" question_id = '%s' AND user_id = '%s' ",$_GET['q'],$this->Openid);
+		//数据结构
+		$data["answer_time"] = time() - 300;
+		//更新语句
+		$this->Sql->where($where)->save($data);
+	}
     
     
-    public function Ajax_购买道具($order,$money,$uid,$tips_index,$tips)
+    public function Ajax_购买道具($order,$money,$bid,$tips_index,$tips)
     { 
+        //获取用户余额
+        $statements_balance =   $this-> get_根据用户id获取余额($bid);
+  
+                
+        
         //选择流水表
         $this->Sql->table = 'statements';
+        //重置
+        $this->Sql->reset();
         //条件语句
         $where = sprintf(" id = '%s' ",$order);
         //数据结构
         $data["flag"] = '1';
+        $data["balance"] = $statements_balance + $money;
         //发送语句
         $this->Sql->where($where)->save($data);
+        
         
         //插入道具流水
         if($tips_index != "" && $tips != "")
         {
               $this->Daoju_添加道具购买标识($tips_index,$tips); 
+              $this->Daoju_添加访客道具购买标识();
         }
+        
+		//更新用户答题的冷却时间
+		$this->Update_更新用户冷却时间();
+		
          
         //添加用户余额
         //选择流水表
@@ -636,7 +717,7 @@ class GuessCtrl
         //重置
         $this->Sql->reset();
          //条件语句
-        $where = sprintf(" openid = '%s' ",$uid);
+        $where = sprintf(" openid = '%s' ",$bid);
         //添加金额
         $this->Sql->where($where)->sum("balance",$money);
         //拼接json
@@ -656,22 +737,32 @@ class GuessCtrl
         $data["flag"] = '1';
         //发送语句
         $this->Sql->where($where)->save($data);
-        //重置
-        $this->Sql->reset();
+        
+        
+        //获取道具比例
+        $DaoJuBiLi = $this->get_获取道具比例();
+        
+      
         //选择流水表
         $this->Sql->table = 'question';
+        //重置
+        $this->Sql->reset();        
         //数据结构
-       // $price = round($HongBaoJinE / $HongBaoCount,1);  //获取每个红包的金额
         $data2["price"] = $this->C_金额转换($HongBaoJinE);
         $data2["price_count"] = $this->C_金额转换($HongBaoJinE)*$HongBaoCount;
         $data2["hongbao_count"] = $HongBaoCount;
         $data2["shengyu_count"] = $HongBaoCount;
+        $data2["prop"] = $this->C_金额转换($HongBaoJinE) * floatval($DaoJuBiLi);  
         $data2["expire_time"] = strtotime("+24 hours");
         $data2["flag"] = '0';
         //条件语句
         $where = sprintf(" id = '%s' ",$_GET["q"]);
         //发送语句
         $this->Sql->where($where)->save($data2);
+        
+        
+        
+        
         //拼接json
         $arr = array('Msg' => '添加成功！' , 'Result' =>"", 'Status' => '成功' );
         //返回结果
@@ -683,9 +774,9 @@ class GuessCtrl
         $this->Sql->table = 'visitor';
         $this->Sql->reset();
         $data["flag"] = 1; //修改状态值为1
-        $where = sprintf(" openid = '%s' and $question_id='%s' ",$openid,$question_id);
+        $where = sprintf(" openid = '%s' and question_id='%s' ",$openid,$question_id);
         $this->Sql->where($where)->save($data);
-    }
+    } 
     
     //购买道具,购买道具,购买道具
     public function Ajax_微信支付json()
@@ -703,9 +794,13 @@ class GuessCtrl
         //获取道具金额
         $daojujiage =  $daoju[0]["daoju"];
         //uid
-        $uid =  $daoju[0]["uid"];                      //用户uid也是受益者的id
-        $uid = $daoju[0]["uid"];                     //用户ID
+        $uid =  $daoju[0]["uid"];              //用户uid也是受益者的id
         $answer = $daoju[0]['answer'];         //正确答案
+        
+        
+        
+        
+        
         
         
         //-----------------------------------------------
@@ -715,7 +810,7 @@ class GuessCtrl
         //选择表
         $this->Sql->table = 'daojuinfo';
         //条件语句
-        $where = sprintf("question_id = %s",$q) ;
+        $where = sprintf("question_id = '%s' AND openid = '%s' ",$q,$this->Openid) ;
         //查询语句
         $word_index =  $this->Sql->where($where)->find();
         //获取结果
@@ -730,14 +825,17 @@ class GuessCtrl
         $tips_index = rand(0, 3);
         //赋值
         $tips = $re[$tips_index];     
+        
+        
+        
        
         //判断用户有购买记录
         IF(strlen($word_index) > 0) 
         {
             //数组
             $word_index_arr = explode(",",$word_index);
-            
-            if(count($word_index_arr) >= 4) 
+			
+            if(count($word_index_arr) >= 4)  
             {
                     //答案已经全部展示给用户了。没什么好展示的了。除非以后扩展
                     $tips = "";
@@ -784,6 +882,7 @@ class GuessCtrl
         
         $tips = Lee::shuffle_打散并且洗牌字符串($tips);
      
+        
         
         //重置
         $this->Sql->reset();

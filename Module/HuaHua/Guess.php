@@ -52,6 +52,7 @@ else
 {
     $IsDrawer = $_GuessCtrl->Is_是否是画主($q);
     $IsReal = $_GuessCtrl->Is_是否用户已经回答正确过();
+    $IsRealButNotMoney = $_GuessCtrl->Is_是否为回答正确但没有获取红包的用户();
     if(!$IsDrawer)
     {
         $Time = $_GuessCtrl->get_距离下一次答题的时间();
@@ -124,7 +125,7 @@ $panelbody{white-space:normal;word-break:break-all}
 .fuck_y
 {
   left: 0;
-    opacity: 0.76;
+    opacity: 1;
     position: absolute;
     top: -20px;}
 .fuck_y img
@@ -152,35 +153,108 @@ color: #ccc;
 :-ms-input-placeholder { /* Internet Explorer 10+ */ 
 color: #ccc; 
 } 
+
+#hb_k
+{
+position:absolute;
+left:4px;
+top:5px;}
+.jjjss
+{
+ color: #f7df7b;
+    left: 18px;
+
+    position: absolute;
+    top: 43px;
+    transform: rotate(315deg) scale(1) skew(1deg) translate(0px);
+-webkit-transform: rotate(315deg) scale(1) skew(1deg) translate(0px);
+-moz-transform: rotate(315deg) scale(1) skew(1deg) translate(0px);
+-o-transform: rotate(315deg) scale(1) skew(1deg) translate(0px);
+-ms-transform: rotate(315deg) scale(1) skew(1deg) translate(0px);
+}
+
+#search{
+float:left;max-width:160px;padding-left: 12px;text-shadow: 0 1px 0 #f3f3f3;border:solid 1px #777;height:43px;margin:9px 10px 9px 1px;
+}
+
+#search:disabled
+{
+border:solid 1px #999;
+}
+#ddd_kk
+{
+position:absolute;
+left:3px;
+top:32px;}
+#ddd_kk .dian
+{
+float:left;
+margin-top:0;
+color:#00FF00;
+border-radius:25px;
+width:2px;
+height:2px;
+border:solid 1px #EA8010;
+background-color:#EA8010;
+margin-left: 2px;
+}
+
+#dddssa
+{
+margin-top:0;
+color:#00FF00;
+border-radius:25px;
+width:2px;
+height:2px;
+border:solid 3px #EA8010;
+background-color:#EA8010;
+margin-left: 2px;
+font-size:12px;
+display:inline-block;
+}
 </style>
 
 <html>
     	<body id="bdbd">
+		
             	<div data-role="page">
                 	    <div role="main" class="ui-content">
-                	    
+                	  		
                 	    				<!-- 图片 -->
                             			<div id="tupian_wrap" class="ui-grid-solo">
                         						<img src="<?php echo $question_pic ?>" alt="" width="100%" style="background:#fff;"  />
                             			</div>
-                            			
+                            			<?php if($Is_Out) { ?>
+							<div id='hb_k'>
+								<span class="jjjss">奖金已领完</span>
+							<img width="150px" src="http://huahua.ncywjd.com/Img/hf.png" /></div>  
+							<?php } ?>
+									
+							<?php if(!$Is_Out) { ?>
+							<div id='hb_k'>
+								<span class="jjjss">猜对奖<?php echo $price/100; ?>元</span>
+							<img width="150px" src="http://huahua.ncywjd.com/Img/hf.png" /></div>  
+							<?php } ?>
                             			
                             			<!-- 输入框 -->
                             			<div class="ui-grid-solo" style="margin:15px auto 0px;">
 											<label for="search" style="float:left;line-height:35px"></label>
-                                    		<input data-role="none" id="search"  name="answerInput"   maxlength="4" placeholder="<?php   if($IsDrawer) {echo "您是画主无法作答";}else{echo "请填写四字成语";} ?>"   style="float:left;max-width:160px;padding-left: 12px;text-shadow: 0 1px 0 #f3f3f3;border:solid 1px #777;height:43px;margin:9px 10px 9px 1px" type="text" />
+                                    		<input data-role="none" id="search"  name="answerInput"  maxlength="4" <?php if(@$IsReal) { echo "disabled='disabled'";} ?> <?php if($IsDrawer) { echo "disabled='disabled'";} ?> placeholder="<?php   if($IsDrawer) {echo "您是画主无法作答";}else{echo "请填写四字成语";} ?>"   style="float:left;max-width:160px;padding-left: 12px;text-shadow: 0 1px 0 #f3f3f3;border:solid 1px #777;height:43px;margin:9px 10px 9px 1px" type="text" />
 											<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
         			 					    <a href="#" data-role="none" id='share_hy' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  >分享给好友</a>
                                     		<?php } else if (@$IsReal) {    //如果猜主已经答对了，无法参与答题 ?>
-                                    				<!--  <a href="<?php //echo $_SESSION["STATIC_ROOT"]."/Home.php?p=user"; ?>" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了，去提现</a>  -->
-                                    				 <a style="margin-top:8px;" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了，去提现</a>  
+                                    				<?php if(@$IsRealButNotMoney) { ?>
+                                    				        <a style="margin-top:8px;" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了</a>
+                                    				 <?php } else {?>
+                                				            <a style="margin-top:8px;" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了，去提现</a>  
+                                    		          <?php } ?>
                                     		<?php } else { ?>
                     	    				 		<a href="#" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a <?php if($Time != '' && $Time < 0)  echo "ui-state-disabled"; ?>"  id="submit">提交答案 <span style="font-size:11px; color:#ffff00; "><?php if(!$Is_Out) {echo "猜中奖".($price/100)."元";} ?></span></a>
                     	    				<?php } ?>
                             			</div>
 										
 										 <div  id="chengyutishi" class="ui-corner-all custom-corners"  style="margin:15px auto; <?php if($tips_word == null){ echo "display:none";} ?>">
-                                                      <div id="cyts_k" class="ui-bar ui-bar-a"> <h3>答案提示 </h3> - <span id="chengyutishilate">下面<span id="chengyunum">4</span>个字有<span id="chengyunum2">1</span>个为成语的字</span> </div>
+                                                      <div id="cyts_k" class="ui-bar ui-bar-a"> <h3>答案提示 </h3>  <span id="chengyutishilate" style="font-size:12px;color:#666">下面<span id="chengyunum">4</span>个字有<span id="chengyunum2">1</span>个为成语的字</span> </div>
                                                       <div class="ui-body ui-body-a"  id="panelbody">                                                            
 															<?php 
 															     if($tips_word != null)
@@ -211,7 +285,7 @@ color: #ccc;
                                     				<?php  if(!$Is_Out) { ?>                                                    	
                                                     	<p>2、答对可获得 <span style="font-size:20px;color:red">￥ <?php echo $price/100;?> </span>元现金奖励</p>                                                 	
                                                   		<p>3、奖励剩余时间 <span id="suoshengshijian" style="font-size:16px;color:red"><?php echo $expire_time; ?></span></p>
-                                                  		<p>4、所有奖金可去个人中心100%提现</p>
+                                                  		<p>4、所有奖金可去<a data-role="none" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd">个人中心</a>100%提现</p>
                                                   <?php } ?>
                                                     </div>
                                           </div>												
@@ -233,16 +307,30 @@ color: #ccc;
                                        	<!--  谁玩过  -->
     									<?php  if(count($piclist) > 0) {   //有数据才显示 ?>
     									 		<div class="ui-corner-all custom-corners"  style="margin:15px auto">
-    									 			 <div class="ui-bar ui-bar-a" id="szw_k"> <h3>谁在玩</h3> </div>
+    									 			 <div class="ui-bar ui-bar-a" id="szw_k"> <h3>谁在玩 <span style="font-size:12px;color:#666666">有<img width="17" src="<?php echo  $_SESSION["STATIC_ROOT"]."/Img/hgg.png"; ?>" />为猜对了</span><span style="font-size:12px;color:#666">，有<span id='dddssa'></span>为买过提示</span></h3> </div>
                                                           <div id="pann_k" class="ui-body ui-body-a">
                                                           		<?php for($k = 0;$k<count($piclist);$k++) { ?>
-                                                            			<span><img width="30" src="<?php echo $piclist[$k]["wx_litpic"] ?>" />
+                                                            			<span><img width="30" height="30" src="<?php echo $piclist[$k]["wx_litpic"] ?>" />
                                                             			             <?php if($piclist[$k]["flag"]) { ?>
-                                                            			                         <a class="fuck_y"> <img width="30" src="<?php echo  $_SESSION["STATIC_ROOT"]."/Img/hg.png"; ?>"  /> </a>
+                                                            			                         <a class="fuck_y"> <img width="30"  src="<?php echo  $_SESSION["STATIC_ROOT"]."/Img/hg.png"; ?>"  /> </a>
                                                         			                 <?php } ?>
+																					 <div id='ddd_kk'>
+																					 <?php 
+																					 $nn=$piclist[$k]["daojuflag"];
+																					 
+																					 for($i=0;$i<$nn;$i++)
+																					 {
+																					 	echo "<span class='dian'></span>";
+																						if($i>=4)
+																						{
+																						break;
+																						}
+																					 
+																					 } ?>
+																					 </div>
                                                             			</span>
     															<?php } ?>
-																<h5 style='color:#747485'>等<?php echo count($piclist); ?>人正在玩</h5>
+																<h5 style='color:#747485'>共<?php echo count($piclist); ?>人正在玩</h5>
                                                           </div>
                                                 </div>
     									<?php } ?>
@@ -257,7 +345,7 @@ color: #ccc;
 																 <table width="100%" cellpadding="5" id="pop_table" style="margin:10px auto;color:#747485" >
                                                             	<?php for($j = 0;$j<count($answerList);$j++) { ?>
 																	 <tr>
-																		  <td align="right" width="15" ><img width="30" style="border-radius:25px;" src="<?php echo $answerList[$j]["wx_litpic"]; ?>" /></td>
+																		  <td align="right" width="15" ><img width="30" height="30" style="border-radius:25px;" src="<?php echo $answerList[$j]["wx_litpic"]; ?>" /></td>
 																			 <td align="left" width="35%"><?php echo Lee::Sub_截取字符串如果超出某位就省略号($answerList[$j]["wx_name"], 15); ?></td>
                                                                             <td align="center" width="50%"><?php echo $answerList[$j]["content"]; ?></td>
                                                                      </tr>
@@ -311,9 +399,9 @@ color: #ccc;
                                                         		<table>
                                                         				<tr>
                                                         					<td width='30%'>奖金金额:</td>
-                                                        					<td><input data-role="none" class='wbkk' name="HongBaoJinE" disabled = "disabled" id="HongBaoJinE"  placeholder="请输入红包金额" value="1"  type="text">
-                                                        						 <p><span class='jsj crrtt' val='1'>1元</span> 	
-                                                        							<span class='jsj' val='3'>3元</span>
+                                                        					<td><input data-role="none" class='wbkk' name="HongBaoJinE" disabled = "disabled" id="HongBaoJinE"  placeholder="请输入红包金额" value="3"  type="text">
+                                                        						 <p><span class='jsj' val='1'>1元</span> 	
+                                                        							<span class='jsj crrtt' val='3'>3元</span>
                                                         						 	<span class='jsj' val='5'>5元</span> 	
                                                         							<span class='jsj' val='10'>10元</span>
                                                         						</p> 
@@ -321,19 +409,19 @@ color: #ccc;
                                                         				</tr>
                                                         			    <tr>
                                                         					<td>奖金份数:</td><td>
-                                                        			    	<input onKeyUp="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" data-role="none" class='wbkk' name="HongBaoCount" id="HongBaoCount" placeholder="请输入红包个数" value="1"  type="text">
+                                                        			    	<input maxlength="2" onKeyUp="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" data-role="none" class='wbkk' name="HongBaoCount" id="HongBaoCount" placeholder="请输入红包个数" value="1"  type="text">
                                                         					</td>
                                                         				</tr>
                                                         			     <tr>
                                                         					<td>购买售价:</td><td>
-                                                        			    	<input data-role="none" class='wbkk' name="DaoJuJinE" id="DaoJuJinE"  disabled = "disabled"  placeholder="请输入道具金额" value="<?php echo $prop;?>" type="text" readonly>
+                                                        			    	<input data-role="none" class='wbkk' name="DaoJuJinE" id="DaoJuJinE"  disabled = "disabled"  placeholder="请输入道具金额" value="<?php echo $prop*3;?>" type="text" readonly>
                                                         					</td>
                                                         				</tr>
                                                         			</table>
                                                         			<p class='ziti'>(提示售价为单份奖金的30%，收入你可百分百提现)</p>
                                                     </div>					          
                                                 <p style="margin:0px auto;text-align:center;">
-                        					        <a href="#" id="Cy-tp-DialogYes2" data-role="none" >充值奖金<span style='color:#FEFF00'><font id='jinddd'>1</font>元</span></a> 
+                        					        <a href="#" id="Cy-tp-DialogYes2" data-role="none" >充值奖金<span style='color:#FEFF00'><font id='jinddd'>3</font>元</span></a> 
                         					
                                                 </p>
                         				    </div>
@@ -341,7 +429,7 @@ color: #ccc;
                         			
                 	    </div><!-- /content -->
             	</div><!-- /page -->
-				<div id="zhezhaocheng" style="background-color:#000000;display:none"><img src="<?php echo $_SESSION["STATIC_ROOT"]?>/Img/83358PICrqB_1024.jpg" /></div>	
+				<div id="zhezhaocheng" style="background-color:#191919;display:none;position:absolute;left:0;top:0"><img width="100%" src="<?php echo $_SESSION["STATIC_ROOT"]?>/Img/83358PICrqB_1024.jpg" /></div>	
 	 	</body>
 </html>
 
@@ -360,8 +448,9 @@ color: #ccc;
 
 <script>
 
+var IsReal = "<?php echo $IsReal; ?>"; 
 var time = <?php echo $Time; ?>;
-if(time < 0)
+if(time < 0 && IsReal != "1")
 {
 	//冷却时间
 	var abstime = Math.abs(time);

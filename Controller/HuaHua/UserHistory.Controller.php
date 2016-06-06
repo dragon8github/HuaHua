@@ -42,7 +42,7 @@ class UserHistoryCtrl
         //选择表
         $this->Sql->table = 'question';
         //条件语句
-        $mysql = sprintf("SELECT a.id,question_pic,b.answer,a.release_time FROM question AS a JOIN question_library AS b ON a.answer = b.id WHERE a.uid =  '%s'",$this->Openid) ;
+        $mysql = sprintf("SELECT a.id,question_pic,b.answer,a.release_time FROM question AS a JOIN question_library AS b ON a.answer = b.id WHERE a.uid =  '%s' ORDER BY release_time DESC",$this->Openid) ;
          
         //发送语句
         return $this->Sql->query($mysql);

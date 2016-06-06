@@ -24,6 +24,21 @@ class UserCtrl
         $this->Sql =  Mysql::start($dsn);
     }
     
+    //根据传入的id，找到用户的余额，然后根据
+    public function get_根据用户id获取余额($uid)
+    {
+        //选择表
+        $this->Sql->table = 'user';
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf("openid = '%s' ",$uid);
+        //发送语句
+        $arr =  $this->Sql->field("balance")->where($where)->find();
+        //返回余额
+        return $arr["balance"];
+    }
+    
     public function Openid是否存在用户表中()
     {
         //用户表
@@ -62,14 +77,36 @@ class UserCtrl
     {
         //选择表
         $this->Sql->table = 'question';
-        //条件语句
-        $mysql = sprintf("SELECT sum(price_count) as money FROM `question` where UNIX_TIMESTAMP() > expire_time AND uid = '%s' AND flag = '0' ",$this->Openid);
+        //sql语句
+        $mysql = sprintf("
+                                SELECT 
+                                              ###A.uid,A.price_count
+                                              sum(price_count) as money
+                                FROM
+                                              `question` AS A
+                                JOIN
+                                               statements AS B
+                                ON 
+                                                A.id = B.question_id
+                                where 
+                                                UNIX_TIMESTAMP() > expire_time
+                                AND 
+                                                B.type = '1' ########首先必须是“画主充值”类型
+                                AND
+                                                B.flag = '1' ######## 必须是充值成功
+                                AND 
+                                                A.flag = '0' ######## 必须是还没过期的
+                                AND
+                                                A.uid = '%s'
+            ",$this->Openid);
+        
+        
         //发送语句
         $arr =  $this->Sql->query($mysql);
         //获取过期金额
         $money = $arr[0]["money"];
         
-        IF($money > 100)
+        IF($money >= 100)
         {
              //重置
              $this->Sql->reset();
@@ -79,6 +116,29 @@ class UserCtrl
              $where = sprintf(" uid = '%s' ",$this->Openid);
              //发送语句
              $this->Sql->where($where)->save($data);
+             
+             
+
+             //获取用户余额
+             $statements_balance =   $this-> get_根据用户id获取余额($this->Openid);
+             
+             
+             //添加流水
+             $this->Sql->table = 'statements';
+              //重置
+             $this->Sql->reset();
+             //数据结构
+             $data2["type"] = '6';
+             $data2["uid"] = $this->Openid;
+             $data2["flag"] = '1';
+             $data2["id"] = uniqid();
+             $data2["happen_time"] = time();
+             $data2["price"] = $money;
+             $data2["balance"] = $statements_balance + $money;
+             //添加语句
+             $this->Sql->add($data2);
+              
+             
 
              //添加用户余额
              $this->Sql->table = 'user';
@@ -89,7 +149,7 @@ class UserCtrl
              //发送语句
              $this->Sql->where($where)->sum('balance',$money);
 
-             Lee::alert("你的题目过期了，这是你的退返金：".$money / 100);
+             Lee::alert("你的题目过期了，这是你的退返金：￥".$money / 100);
         }
         
 //         //以前的代码
@@ -216,6 +276,7 @@ class UserCtrl
         $data2["happen_time"] = time();
         $data2["uid"] = $this->Openid;
         $data2["flag"] = "1";
+        $data2["balance"] = "0";
         //发送语句
         $this->Sql->add($data2);
     }
@@ -292,7 +353,22 @@ class UserCtrl
         //选择表
         $this->Sql->table = 'statements';
         //查询语句
-        $mysql = sprintf("select *,if(bid <> '',3,type) AS realtype  from statements where uid = '%s' OR bid = '%s' AND flag = '1'",$this->Openid,$this->Openid);
+        $mysql = sprintf("
+                                    SELECT A. * , B.wx_name, B.wx_litpic, IF( bid =  '%s', 3, 
+                                    TYPE ) AS realtype
+                                    FROM statements AS A
+                                    JOIN user AS B ON uid = openid
+                                    WHERE 
+                                    A.type IN ( 2, 3, 4, 5, 6 ) 
+                                    AND uid =  '%s' 
+                                    AND A.flag =  '1'
+                                    OR 
+                                    bid = '%s' 
+                                    AND A.flag =  '1'
+                                    ORDER BY happen_time DESC 
+                                 ",$this->Openid,$this->Openid,$this->Openid);
+        
+        
         //发送语句
         return $this->Sql->query($mysql); 
     }

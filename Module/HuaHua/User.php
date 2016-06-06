@@ -1,6 +1,7 @@
 <?php 
 SESSION_START(); 
 
+
 //引用区 开始================================================
 include $_SESSION["APP_ROOT"].'/Lib/Class/Lee.class.php';                                //加载辅助类库
 include $_SESSION["APP_ROOT"].'/Lib/wang/wx_class.php';                                 //加载微信类
@@ -18,13 +19,12 @@ $nickname = $_SESSION["nickname"];              //昵称
 $headimgurl = $_SESSION["headimgurl"];        //头像
 $balance = 0;                                                   //余额
 
-         //openid
- 
 
 
 //业务逻辑 开始=================================================
 $arr_ls = $_UserCtrl->get_获取流水列表();
  
+
 
 //判断openid是否存在用户表，没有的话先插入
 if(!$_UserCtrl->Openid是否存在用户表中())
@@ -39,7 +39,6 @@ else
     $arr =  $_UserCtrl->get_获取用户资料();
     $balance = $arr["balance"];  //余额    
 }
-
 
 
 
@@ -87,13 +86,13 @@ CssLoader::LoadCss("Copy", "User.css");
                    <?php 
                      for($i = 0;$i<count($arr_ls);$i++)
                      {
-                         $img = $_UserCtrl->get_根据不同的type获取不同的图片($arr_ls[$i]["realtype"]);
+                         $img = $arr_ls[$i]["wx_litpic"];
                          $des_date = date('Y-m-d',$arr_ls[$i]["happen_time"]);
                          $zhengfu = $_UserCtrl->get_根据不同的type获取正负($arr_ls[$i]["realtype"]);
                          $jine = $arr_ls[$i]["price"];
                  ?>
                        	   <a class="item" href="javascript:;">
-                        		<div class="ff icon"></div>
+                        		<div class="ff icon"><img src="<?php echo $img; ?>" width="100%" height="45px" /></div>
                     			<span class="des_tit"><?php echo $des_date; ?></span>
                                 <span class="tit"><?php echo $zhengfu; ?> ￥ <?php echo $jine / 100; ?></span>
                             </a>

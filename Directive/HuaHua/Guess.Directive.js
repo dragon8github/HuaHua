@@ -10,11 +10,9 @@ GuessDir.ReadMe = function()
 
 //重新添加红包，重新添加红包，重新添加红包
 GuessDir.UpdateWxResult2 = function(res,myData)
-{
-	//alert("得到微信返回的对象是：" + res.err_msg); //获取微信返回结果
-	
+{	
 	if(res.err_msg.indexOf("ok") >= 0)
-	{
+	{				
 		//先关闭原来的弹窗
 		$("#cy-tp-dialog2").popup('close');  
 		$.ajax
@@ -59,6 +57,8 @@ GuessDir.UpdateWxResult = function(res,myData)
 			data: { type:"GouMaiDaoJu", order:myData.order,money:myData.money,uid:myData.uid,tips_index:myData.tips_index,tips:myData.tips },
 			success:function(Resultdata) 
 			{
+				
+				
 				//如果用户购买了道具，应该立即清空倒计时
 				for(var i = 0;i<GuessDir.SetTimeOutObj.length;i++) { clearTimeout(GuessDir.SetTimeOutObj[i]); }
 				//修改倒计时样式
@@ -85,8 +85,6 @@ GuessDir.UpdateWxResult = function(res,myData)
 						var textlength = $("#panelbody").text().replace(/\s/g, "").length;
 						$("#chengyunum").text(textlength);
 						$("#chengyunum2").text(textlength/4);
-
-						
 					}
 				}
 				//失败
@@ -117,13 +115,15 @@ GuessDir.DialogYes2 = function()
 	myData.HongBaoCount = $("#HongBaoCount").val();		//红包个数
 	
 	//数据验证
-	if(myData.HongBaoJinE.length == 0)
+	if(myData.HongBaoJinE.length == 0 ||  /^[1-9]+/.test(myData.HongBaoJinE) == false)
 	{
+		layer.open({ title: '信息', content: '金额必须为正整数',btn:["好的"],yes:function(){layer.closeAll();}  });
 		//layer.tips("请输入整数型的数据",$("#HongBaoJinE"), { tips: [2, '#000'], time: 4000 }) 
 		return false;
-	}
-	else if(myData.HongBaoCount.length == 0)
+	} 
+	else if(myData.HongBaoCount.length == 0 || /^[1-9]+/.test(myData.HongBaoCount) == false  )
 	{
+		layer.open({ title: '信息', content: '红包数量必须为正整数',btn:["好的"],yes:function(){layer.closeAll();} });
 		//layer.tips("请输入整数型的数据",$("#HongBaoCount"), { tips: [2, '#000'], time: 4000 })
 		return false;
 	}
@@ -202,21 +202,22 @@ function Send()
 				var json = JSON.parse(mydata);
 				var price = json["Result"].price;
 				var info = "";
-				if(price != 0) { info = "获得 ￥" + (price/100) + "元红包，请前往<a href='http://huahua.ncywjd.com/Home.php?p=user'>用户中心</a>查看"; }
-				$("#submit").addClass("ui-state-disabled").unbind("tap",Send);	
+				//if(price != 0) { info = "获得 ￥" + (price/100) + "元红包，请前往<a href='http://huahua.ncywjd.com/Home.php?p=user'>用户中心</a>查看"; }
+				if(price != 0) { info = "获得 ￥" + (price/100) + "元红包，请前往<a href='http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd'>用户中心</a>查看"; }
+				$("#submit").addClass("ui-state-disabled").unbind("tap",Send);	 
 				if(json.Status == "成功")
 				{
 					if(json.Result.flag == 0)
 					{
 						//...回答错误
-						layer.open ({  title:"信息", content:"回答错误 </br> 你可以购买并使用道具帮助你解决问题",yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); }  });
+						layer.open ({  title:"信息", content:"回答错误 </br> 你可以购买并使用道具帮助你解决问题",btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); }  });
 					}
 					else
 					{
 						//...回答正确
-						layer.open ({ title:"信息", content:"回答正确 </br>" + info,yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); } });
+						layer.open ({ title:"信息", content:"回答正确 </br>" + info,btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); } });
 					}
-				}
+				} 
 			}
 		})
 	}
@@ -238,7 +239,7 @@ $(function()
 		var val=$("#radio-choice-0a").attr("data-tipstype");
 		$.ajax
 		({
-				data: { type:"weixinzhifu"},
+				data: { type:"weixinzhifu"},			
 				success:function(jsonstrdata)
 				{  
 					var obj = JSON.parse(jsonstrdata);
@@ -255,6 +256,7 @@ $(function()
 					myData.uid = uid;
 					myData.tips = tips;
 					myData.tips_index = tips_index;  
+					
 					    
 					callpay(wxjson,myData,GuessDir.UpdateWxResult); 
 				}
@@ -289,7 +291,13 @@ $(function()
 	
 	$("#HongBaoCount").blur(function()
 									  {
+										 
 										  var val=$("#HongBaoJinE").val();
+										  var cot=$("#HongBaoCount").val();
+										  if(cot>100)
+										  {
+											  $("#HongBaoCount").val(100);
+											  }
 										   $("#jinddd").text(val*$("#HongBaoCount").val());
 										  })
 })

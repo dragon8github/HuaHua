@@ -161,7 +161,7 @@ var canvas = document.getElementById("canvas");
 
 //full screen
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight -80;
+canvas.height = (window.innerHeight -80)*0.8;
 
 var touchable = 'createTouch' in document;
 if (touchable) {
@@ -244,6 +244,7 @@ $(function()
 	
 		$("#KaiShiZhizuo").tap(function()
 		{
+			if(confirm('是否确认生成作品，确认后无法修改')){
 			var c=document.getElementById("canvas");
 			var pic=convertCanvasToImage(c);
 			
@@ -301,6 +302,7 @@ $(function()
 						}
 					}
 				})
+				}
 		})
 		  $(".xiangpicha").click(function() 
 		  {
