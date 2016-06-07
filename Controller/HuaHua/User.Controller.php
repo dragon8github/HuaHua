@@ -75,72 +75,93 @@ class UserCtrl
     
     public function Is_如果用户存在过期的信息就归还金钱()
     {
+        if($this->Openid != "oYNn6wg0qYDkqNVomc78AUctYfRM")
+        {
+            return false;      
+        }
+        
         //选择表
         $this->Sql->table = 'question';
         //sql语句
         $mysql = sprintf("
-                                SELECT 
-                                              ###A.uid,A.price_count
-                                              sum(price_count) as money
-                                FROM
-                                              `question` AS A
-                                JOIN
-                                               statements AS B
-                                ON 
-                                                A.id = B.question_id
-                                where 
-                                                UNIX_TIMESTAMP() > expire_time
-                                AND 
-                                                B.type = '1' ########首先必须是“画主充值”类型
-                                AND
-                                                B.flag = '1' ######## 必须是充值成功
-                                AND 
-                                                A.flag = '0' ######## 必须是还没过期的
-                                AND
-                                                A.uid = '%s'
-            ",$this->Openid);
-        
-        
+                                            SELECT 
+                                            A.uid,B.type,A.shengyu_count,A.price,A.price_count,A.id
+                                            ###sum(A.shengyu_count * A.price) as money
+                                            FROM
+                                            `question` AS A
+                                            JOIN
+                                            statements AS B
+                                            ON 
+                                            A.id = B.question_id
+                                            where 
+                                            UNIX_TIMESTAMP() > expire_time    #####必须是过期题目
+                                            AND 
+                                            B.type = '1'					 ########首先必须是“画主充值”类型
+                                            AND
+                                            B.flag = '1'					 ######## 必须是充值成功
+                                            AND 
+                                            A.flag = '0' 					  ### 必须还没有过期
+                                            AND
+                                            A.uid = '%s'
+        ",$this->Openid);
         //发送语句
-        $arr =  $this->Sql->query($mysql);
-        //获取过期金额
-        $money = $arr[0]["money"];
-        
+        $arr =  $this->Sql->query($mysql);    
+        //拼接insery语句
+         $Insertsql = 'INSERT INTO statements (`type`,flag,id,uid,happen_time,price,balance,question_id) values ';        
+         //总金额
+         $money = 0;       
+         //获取用户余额
+         $statements_balance =   $this-> get_根据用户id获取余额($this->Openid);                 
+         //循环结果集
+         for ($i=0;$i<count($arr);$i++)
+         {           
+                //题目id
+                $question_id = $arr[$i]["id"];
+               //单价
+               $price = $arr[$i]["price"];
+               //剩余红包数量
+               $shengyu_count = $arr[$i]["shengyu_count"];
+               //累加总金额
+               $money = $money  + $price * $shengyu_count; 
+               //余额流水
+               $statements_balance = $statements_balance +  $price * $shengyu_count; 
+               //拼接结果集
+               $Insertsql .= sprintf("( '6', '1' ,'%s' ,'%s' ,'%s' ,'%s','%s',%s),",uniqid().rand(0,10000),$this->Openid,time(), $price * $shengyu_count, $statements_balance,$question_id);
+         }        
+       //去除最后一个逗号
+       $Insertsql = substr($Insertsql, 0,-1);    
+       //判断
         IF($money >= 100)
         {
+            //添加流水statements
+            $this->Sql->table = 'statements';
+            //重置
+            $this->Sql->reset();
+            //发送语句
+            $this->Sql->send($Insertsql);
+            
+            
+             //选择表question
+             $this->Sql->table = 'question';
              //重置
              $this->Sql->reset();
              //数据结构
-             $data["flag"] = "1";
+             $data["flag"] = "2";
+             $data["price"] = '0';
+             $data["prop"] = '0';
+             $data["price_count"] = '0';
+             $data["hongbao_count"] = '0';
+             $data["shengyu_count"] = '0';
              //条件语句
-             $where = sprintf(" uid = '%s' ",$this->Openid);
+             $where = sprintf(" uid = '%s' AND  UNIX_TIMESTAMP() > expire_time AND flag != '2' ",$this->Openid);
              //发送语句
              $this->Sql->where($where)->save($data);
+                         
+ 
              
              
 
-             //获取用户余额
-             $statements_balance =   $this-> get_根据用户id获取余额($this->Openid);
-             
-             
-             //添加流水
-             $this->Sql->table = 'statements';
-              //重置
-             $this->Sql->reset();
-             //数据结构
-             $data2["type"] = '6';
-             $data2["uid"] = $this->Openid;
-             $data2["flag"] = '1';
-             $data2["id"] = uniqid();
-             $data2["happen_time"] = time();
-             $data2["price"] = $money;
-             $data2["balance"] = $statements_balance + $money;
-             //添加语句
-             $this->Sql->add($data2);
-              
-             
-
-             //添加用户余额
+             //添加用户余额user
              $this->Sql->table = 'user';
              //重置
              $this->Sql->reset();
@@ -149,49 +170,10 @@ class UserCtrl
              //发送语句
              $this->Sql->where($where)->sum('balance',$money);
 
+             
+             //提示一下
              Lee::alert("你的题目过期了，这是你的退返金：￥".$money / 100);
         }
-        
-//         //以前的代码
-//         IF($money > 100)
-//         {
-//              $XML = $this->wx_转账接口($money);
-             
-//              //解析XML
-//              $XMLOBJ = simplexml_load_string($XML, 'SimpleXMLElement', LIBXML_NOCDATA);
-              
-//              IF($XMLOBJ->result_code == "SUCCESS")
-//              {
-//                  //重置
-//                  $this->Sql->reset();
-//                  //数据结构
-//                  $data["flag"] = "1";
-//                  //条件语句
-//                  $where = sprintf(" uid = '%s' ",$this->Openid);
-//                  //发送语句
-//                  $this->Sql->where($where)->save($data);
-                 
-//                  //添加用户余额
-//                  //选择表
-//                  $this->Sql->table = 'user';
-//                  //重置
-//                  $this->Sql->reset();
-//                  //条件语句
-//                  $where =sprintf(" openid = '%s' ",$this->Openid) ;
-//                  //发送语句
-//                  $this->Sql->where($where)->sum('balance',$money);
-                 
-//                  Lee::alert("你的题目过期了，这是你的退返金：".$money);
-//              }
-//              else IF($XMLOBJ->result_code == "FAIL")
-//              {
-//                  //获取微信错误信息
-//                  $msg = $XMLOBJ->err_code_des;
-//                  //发送失败消息
-//                 //Lee::alert("领取退返金失败，失败原因：".$msg);
-//              }
-//         }
-        
     }
     
     

@@ -292,6 +292,7 @@ display:inline-block;
                                           <?php  if(!$Is_Out) {  //该题目没过期/红包没发完的情况下才显示‘温馨提示' ?>        
     										         <div style='margin:0 auto'> <a name="radio-choice" data-role="none"  data-daoju = '1'     id="radio-choice-0a"    >购买提示<span style='color:#ffff00'><?php  echo ($daoju / 100)."元"; ?></span></a></div>
     										         <p class='ziti' style='text-align: center;color:#747485'>(买后可立即再猜一次，并显示4个字含1个成语字)</p>
+													 <p class='ziti' style='text-align: center;color:#ff0000'>推荐购买，有提示猜对机率提升200%</p>
                                           <?php } ?>          
                                          
                                                         

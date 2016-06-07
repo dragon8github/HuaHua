@@ -226,7 +226,7 @@ function Send()
 function reputHongBao()
 {
 	$("#cy-tp-dialog2").popup("open");			
-	$("#Cy-tp-DialogYes2").bind("tap",GuessDir.DialogYes2);		//Dialog确定按钮
+	$("#Cy-tp-DialogYes2").bind("click",GuessDir.DialogYes2);		//Dialog确定按钮
 }
 
 //页面逻辑============================================

@@ -72,7 +72,7 @@ if(count($arr))
 														<div class="fl_left"><div id="k_h1" >清屏</div></div>
 														<div class="fl_left"><div id="k_h2"  val='8'>橡皮</div></div>
 														<div class="fl_left"><div id="k_h3" val="2" >细</div></div>
-														<div class="fl_left"><div id="k_h4" val="4" class="cjjssll" >中</div></div>
+														<div class="fl_left"><div id="k_h4" val="4" class="cjjssll current" >中</div></div>
 														<div class="fl_left"><div id="k_h5" val="6" >粗</div></div>
 															<div style="clear:both"></div>
 													</div>
@@ -279,9 +279,7 @@ padding:10px 0;}
 <script type="text/javascript">
 	$(document).ready(function()
 	{
-			var n=1;
-			$(".kedian").click(function()
-			{ if(n) { $("#gongju").slideDown(); n=0; } else { $("#gongju").slideUp(); n=1; } return false; })
+		
 			
 			//点击其他按钮需要修改N
 			//橡皮擦
@@ -292,7 +290,7 @@ padding:10px 0;}
 		  	//$("#k_h4").addClass("cjjssll");
 		$(this).addClass("cjjssll");
 				 // alert('huabu'); //line_color = "#ffffff";
-		 		 line_color = "#F9F9F9";  $(".current").removeClass("current"); $(this).addClass("current");  n=1; 
+		 		 line_color = "#ffffff";  $(".current").removeClass("current"); $(this).addClass("current");  
 		  })
 		  
 		    //清楚画布
@@ -311,7 +309,7 @@ padding:10px 0;}
 
 		
 		//ctx.clearRect(0, 0, $("#canvas")[0].width, $("#canvas")[0].height); 
-		n=1; 
+	
 		 })
 		//最小线
 		$("#k_h3").click(function()
@@ -319,33 +317,36 @@ padding:10px 0;}
 			if(!$(".cjjssll22").length)
 			{
 			$("#k_c2").addClass("cjjssll22");
+			line_color = "#cc0000";
 			}
 			$(".cjjssll").removeClass("cjjssll");
 		$(this).addClass("cjjssll");
 			// line_color = "#ff0000";
-			 $(".current").removeClass("current"); $(this).addClass("current"); n=1;
+			 $(".current").removeClass("current"); $(this).addClass("current");
 		})
 			$("#k_h4").click(function()
 		{
 		if(!$(".cjjssll22").length)
 			{
 			$("#k_c2").addClass("cjjssll22");
+			line_color = "#cc0000";
 			}
 			$(".cjjssll").removeClass("cjjssll");
 		$(this).addClass("cjjssll");
 			// line_color = "#ff0000";
-			 $(".current").removeClass("current"); $(this).addClass("current"); n=1;
+			 $(".current").removeClass("current"); $(this).addClass("current"); 
 		})
 			$("#k_h5").click(function()
 		{
 		if(!$(".cjjssll22").length)
 			{
 			$("#k_c2").addClass("cjjssll22");
+			line_color = "#cc0000";
 			}
 			$(".cjjssll").removeClass("cjjssll");
 		$(this).addClass("cjjssll");
 			// line_color = "#ff0000";
-			 $(".current").removeClass("current"); $(this).addClass("current"); n=1; 
+			 $(".current").removeClass("current"); $(this).addClass("current"); 
 		})
 		$("#k_c1").click(function()
 		{
@@ -355,11 +356,11 @@ padding:10px 0;}
 				$(".cjjssll").removeClass("cjjssll");
 				$("#k_h4").addClass("cjjssll");
 				 $(".current").removeClass("current");
-				$("k_h3").addClass("current");
+				$("#k_h4").addClass("current");
 			}
 			$(".cjjssll22").removeClass("cjjssll22");
 			$(this).addClass("cjjssll22");
-			 line_color = "#000000"; n=1; 
+			 line_color = "#000000"; 
 		})
 		$("#k_c2").click(function()
 		{
@@ -369,11 +370,11 @@ padding:10px 0;}
 				$(".cjjssll").removeClass("cjjssll");
 				$("#k_h4").addClass("cjjssll");
 				 $(".current").removeClass("current");
-				$("k_h3").addClass("current");
+				$("#k_h4").addClass("current");
 			}
 		$(".cjjssll22").removeClass("cjjssll22");
 			$(this).addClass("cjjssll22");
-			 line_color = "#cc0000"; n=1; 
+			 line_color = "#cc0000";
 		})
 		$("#k_c3").click(function()
 		{
@@ -383,11 +384,11 @@ padding:10px 0;}
 				$(".cjjssll").removeClass("cjjssll");
 				$("#k_h4").addClass("cjjssll");
 				 $(".current").removeClass("current");
-				$("k_h3").addClass("current");
+				$("#k_h4").addClass("current");
 			}
 		$(".cjjssll22").removeClass("cjjssll22");
 			$(this).addClass("cjjssll22");
-			 line_color = "#ffcc00"; n=1;
+			 line_color = "#ffcc00"; 
 		})
 		$("#k_c4").click(function()
 		{
@@ -397,11 +398,11 @@ padding:10px 0;}
 				$(".cjjssll").removeClass("cjjssll");
 				$("#k_h4").addClass("cjjssll");
 				 $(".current").removeClass("current");
-				$("k_h3").addClass("current");
+				$("#k_h4").addClass("current");
 			}
 		$(".cjjssll22").removeClass("cjjssll22");
 			$(this).addClass("cjjssll22");
-			 line_color = "#0099ff"; n=1; 
+			 line_color = "#0099ff"; 
 		})
 		$("#k_c5").click(function()
 		{
@@ -411,11 +412,11 @@ padding:10px 0;}
 				$(".cjjssll").removeClass("cjjssll");
 				$("#k_h4").addClass("cjjssll");
 				 $(".current").removeClass("current");
-				$("k_h3").addClass("current");
+				$("#k_h4").addClass("current");
 			}
 		$(".cjjssll22").removeClass("cjjssll22");
 			$(this).addClass("cjjssll22");
-			 line_color = "#33cc66"; n=1; 
+			 line_color = "#33cc66"; 
 		})
 	
 	})

@@ -142,7 +142,7 @@ function ReadMe()
 {
 	console.log("不建议这样使用，但特殊情况譬如为了开发速度也无需顾虑");
 }
-var line_color="#ff0000";
+var line_color="#cc0000";
 // 从 canvas 提取图片 image  
 function convertCanvasToImage(canvas) {  
     //新Image对象，可以理解为DOM  
@@ -161,7 +161,7 @@ var canvas = document.getElementById("canvas");
 
 //full screen
 canvas.width = window.innerWidth;
-canvas.height = (window.innerHeight -80)*0.8;
+canvas.height = window.innerHeight -80-130;
 
 var touchable = 'createTouch' in document;
 if (touchable) {
@@ -176,7 +176,7 @@ else {
 var lastX;
 var lastY;
 var ctx = canvas.getContext("2d");
-ctx.fillStyle="#F9F9F9";
+ctx.fillStyle="#ffffff";
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
 ctx.lineWidth = 2; //画笔粗细
@@ -195,7 +195,7 @@ function onTouchMove(event) {
         event.preventDefault();
         ctx.strokeStyle = line_color; //画笔颜色</p> <p>//触摸开始事件
         ctx.lineWidth = $(".current").attr("val"); //画笔粗细
-        drawLine(lastX, lastY, event.touches[0].clientX, event.touches[0].clientY);
+        drawLine(lastX, lastY-130, event.touches[0].clientX, event.touches[0].clientY-130);
         lastX = event.touches[0].clientX;
         lastY = event.touches[0].clientY;
     }

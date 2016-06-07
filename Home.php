@@ -7,6 +7,8 @@ $_SESSION["STATIC_ROOT"] = "http://".dirname($_SERVER["HTTP_HOST"].$_SERVER['PHP
 //测试人员的调试模式
 if(@$_GET["model"] == "test")
 { 
+   
+    
     $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
     $_SESSION["nickname"] = "李钊鸿";      //昵称
     $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像

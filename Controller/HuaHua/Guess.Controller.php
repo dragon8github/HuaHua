@@ -350,6 +350,7 @@ class GuessCtrl
        }
      return false;
    }
+   
   
    public function 红包是否无剩余或者过期()
    {
@@ -360,10 +361,68 @@ class GuessCtrl
        //条件语句
        $where = sprintf(" id = '%s' ",$_GET['q']);
        //发送语句
-       $arr =  $this->Sql->where($where)->field('price,shengyu_count,expire_time')->find();
-       $price = $arr['price'];
+       $arr =  $this->Sql->where($where)->field('price,shengyu_count,expire_time,price_count,uid,flag')->find();
+       $price = $arr["price"];
+       $price_count = $arr['price_count'];
        $shengyu_count =$arr["shengyu_count"];
        $expire_time = $arr['expire_time'];
+       $uid = $arr["uid"];  //画主ID
+       $flag = $arr["flag"];  
+       
+       if($price != 0 && time() > $expire_time && $flag != "2")
+       {
+           //六个参数，红包剩余数量，红包总数，金额总数，单价，道具金额，flag = '2'
+           //更新状态为2，退还金额(增加用户余额) ，添加流水
+           $this->Sql->reset();
+           //数据结构
+           $data["flag"] = '2';
+           $data["price"] = '0';
+           $data["prop"] = '0';
+           $data["price_count"] = '0';
+           $data["hongbao_count"] = '0';
+           $data["shengyu_count"] = '0';
+           //条件语句
+           $where = sprintf(" id = '%s' ",$_GET['q']);
+           //发送语句
+           $this->Sql->where($where)->save($data);
+           
+           
+
+           //获取用户余额
+           $statements_balance =   $this-> get_根据用户id获取余额($uid);
+            
+           //添加流水
+           $this->Sql->table = 'statements';
+           //重置
+           $this->Sql->reset();
+           //数据结构
+           $data2["question_id"] = $_GET['q']; 
+           $data2["type"] = '6';
+           $data2["uid"] = $uid;
+           $data2["flag"] = '1';
+           $data2["id"] = uniqid();
+           $data2["happen_time"] = time();
+           $data2["price"] = $price * $shengyu_count;
+           $data2["balance"] = $statements_balance + $price * $shengyu_count;
+           //添加语句
+           $this->Sql->add($data2);
+            
+           
+           
+           
+           //选择表
+           $this->Sql->table = 'user';
+           //重置
+           $this->Sql->reset();
+           //条件语句
+           $where = sprintf("openid = '%s' ",$uid);
+           //发送语句
+           $this->Sql->where($where)->sum('balance',$price * $shengyu_count);
+           
+        
+           Lee::alert("温馨提示：本题已过期，答对不触发奖励机制");
+       }
+       
        
        IF($price == 0 || $shengyu_count <= 0 || time() > $expire_time)
        {
@@ -753,7 +812,7 @@ class GuessCtrl
         $data2["hongbao_count"] = $HongBaoCount;
         $data2["shengyu_count"] = $HongBaoCount;
         $data2["prop"] = $this->C_金额转换($HongBaoJinE) * floatval($DaoJuBiLi);  
-        $data2["expire_time"] = strtotime("+24 hours");
+        $data2["expire_time"] = strtotime("+1 hours");
         $data2["flag"] = '0';
         //条件语句
         $where = sprintf(" id = '%s' ",$_GET["q"]);
