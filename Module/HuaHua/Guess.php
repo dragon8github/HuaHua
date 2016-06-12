@@ -11,26 +11,26 @@ include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                          
 
 
 //公共变量 开始==============================================
-
 $openid = $_SESSION["openid"];                       //openid
 $nickname = $_SESSION["nickname"];              //昵称
 $headimgurl = $_SESSION["headimgurl"];        //头像
-
-
-
 $q = $_GET["q"];                                               //题目编号
 $IsDrawer= false;                                              //是否画主本人
 $Time = "0";                                                      //冷却时间
+
+
 
 //微信类 开始==============================================
 $ko=new WX_INT();
 $signPackage = $ko->GetSignPackage();   //获取分享接口 相关信
 
+
+
 //页面逻辑 开始==============================================
 $_GuessCtrl = new GuessCtrl();
 
-//显示图片信息
-$arr = $_GuessCtrl->get_根据ID获取画画信息();
+
+$arr = $_GuessCtrl->get_根据ID获取画画信息();                   //显示图片信息
 $question_pic = $arr["question_pic"];                                  //图片路径
 $price = $arr["price"];                                                         //单价
 $price_count = $arr["price_count"];                                     //总价
@@ -49,196 +49,77 @@ $model = $arr["model"];                                                  //该�
 //判断openid是否存在用户表，没有的话先插入
 if(!$_GuessCtrl->Openid是否存在用户表中())
 {
-    $_GuessCtrl->Insert_新增用户($openid,$nickname,$headimgurl);   //添加到数据库
-    
+    //添加新用户到数据库
+    $_GuessCtrl->Insert_新增用户($openid,$nickname,$headimgurl);      
 }
 else 
 {
+    //获取画主标识
     $IsDrawer = $_GuessCtrl->Is_是否是画主($q);
+    //获取是否答对的标识
     $IsReal = $_GuessCtrl->Is_是否用户已经回答正确过();
+    //获取非奖励但答对的标识
     $IsRealButNotMoney = $_GuessCtrl->Is_是否为回答正确但没有获取红包的用户();
+    //获取时间间隔
     if(!$IsDrawer)
     {
         $Time = $_GuessCtrl->get_距离下一次答题的时间();
     } 
 }
 
-
+//插入访客
 $_GuessCtrl->Add_插入访客($openid,$headimgurl,$nickname);
 
-$Is_Out =  $_GuessCtrl->红包是否无剩余或者过期();      //返回true即是过期
+//返回true即是过期
+$Is_Out =  $_GuessCtrl->红包是否无剩余或者过期();     
 
+//获取访客答案列表
 $answerList = $_GuessCtrl->get_answerList();
 
+//获取访客图像列表
 $piclist = $_GuessCtrl->get_headpic();
 
-//判断tips状态
-//$tips_row=$_GuessCtrl->get_tip_rows();
-//获取tips
-//$tips_arr=$_GuessCtrl->get_tips();
-
-
-
-
+//获取道具提示列表
 $tips_word = $_GuessCtrl->get_tips_for_word();
 
+//获取道具比例
 $prop = $_GuessCtrl->get_获取道具比例();
-
-
-
 
 ?>
 
 
-
-<?php 	include $_SESSION["APP_ROOT"].'/Inc/Header.inc.php';?>
-
+ <?php include $_SESSION["APP_ROOT"].'/Inc/Header.inc.php'; ?>
+ 
 <?php 
-       CssLoader::Jqm();      //加载jqm.css
+       CssLoader::Jqm();                                                //加载jqm.css
+       CssLoader::LoadCss("HuaHua", "Guess.css");       //加载本页样式
  ?>
 	
- <style type="text/css">
-.ui-body-a img { border-radius: 25px; -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.5); -moz-box-shadow: inset 0 1px 5px rgba(0,0,0,.5); box-shadow: inset 0 1px 1px rgba(0,0,0,.5); }
-.ui_ko span { margin:0 3px; float:left;}
-#submit{background-color:#2ED146;color:#FFF;max-width:45%;}
-#share_hy{background-color:#3aa7ff;color:#FFF;max-width:45%}
-#search{border-radius:.3125em}
-#clsm_k,#cyts_k,#szw_k,#zhuyi,#clsm_k2{border-top-left-radius:.3125em;border-top-right-radius:.3125em}
-#panelbody,#panelbody2,#pann_k,#pnnn_k,#pnnn_k2{border-bottom-left-radius:.3125em;border-bottom-right-radius:.3125em}
-#radio-choice-0a,#reputHongBao,#Cy-tp-DialogYes2{background-color:#2ED146;color:#fff;max-width:45%;border-color:#ddd;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto}
-#huahua1,#huahua2,#hhhh{background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:0 1px 0 #f3f3f3;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto;text-shadow:0 0 0 #000;}
-#panelbody2 p{color:#747485}
-#tupian_wrap{box-shadow:0px 0px 8px #ccc;-moz-box-shadow:0px 0px 8px #ccc;-webkit-box-shadow:0px 0px 8px #ccc;border-radius:6px}
-#Cy-tp-DialogYes2{text-decoration:none}
-.tipsFont{line-height:1.3rem;margin:6px 3px;border-radius:.2rem;border:solid 1px #ccc;display:inline-block;padding:1px 3px;background-color:#F6F5F7;color:#747485}
-$panelbody{white-space:normal;word-break:break-all}
-#bdbd a,#bdbd div,#bdbd h3,#bdbd h4,#bdbd h5,#bdbd input,#bdbd p{font-family:"黑体";}
-#Cy-tp-PopupTitle{background-color:#2ED146}
-#cy-tp-dialog2{border-color:#2ED146}
-#boderdd{border:none}
-.wbkk{border:1px solid #ddd;height:43px;margin:9px 10px 9px 1px;width:100%;padding-left:18px;text-shadow:0 1px 0 #f3f3f3}
-#Cy-tp-DialogInfo p{margin:5px 0;color:#747485}
-.jsj{border:1px solid #ccc;padding:4px;border-radius:.2rem;margin:4px 5px}
-.crrtt{border:1px solid #2ed146;color:#2ed146}
-.ui-body-a, .ui-page-theme-a .ui-body-inherit, html .ui-bar-a .ui-body-inherit, html .ui-body-a .ui-body-inherit, html body .ui-group-theme-a .ui-body-inherit, html .ui-panel-page-container-a
-,.ui-page-theme-a .ui-btn, html .ui-bar-a .ui-btn, html .ui-body-a .ui-btn, html body .ui-group-theme-a .ui-btn, html head + body .ui-btn.ui-btn-a, .ui-page-theme-a .ui-btn:visited, html .ui-bar-a .ui-btn:visited, html .ui-body-a .ui-btn:visited, html body .ui-group-theme-a .ui-btn:visited, html head + body .ui-btn.ui-btn-a:visited
-,#huahua1, #huahua2,.ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper
-{text-shadow: 0 0 0 #000;}
-.ziti{font-size:13px;}
-.layermanim h3{margin:0px;}
-.fuck_y
-{
-  left: 0;
-    opacity: 1;
-    position: absolute;
-    top: -20px;}
-.fuck_y img
-{
-border:none;
-box-shadow:0 0 0 rgba(0, 0, 0, 0);
-}
-#pann_k span
-{
-position:relative;
-display:inline-block;
-margin-top:30px;
-}
-#chengyutishilate{font-size:14px;}
-
-::-webkit-input-placeholder { /* WebKit browsers */ 
-color: #ccc; 
-} 
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ 
-color: #ccc; 
-} 
-::-moz-placeholder { /* Mozilla Firefox 19+ */ 
-color: #ccc; 
-} 
-:-ms-input-placeholder { /* Internet Explorer 10+ */ 
-color: #ccc; 
-} 
-
-#hb_k
-{
-position:absolute;
-left:4px;
-top:5px;}
-.jjjss
-{
- color: #f7df7b;
-    left: 18px;
-
-    position: absolute;
-    top: 43px;
-    transform: rotate(315deg) scale(1) skew(1deg) translate(0px);
--webkit-transform: rotate(315deg) scale(1) skew(1deg) translate(0px);
--moz-transform: rotate(315deg) scale(1) skew(1deg) translate(0px);
--o-transform: rotate(315deg) scale(1) skew(1deg) translate(0px);
--ms-transform: rotate(315deg) scale(1) skew(1deg) translate(0px);
-}
-
-#search{
-float:left;max-width:160px;padding-left: 12px;text-shadow: 0 1px 0 #f3f3f3;border:solid 1px #777;height:43px;margin:9px 10px 9px 1px;
-}
-
-#search:disabled
-{
-border:solid 1px #999;
-}
-#ddd_kk
-{
-position:absolute;
-left:3px;
-top:32px;}
-#ddd_kk .dian
-{
-float:left;
-margin-top:0;
-color:#00FF00;
-border-radius:25px;
-width:2px;
-height:2px;
-border:solid 1px #EA8010;
-background-color:#EA8010;
-margin-left: 2px;
-}
-
-#dddssa
-{
-margin-top:0;
-color:#00FF00;
-border-radius:25px;
-width:2px;
-height:2px;
-border:solid 3px #EA8010;
-background-color:#EA8010;
-margin-left: 2px;
-font-size:12px;
-display:inline-block;
-}
-</style>
-
 <html>
     	<body id="bdbd">
-		
             	<div data-role="page">
                 	    <div role="main" class="ui-content">
-                	  		
+                	    
                 	    				<!-- 图片 -->
                             			<div id="tupian_wrap" class="ui-grid-solo">
-                        						<img src="<?php echo $question_pic ?>" alt="" width="100%" style="background:#fff;"  />
+                        						<img src="<?php echo $question_pic ?>" alt="名作加载中" width="100%" style="background:#fff;"  />
                             			</div>
+                            			
+                            			<!-- 已过期 -->
                             			<?php if($Is_Out) { ?>
-							<div id='hb_k'>
-								<span class="jjjss">奖金已领完</span>
-							<img width="150px" src="http://huahua.ncywjd.com/Img/hf.png" /></div>  
-							<?php } ?>
+                    							<div id='hb_k'>
+                    								    <span class="jjjss">奖金已领完</span>
+                    							        <img width="150px" src="http://huahua.ncywjd.com/Img/hf.png" />
+                    							</div>  
+							             <?php } ?>
 									
-							<?php if(!$Is_Out) { ?>
-							<div id='hb_k'>
-								<span class="jjjss">猜对奖<?php echo $price/100; ?>元</span>
-							<img width="150px" src="http://huahua.ncywjd.com/Img/hf.png" /></div>  
-							<?php } ?>
+									   <!-- 未过期 -->
+            							<?php if(!$Is_Out) { ?>
+                    							<div id='hb_k'>
+                    								    <span class="jjjss">猜对奖<?php echo $price/100; ?>元</span>
+                    							         <img width="150px" src="http://huahua.ncywjd.com/Img/hf.png" />
+                    							</div>  
+            							<?php } ?>
                             			
                             			<!-- 输入框 -->
                             			<div class="ui-grid-solo" style="margin:15px auto 0px;">
@@ -257,24 +138,26 @@ display:inline-block;
                     	    				<?php } ?>
                             			</div>
 										
+										
+										<!-- 成语提示 -->
 										 <div  id="chengyutishi" class="ui-corner-all custom-corners"  style="margin:15px auto; <?php if($tips_word == null){ echo "display:none";} ?>">
                                                       <div id="cyts_k" class="ui-bar ui-bar-a"> <h3>答案提示 </h3>  <span id="chengyutishilate" style="font-size:12px;color:#666">下面<span id="chengyunum">4</span>个字有<span id="chengyunum2">1</span>个为成语的字</span> </div>
                                                       <div class="ui-body ui-body-a"  id="panelbody">                                                            
 															<?php 
 															     if($tips_word != null)
 															     {
-        															      $tips_word_arr  = explode(",", $tips_word);
-        															      for($p = 0;$p<count($tips_word_arr);$p++) 
-        															      { 
-        														              $re = chunk_split($tips_word_arr[$p],3,",");
-        														              $re = explode(",",$re);
-        														              echo "<div class='tipsFontPanel'>";
-        														              for($k = 0;$k<count($re) - 1;$k++)
-        														              {
-        														                  echo sprintf("<span class='tipsFont'>%s</span>",$re[$k]);
-        														              }
-        														              echo "</div>";
-        															      } 
+    															      $tips_word_arr  = explode(",", $tips_word);
+    															      for($p = 0;$p<count($tips_word_arr);$p++) 
+    															      { 
+    														              $re = chunk_split($tips_word_arr[$p],3,",");
+    														              $re = explode(",",$re);
+    														              echo "<div class='tipsFontPanel'>";
+    														              for($k = 0;$k<count($re) - 1;$k++)
+    														              {
+    														                  echo sprintf("<span class='tipsFont'>%s</span>",$re[$k]);
+    														              }
+    														              echo "</div>";
+    															      } 
 															     }
 															?>  
                                                       </div>
@@ -292,7 +175,9 @@ display:inline-block;
                                                   		<p>4、所有奖金可去<a data-role="none" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd">个人中心</a>100%提现</p>
                                                   <?php } ?>
                                                     </div>
-                                          </div>												
+                                          </div>		
+                                          
+                                          <!-- 未过期  -->										
                                           <?php  if(!$Is_Out) {  //该题目没过期/红包没发完的情况下才显示‘温馨提示' ?>        
     										         <div style='margin:0 auto'> <a name="radio-choice" data-role="none"  data-daoju = '1'     id="radio-choice-0a"    >购买提示<span style='color:#ffff00'><?php  echo ($daoju / 100)."元"; ?></span></a></div>
     										         <p class='ziti' style='text-align: center;color:#747485'>(买后可立即再猜一次，并显示4个字含1个成语字)</p>
@@ -320,18 +205,7 @@ display:inline-block;
                                                             			                         <a class="fuck_y"> <img width="30"  src="<?php echo  $_SESSION["STATIC_ROOT"]."/Img/hg.png"; ?>"  /> </a>
                                                         			                 <?php } ?>
 																					 <div id='ddd_kk'>
-																					 <?php 
-																					 $nn=$piclist[$k]["daojuflag"];
-																					 
-																					 for($i=0;$i<$nn;$i++)
-																					 {
-																					 	echo "<span class='dian'></span>";
-																						if($i>=4)
-																						{
-																						break;
-																						}
-																					 
-																					 } ?>
+																					            <?php $nn=$piclist[$k]["daojuflag"];  for($i=0;$i<$nn;$i++) { echo "<span class='dian'></span>"; if($i>=4) { break; } } ?>
 																					 </div>
                                                             			</span>
     															<?php } ?>
@@ -359,13 +233,14 @@ display:inline-block;
                                                           </div>
                                                 </div>
     									<?php } else if($IsDrawer){?>
-										 <div class="ui-corner-all custom-corners"  style="margin:15px auto">
-										  <div class="ui-bar ui-bar-a" id="clsm_k2"> <h3>他们猜了什么</h3> </div>
-                                                          <div id="pnnn_k2"  class="ui-body ui-body-a ui_ko">
-                                                            	<p style='color:#747485' >暂时还没有人回答</p>
-                                                          </div>
-                                                </div>
+        										  <div class="ui-corner-all custom-corners"  style="margin:15px auto">
+        										  <div class="ui-bar ui-bar-a" id="clsm_k2"> <h3>他们猜了什么</h3> </div>
+                                                                  <div id="pnnn_k2"  class="ui-body ui-body-a ui_ko">
+                                                                    	<p style='color:#747485' >暂时还没有人回答</p>
+                                                                  </div>
+                                                    </div>
 										<?php }?>
+    									
     									
                                 	 	<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
                 								<a href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id="huahua1" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a">再去画一题</a>
@@ -400,38 +275,36 @@ display:inline-block;
                         				    </div> 
                         				    <div role="main" class="ui-content">
                                                     <div id="Cy-tp-DialogInfo" style="margin:0px;font-size:16px;">
-                                                       
-                                                        		<table>
-                                                        				<tr>
-                                                        					<td width='30%'>奖金金额:</td>
-                                                        					<td><input data-role="none" class='wbkk' name="HongBaoJinE" disabled = "disabled" id="HongBaoJinE"  placeholder="请输入红包金额" value="3"  type="text">
-                                                        						 <p><span class='jsj' val='1'>1元</span> 	
-                                                        							<span class='jsj crrtt' val='3'>3元</span>
-                                                        						 	<span class='jsj' val='5'>5元</span> 	
-                                                        							<span class='jsj' val='10'>10元</span>
-                                                        						</p> 
-                                                        					</td>
-                                                        				</tr>
-                                                        			    <tr>
-                                                        					<td>奖金份数:</td><td>
-                                                        			    	<input maxlength="2" onKeyUp="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" data-role="none" class='wbkk' name="HongBaoCount" id="HongBaoCount" placeholder="请输入红包个数" value="1"  type="text">
-                                                        					</td>
-                                                        				</tr>
-                                                        			     <tr>
-                                                        					<td>购买售价:</td><td>
-                                                        			    	<input data-role="none" class='wbkk' name="DaoJuJinE" id="DaoJuJinE"  disabled = "disabled"  placeholder="请输入道具金额" value="<?php echo $prop*3;?>" type="text" readonly>
-                                                        					</td>
-                                                        				</tr>
-                                                        			</table>
-                                                        			<p class='ziti'>(提示售价为单份奖金的30%，收入你可百分百提现)</p>
+                                                    		<table>
+                                                    				<tr>
+                                                    					<td width='30%'>奖金金额:</td>
+                                                    					<td><input data-role="none" class='wbkk' name="HongBaoJinE" disabled = "disabled" id="HongBaoJinE"  placeholder="请输入红包金额" value="3"  type="text">
+                                                    						 <p>
+                                                    						    <span class='jsj' val='1'>1元</span> 	
+                                                    							<span class='jsj crrtt' val='3'>3元</span>
+                                                    						 	<span class='jsj' val='5'>5元</span> 	
+                                                    							<span class='jsj' val='10'>10元</span> 
+                                                    						</p> 
+                                                    					</td>
+                                                    				</tr>
+                                                    			    <tr>
+                                                    					<td>奖金份数:</td><td>
+                                                    			    	<input maxlength="2" onKeyUp="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" data-role="none" class='wbkk' name="HongBaoCount" id="HongBaoCount" placeholder="请输入红包个数" value="1"  type="text">
+                                                    					</td>
+                                                    				</tr>
+                                                    			     <tr>
+                                                    					<td>购买售价:</td><td>
+                                                    			    	<input data-role="none" class='wbkk' name="DaoJuJinE" id="DaoJuJinE"  disabled = "disabled"  placeholder="请输入道具金额" value="<?php echo $prop*3;?>" type="text" readonly>
+                                                    					</td>
+                                                    				</tr>
+                                                    			</table>
+                                                    			<p class='ziti'>(提示售价为单份奖金的30%，收入你可百分百提现)</p>
                                                     </div>					          
-                                                <p style="margin:0px auto;text-align:center;">
-                        					        <a href="#" id="Cy-tp-DialogYes2" data-role="none" >充值奖金<span style='color:#FEFF00'><font id='jinddd'>3</font>元</span></a> 
-                        					
-                                                </p>
+                                                    <p style="margin:0px auto;text-align:center;">
+                            					               <a href="#" id="Cy-tp-DialogYes2" data-role="none" >充值奖金<span style='color:#FEFF00'><font id='jinddd'>3</font>元</span></a> 
+                                                    </p>
                         				    </div>
-                        			</div>    
-                        			
+                    			    </div>    
                 	    </div><!-- /content -->
             	</div><!-- /page -->
 				<div id="zhezhaocheng" style="background-color:#191919;display:none;position:absolute;left:0;top:0"><img width="100%" src="<?php echo $_SESSION["STATIC_ROOT"]?>/Img/83358PICrqB_1024.jpg" /></div>	
@@ -442,7 +315,6 @@ display:inline-block;
 <?php 
 	JsLoader::Jquery();    //加载jquery
 	JsLoader::Jqm();       //加载jqm
-	//JsLoader::Layer();     //加载layer
     JsLoader::Layermobile();    //加载layermobile
 	JsLoader::weixin();   //加载微信官方JS
 	JsLoader::LoadDirective('HuaHua', 'Ajax.Directive.js');
@@ -478,6 +350,8 @@ var timestamp = Date.parse(new Date()) / 1000;
 //倒计时函数
 var getTime = function() 
 {
+	var daojishi_sysj =  document.getElementById("suoshengshijian");
+	if(daojishi_sysj == null) return false;  //说明题目已过期;
     var nowTime = new Date();
     var endTime = new Date(suoshengshijian * 1000);
     var ms = endTime.getTime() - nowTime.getTime();
@@ -488,7 +362,7 @@ var getTime = function()
     ms = Math.floor(ms / 100) % 10;
     if (second >= 0)   
     {
-        document.getElementById("suoshengshijian").innerHTML = hour + "小时 " + minute + "分 " + second + " 秒"
+    	daojishi_sysj.innerHTML = hour + "小时 " + minute + "分 " + second + " 秒";
     } else {
         window.location.reload();
         return false;

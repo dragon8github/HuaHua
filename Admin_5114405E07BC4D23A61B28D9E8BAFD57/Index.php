@@ -58,7 +58,7 @@ $arr = $_AdminCtrl->get_所有信息();
         <tr>                
               <td><?php echo $i; ?></td>
               <td><?php echo $id; ?></td>
-              <td><img width="300" height="280" src="<?php echo $wx_litpic; ?>" /></td>
+              <td><img width="100" height="100" src="<?php echo $wx_litpic; ?>" /></td>
               <td><?php echo $username; ?></td>
               <td><?php echo $answer; ?></td>
               <td><img width="300" height="280" src="<?php echo $question_pic; ?>" /></td>

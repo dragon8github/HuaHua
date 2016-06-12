@@ -325,6 +325,8 @@ class UserCtrl
                 break;
             case 6:
                 $Reuslt = "红包退回 +";
+            case 7:
+                $Reuslt = "答题消费 +";
                 break;
         }
         return  $Reuslt;
@@ -336,12 +338,12 @@ class UserCtrl
         $this->Sql->table = 'statements';
         //查询语句
         $mysql = sprintf("
-                                    SELECT A. * , B.wx_name, B.wx_litpic, IF( bid =  '%s', 3, 
+                                    SELECT A. * , B.wx_name, B.wx_litpic, IF( bid =  '%s' AND TYPE <>7, 3, 
                                     TYPE ) AS realtype
                                     FROM statements AS A
                                     JOIN user AS B ON uid = openid
                                     WHERE 
-                                    A.type IN ( 2, 3, 4, 5, 6 ) 
+                                    A.type IN ( 2, 3, 4, 5, 6,7) 
                                     AND uid =  '%s' 
                                     AND A.flag =  '1'
                                     OR 

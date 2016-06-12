@@ -607,19 +607,21 @@ class GuessCtrl
    
     
     
-    public function Ajax_提交答案($id,$content)
+    public function Ajax_提交答案($id,$content,$orderid,$money)
     {
         //是否回答正确？
         $flag = 0;  
         //返回的金额
         $price = 0;
+        //tips
+        $tips = "";
         
         //获取正确答案
         $this->Sql->table = 'question_library';
         //条件语句
         $myql = sprintf("
                                     SELECT 
-                                                    a.answer,b.model  
+                                                    a.answer,b.model,b.uid  
                                       FROM 
                                                     question_library AS a 
                                         JOIN 
@@ -628,20 +630,69 @@ class GuessCtrl
                                                     a.id = b.answer 
                                     WHERE 
                                                     b.id = '%s' 
-					   ",$id); 
+					   ",$id);         
         //发送语句
-        $readContent = $this->Sql->field("answer")->query($myql);
-        $readContent = $readContent[0]["answer"];
-        $model = $readContent[0]["model"];    //获取模式，暂未使用
+        $ret = $this->Sql->query($myql);
+        $readContent = $ret[0]["answer"];
+        $bid = $ret[0]["uid"];
+        //$model =@$readContent[0]["model"];    //获取模式，暂未使用
         
+        
+        //说明当前在答题消费模式下
+        IF($orderid != null && $money != null)
+        {
+            //获取用户余额
+            $statements_balance =   $this-> get_根据用户id获取余额($bid);
+            
+            //选择流水表
+            $this->Sql->table = 'statements';
+            //重置
+            $this->Sql->reset();
+            //条件语句
+            $where = sprintf(" id = '%s' ",$orderid);
+            //数据结构
+            $data2["happen_time"] = time();
+            $data2["flag"] = '1';
+            $data2["balance"] = $statements_balance + $money;
+            //发送语句
+            $this->Sql->where($where)->save($data2);
+            
+            //添加用户余额
+            $this->Sql->table = 'user';
+            //重置
+            $this->Sql->reset();
+            //条件语句 
+            $where = sprintf(" openid = '%s' ",$bid);
+            //添加金额
+            $this->Sql->where($where)->sum("balance",$money); 
+        }
+       
 
         if($readContent == $content)
         {
-            $this->Update_访客是否答对($this->Openid, $_GET['q']);
             //猜主回答正确
+            $this->Update_访客是否答对($this->Openid, $_GET['q']);            
             $flag = 1;
             $price = $this->Add_猜主回答正确添加流水并且减掉红包数量();
         } 
+        else 
+        {
+            //猜主回答错误
+           // if($model)
+           // {
+                //获取tips的索引
+                $tips_index = rand(0, 3);
+                //获取生成的提示
+                $tips =$this->get_生成提示($readContent,$tips_index);
+                if($tips != "" && $tips_index != "")
+                {
+                    //插入数据库
+                    $this->Daoju_添加道具购买标识($tips_index,$tips);   
+                }
+           // }
+        }
+        
+        
         
         //还原配置,如where,order,limit,field
         $this->Sql->reset();
@@ -665,7 +716,7 @@ class GuessCtrl
        //发送语句,返回id
         $id =  $this->Sql->add($data); 
         //AJAX接受的信息
-        $arr = array('Msg' => '请求成功！' , 'Result' => array('id' => $id,'flag' => $flag,'price'=>$price), 'Status' => '成功' );
+        $arr = array('Msg' => '请求成功！' , 'Result' => array('id' => $id,'flag' => $flag,'price'=>$price,'tips'=>$tips), 'Status' => '成功' );
         //返回为json
         exit(json_encode($arr));  
     }
@@ -860,6 +911,8 @@ class GuessCtrl
             //数组
             $word_index_arr = explode(",",$word_index);
             	
+        
+            
             if(count($word_index_arr) >= 4)
             {
                 //答案已经全部展示给用户了。没什么好展示的了。除非以后扩展
@@ -975,6 +1028,55 @@ class GuessCtrl
         //返回为json
         exit(json_encode($arr));
     }
+    
+    public function Ajax_答题花销($id)
+    {
+        //生成订单号
+        $orderid = uniqid();
+        
+        //----------------------------------------
+        
+      $datihuaxiaobili =   $this->get_获取答题花销比例();
+        
+        //选择表
+        $this->Sql->table = "question";
+        //条件语句
+        $where = sprintf( " id = '%s' ",$id);
+        //发送查找
+        $ret = $this->Sql->where($where)->find();
+        //获取消费
+        $model_price = $ret["price_count"] * $datihuaxiaobili;
+        //获取画主
+        $uid  = $ret["uid"];
+        
+        //----------------------------------------
+        
+        //选择表
+        $this->Sql->table = "statements";
+        //重置
+        $this->Sql->reset();
+        //插入流水
+        $data["id"] = $orderid;
+        $data["type"] = "7";
+        $data["price"] = $model_price;
+        $data["happen_time"] = time();
+        $data["uid"] = $this->Openid;
+        $data["flag"] = "0";
+        $data["bid"] = $uid;
+        $data["question_id"] = $id;
+        
+        //------------------------------------
+        
+        $ko=new WX_INT();
+        $jsApiParameters=$ko->Jspay("添加红包","添加红包",$model_price,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
+        
+       //发送请求
+       $this->Sql->add($data);
+       //拼接json
+       $arr = array('Msg' => '请求成功！' , 'Result' => array('order' => $orderid,'money' => $model_price,"wxjson"=>$jsApiParameters) , 'Status' => '成功' );
+       //返回为json
+       exit(json_encode($arr));
+    }
    
 }
 
@@ -988,10 +1090,23 @@ IF(@$_POST["type"] == 'TiJiaoDaAn')
     //获取参数
     $id = $_GET["q"];                            //id
     $content = $_POST["content"];      //内容
-    //调用方法
-    $_GuessCtrl->Ajax_提交答案($id,$content);
+    $orderid = @$_POST["order"];       //订单号，只有答题消费模式才会有这个参数
+    $money = @$_POST["money"];     //金额
+    //调用方法 
+    $_GuessCtrl->Ajax_提交答案($id,$content,$orderid,$money);
 }
 
+
+//答题消费模式下面的提交答案，这里实质上是插入流水表，然后返回"orderid"和"消费金额"，在微信回调函数中更新
+IF(@$_POST["type"] == 'DaTiHuaXiao')
+{
+    //实例化
+    $_GuessCtrl = new GuessCtrl();
+    //获取参数
+    $id = $_GET["q"];    
+    //调用方法
+    $_GuessCtrl->Ajax_答题花销($id);
+}
 
 //调用微信支付接口，返回核心json
 IF(@$_POST['type'] == 'weixinzhifu')

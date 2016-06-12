@@ -30,12 +30,30 @@ class AdminCtrl
         $this->Sql->table = 'question';
         //条件语句
         $mysql = sprintf("
-                                SELECT *,B.id AS AID FROM statements  AS A
-                                JOIN question AS B ON A.question_id = B.id
-                                JOIN question_library AS C ON B.answer = C.id
-                                JOIN `user` AS D ON D.openid = B.uid
-                                WHERE A.flag = '1' AND A.type = '1'
-                                ORDER BY B.release_time DESC 
+                                SELECT 
+                                            *,
+                                            B.id AS AID 
+                                FROM 
+                                            statements  AS A
+                                  JOIN 
+                                            question AS B 
+                                    ON 
+                                            A.question_id = B.id
+                                  JOIN 
+                                            question_library AS C 
+                                    ON 
+                                            B.answer = C.id
+                                JOIN 
+                                            `user` AS D 
+                                    ON 
+                                            D.openid = B.uid
+                                WHERE 
+                                            A.flag = '1' 
+                                    AND 
+                                            A.type = '1'
+                          ORDER BY 
+                                            B.release_time 
+                                 DESC 
                             ");  
         //发送语句
         return $this->Sql->query($mysql);

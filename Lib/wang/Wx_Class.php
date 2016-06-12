@@ -187,13 +187,6 @@ if(@$code != null && @$_SESSION["openid"] == null)
     $_SESSION["openid"] = $openid;
     //code
     $_SESSION["code"] = $code;
-    
-    
-
-    define("WX_OPENID", $openid);
-    define("WX_NICKNAME",  $user_message['nickname']);
-    define("WX_HEADIMGURL",  substr($user_message['headimgurl'], 0,-1)."64");
-    
 } 
 
 

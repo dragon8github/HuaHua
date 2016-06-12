@@ -1,0 +1,41 @@
+
+.ui-body-a img{border-radius:25px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.5);-moz-box-shadow:inset 0 1px 5px rgba(0,0,0,.5);box-shadow:inset 0 1px 1px rgba(0,0,0,.5)}
+.ui_ko span{margin:0 3px;float:left}
+#submit{background-color:#2ED146;color:#FFF;max-width:45%}
+#share_hy{background-color:#3aa7ff;color:#FFF;max-width:45%}
+#search{border-radius:.3125em}
+#clsm_k,#clsm_k2,#cyts_k,#szw_k,#zhuyi{border-top-left-radius:.3125em;border-top-right-radius:.3125em}
+#panelbody,#panelbody2,#pann_k,#pnnn_k,#pnnn_k2{border-bottom-left-radius:.3125em;border-bottom-right-radius:.3125em}
+#Cy-tp-DialogYes2,#radio-choice-0a,#reputHongBao{background-color:#2ED146;color:#fff;max-width:45%;border-color:#ddd;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto}
+#hhhh,#huahua1,#huahua2{background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:0 1px 0 #f3f3f3;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto;text-shadow:0 0 0 #000}
+#panelbody2 p{color:#747485}
+#tupian_wrap{box-shadow:0 0 8px #ccc;-moz-box-shadow:0 0 8px #ccc;-webkit-box-shadow:0 0 8px #ccc;border-radius:6px}
+#Cy-tp-DialogYes2{text-decoration:none}
+.tipsFont{line-height:1.3rem;margin:6px 3px;border-radius:.2rem;border:solid 1px #ccc;display:inline-block;padding:1px 3px;background-color:#F6F5F7;color:#747485}
+$panelbody{white-space:normal;word-break:break-all}
+#bdbd a,#bdbd div,#bdbd h3,#bdbd h4,#bdbd h5,#bdbd input,#bdbd p{font-family:"黑体"}
+#Cy-tp-PopupTitle{background-color:#2ED146}
+#cy-tp-dialog2{border-color:#2ED146}
+#boderdd{border:none}
+.wbkk{border:1px solid #ddd;height:43px;margin:9px 10px 9px 1px;width:100%;padding-left:18px;text-shadow:0 1px 0 #f3f3f3}
+#Cy-tp-DialogInfo p{margin:5px 0;color:#747485}
+.jsj{border:1px solid #ccc;padding:4px;border-radius:.2rem;margin:4px 5px}
+.crrtt{border:1px solid #2ed146;color:#2ed146}
+#huahua1,#huahua2,.ui-body-a,.ui-overlay-a,.ui-page-theme-a,.ui-page-theme-a .ui-body-inherit,.ui-page-theme-a .ui-btn,.ui-page-theme-a .ui-btn:visited,.ui-page-theme-a .ui-panel-wrapper,html .ui-bar-a .ui-body-inherit,html .ui-bar-a .ui-btn,html .ui-bar-a .ui-btn:visited,html .ui-body-a .ui-body-inherit,html .ui-body-a .ui-btn,html .ui-body-a .ui-btn:visited,html .ui-panel-page-container-a,html body .ui-group-theme-a .ui-body-inherit,html body .ui-group-theme-a .ui-btn,html body .ui-group-theme-a .ui-btn:visited,html head+body .ui-btn.ui-btn-a,html head+body .ui-btn.ui-btn-a:visited{text-shadow:0 0 0 #000}
+.ziti{font-size:13px}
+.layermanim h3{margin:0}
+.fuck_y{left:0;opacity:1;position:absolute;top:-20px}
+.fuck_y img{border:none;box-shadow:0 0 0 transparent}
+#pann_k span{position:relative;display:inline-block;margin-top:30px}
+#chengyutishilate{font-size:14px}
+::-webkit-input-placeholder{color:#ccc}
+:-moz-placeholder{color:#ccc}
+::-moz-placeholder{color:#ccc}
+:-ms-input-placeholder{color:#ccc}
+#hb_k{position:absolute;left:4px;top:5px}
+.jjjss{color:#f7df7b;left:18px;position:absolute;top:43px;transform:rotate(315deg) scale(1) skew(1deg) translate(0);-webkit-transform:rotate(315deg) scale(1) skew(1deg) translate(0);-moz-transform:rotate(315deg) scale(1) skew(1deg) translate(0);-o-transform:rotate(315deg) scale(1) skew(1deg) translate(0);-ms-transform:rotate(315deg) scale(1) skew(1deg) translate(0)}
+#search{float:left;max-width:160px;padding-left:12px;text-shadow:0 1px 0 #f3f3f3;border:solid 1px #777;height:43px;margin:9px 10px 9px 1px}
+#search:disabled{border:solid 1px #999}
+#ddd_kk{position:absolute;left:3px;top:32px}
+#ddd_kk .dian{float:left;margin-top:0;color:#0F0;border-radius:25px;width:2px;height:2px;border:solid 1px #EA8010;background-color:#EA8010;margin-left:2px}
+#dddssa{margin-top:0;color:#0F0;border-radius:25px;width:2px;height:2px;border:solid 3px #EA8010;background-color:#EA8010;margin-left:2px;font-size:12px;display:inline-block}

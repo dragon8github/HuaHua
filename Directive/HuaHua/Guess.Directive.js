@@ -8,6 +8,56 @@ GuessDir.ReadMe = function()
 	console.log("避免污染全局空间，请开发者遵循我的做法");
 }
 
+//微信回调：正式提交答案
+GuessDir.UpdateWxResult3 = function(res,myData)
+{
+	if(res.err_msg.indexOf("ok") >= 0)
+	{				
+		$.ajax
+		({
+			data: 
+				{
+					type:"TiJiaoDaAn",
+					content:myData.content,
+					order:myData.order,
+					money:myData.money 
+				},
+			success:function(mydata)
+			{
+				var json = JSON.parse(mydata);
+				var price = json["Result"].price;
+				var tips =  json["Result"].tips;		//其实可以不要这个的，反正要刷新页面。但是还是准备好以防万一吧
+				var info = "";
+				if(price != 0) { info = "获得 ￥" + (price/100) + "元红包，请前往<a href='http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd'>用户中心</a>查看"; }
+				$("#submit").addClass("ui-state-disabled").unbind("tap",Send);	 
+				if(json.Status == "成功")
+				{
+					if(json.Result.flag == 0)
+					{
+						//...回答错误
+						layer.open ({  title:"信息", content:"回答错误 </br> 请查看答案提示，稍后再接再厉",btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); }  });
+					}
+					else
+					{
+						//...回答正确
+						layer.open ({ title:"信息", content:"回答正确 </br>" + info,btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); } });
+					}
+				} 
+			}
+		})		
+	}
+	else if(res.err_msg.indexOf("fail") >= 0)
+	{
+		//...失败
+		return false;   
+	}
+	else if(res.err_msg.indexOf("cancel") >= 0)
+	{
+		//...取消
+		return false;   
+	}
+}
+
 //微信回调：正式添加红包或者更新画画题目的数据
 GuessDir.UpdateWxResult2 = function(res,myData)
 {	
@@ -62,7 +112,7 @@ GuessDir.UpdateWxResult = function(res,myData)
 				//如果用户购买了道具，应该立即清空倒计时
 				for(var i = 0;i<GuessDir.SetTimeOutObj.length;i++) { clearTimeout(GuessDir.SetTimeOutObj[i]); }
 				//修改倒计时样式
-		    	$("title").text("你可以答题了"); $("#submit").text("提交").removeClass("ui-state-disabled");
+		    	//$("title").text("你可以答题了"); $("#submit").text("提交").removeClass("ui-state-disabled");
 				//正式后端数据
 				var json = JSON.parse(Resultdata);
 				//成功
@@ -193,12 +243,52 @@ function Send()
 	} 
 	else
 	{
+		/* 这里根据应该根据模式来判断 
+		 * 首先同样AJAX发送后台，先插入一条流水数据，然后返回一个Orderno.流水的type=7
+		 * IF(model == "XXXX")
+		 * {
+		 * 		$.ajax
+				({   
+						data: { type:"DaTiHuaXiao"},
+						success:function(data)
+						{  
+							var obj = JSON.parse(data);
+							var order = obj["Result"].order;			//流水订单号
+							var money = obj["Result"].money;	    //需要花销的金额
+							var myobj = new Object();				   //新建一个对象
+							myobj.order = order;						   //将”流水号“插入数据集中传递给回调函数
+							myobj.content = v;						   //将”用户提交的答案“插入数据集中传递给回调函数
+						    myobj.money = money;				   //将”答题花销“插入数据集中传递给回调函数	
+							callpay(wxjson,myobj,GuessDir.UpdateWxResult3);
+						}
+				})
+			}
+		 * */
+		
+		$.ajax
+		({   
+				data: { type:"DaTiHuaXiao"},
+				success:function(data)
+				{  
+					var obj = JSON.parse(data);
+					var order = obj["Result"].order;			//流水订单号
+					var money = obj["Result"].money;	    //需要花销的金额
+					var myobj = new Object();				   //新建一个对象						
+				    var wxjson = obj["Result"].wxjson;		//微信核心json
+				    myobj.order = order;						   //将”流水号“插入数据集中传递给回调函数
+					myobj.content = v;						   //将”用户提交的答案“插入数据集中传递给回调函数
+				    myobj.money = money;				   //将”答题花销“插入数据集中传递给回调函数
+				    
+					callpay(wxjson,myobj,GuessDir.UpdateWxResult3);
+				}
+		})
+			
+		/*
 		$.ajax
 		({
 			data: { type:"TiJiaoDaAn", content:v },
 			success:function(mydata)
 			{
-				
 				var json = JSON.parse(mydata);
 				var price = json["Result"].price;
 				var info = "";
@@ -220,6 +310,7 @@ function Send()
 				} 
 			}
 		})
+		*/
 	}
 }
 
