@@ -131,7 +131,7 @@ class UserCtrl
        //去除最后一个逗号
        $Insertsql = substr($Insertsql, 0,-1);    
        //判断
-        IF($money >= 100)
+        IF($money > 0)
         {
             //添加流水statements
             $this->Sql->table = 'statements';

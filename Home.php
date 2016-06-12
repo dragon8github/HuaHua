@@ -3,20 +3,17 @@ SESSION_START();
 $_SESSION["APP_ROOT"] = dirname(__FILE__);
 $_SESSION["STATIC_ROOT"] = "http://".dirname($_SERVER["HTTP_HOST"].$_SERVER['PHP_SELF']);
 
- 
 //测试人员的调试模式
 if(@$_GET["model"] == "test")
 { 
-   
-    
     $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
     $_SESSION["nickname"] = "李钊鸿";      //昵称
     $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
-    //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Draw.php?q=1&word=金蝉脱壳";
+    $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Draw.php?q=1&word=金蝉脱壳";
     // $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Guess.php?q=367";
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/UserList.php"; 
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/List.php"; 
-    $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/User.php";
+    //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/User.php";
     header("Location:".$Wxurl);
     exit();
 }   
@@ -27,6 +24,7 @@ if(@$_GET["model"] == "admin")
     $_SESSION["nickname"] = "李钊鸿";      //昵称
     $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
     header("Location:"."http://huahua.ncywjd.com/Admin_5114405E07BC4D23A61B28D9E8BAFD57");
+    exit();
 }
 
 

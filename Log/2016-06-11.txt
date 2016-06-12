@@ -1,0 +1,184 @@
+
+-------------------------------  2016-06-11 00:37:41 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/pXdCYLq4arPO1koyYXdCa307pShIiboIibxNLMjiagbnmoBtxnNOwgKVXsBTWvRyjRxfic6wQaWXdicHlyHvmceicTtMWHMsHdRrib1/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 02:21:43 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/FnNuudBXicxhmh5sjqW0nEQI641dorp8AiaMVXpHpevAmsdichtUWHYkOoRU8ZjMGja9cUKKUTFNyBNdiaWT67cnIVYzApYt2UPe/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 04:32:35 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/pXdCYLq4arPO1koyYXdCa6gIhoMKxqia367bDkiawbWMbIkIibXolD1gS3JXTlvptaUYibwpwFH3W9fzZRR0TmfhiaF90MTlWUF88/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 04:32:39 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/pXdCYLq4arPO1koyYXdCa6gIhoMKxqia367bDkiawbWMbIkIibXolD1gS3JXTlvptaUYibwpwFH3W9fzZRR0TmfhiaF90MTlWUF88/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 04:35:45 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/pXdCYLq4arPO1koyYXdCa6gIhoMKxqia367bDkiawbWMbIkIibXolD1gS3JXTlvptaUYibwpwFH3W9fzZRR0TmfhiaF90MTlWUF88/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 04:36:17 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/pXdCYLq4arPO1koyYXdCa6gIhoMKxqia367bDkiawbWMbIkIibXolD1gS3JXTlvptaUYibwpwFH3W9fzZRR0TmfhiaF90MTlWUF88/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 04:39:29 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/pXdCYLq4arPO1koyYXdCa6gIhoMKxqia367bDkiawbWMbIkIibXolD1gS3JXTlvptaUYibwpwFH3W9fzZRR0TmfhiaF90MTlWUF88/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 07:20:31 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/89JKE32FSycicGAmgNpml8oGTic4lwEpLcxWWoyOosGBGBialEbPJCCetWJnXW4ONd5ibHxxFibHyTadzDvUNiaVB50LOCElbyKYqC/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 08:26:40 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/ajNVdqHZLLB0pTqdKZHLPcScZfxNjht8eqjICPjARu6uUUw9M9cWsRWQcE16Hyry6YiaTXCHicn4FUbZKATlWF9JlhajicPuibMnvjydUQtul74/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 08:26:55 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/ajNVdqHZLLB0pTqdKZHLPcScZfxNjht8eqjICPjARu6uUUw9M9cWsRWQcE16Hyry6YiaTXCHicn4FUbZKATlWF9JlhajicPuibMnvjydUQtul74/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 08:29:07 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/ajNVdqHZLLB0pTqdKZHLPcScZfxNjht8eqjICPjARu6uUUw9M9cWsRWQcE16Hyry6YiaTXCHicn4FUbZKATlWF9JlhajicPuibMnvjydUQtul74/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 09:26:13 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/pXdCYLq4arMwTQRCbK8wYNj6b4SyyLZbYqEpTdvTjQ8I31qu1ia4CbDPYm1llJsl3NEW0ibjdrUzyPcEsWz1fOOQ/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 09:26:20 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/pXdCYLq4arMwTQRCbK8wYNj6b4SyyLZbYqEpTdvTjQ8I31qu1ia4CbDPYm1llJsl3NEW0ibjdrUzyPcEsWz1fOOQ/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 09:32:04 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/7WQ2yZ8Qvd2O1UofNQRBszPfmmfeuuf6LBwVN8U7rdRo7tSspsyevJf9Bnqowhmuq3GJMPWxPSNAwp6vNgdVrCTXeNwpEvB0/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 09:54:51 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/PiajxSqBRaEIvqFj1O13Jmzh9ibSjrQfqOricVW2o3omSgmolaOOHpupSPYpmmcLTLCdhibN4IRw8Q0JMib47mquTAg/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 12:17:41 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/89JKE32FSydMJMnjMYwPf1Gib265Gtp7UjWF5zq5lptNQQEQ88atBUH37vibYXtTf9zuliaPcTkjLicsQvCmjKDD5wib864pI99icf/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 12:17:53 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/89JKE32FSydMJMnjMYwPf1Gib265Gtp7UjWF5zq5lptNQQEQ88atBUH37vibYXtTf9zuliaPcTkjLicsQvCmjKDD5wib864pI99icf/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 12:18:41 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/89JKE32FSydMJMnjMYwPf1Gib265Gtp7UjWF5zq5lptNQQEQ88atBUH37vibYXtTf9zuliaPcTkjLicsQvCmjKDD5wib864pI99icf/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 12:45:39 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/7WQ2yZ8Qvd1u00LicZMuZDWia3Vmkct4Mu0aibBuRfowVAOaMd8Gvb0zibLVzq6dxQGSfc73GC4XAenF10MLIKpZlsC1vN9ymrmm/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 19:52:10 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/7WQ2yZ8Qvd1u00LicZMuZDWyEM7gMZlUA2j6c7HVSibuZnHgCX0bhSB9K4OztMgUzhbLa10jEibGCg3W6kJicJ4F8mPERTDceRz2/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 21:06:09 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/7WQ2yZ8Qvd3QbIESX7ssEoHqStcN5HVbu4FqhRfKUePwH7CicYnQsYmjibg4NIkJ4YC9FVugF0rfABicdlGFm477t7ENmGDLO1I/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 22:23:04 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/89JKE32FSydMJMnjMYwPf6wExicjoOhdWjepXvVMsZVg1HApyBoC1jOCFQ9woZe4DY9lYER3UrZm7niauicibgibw5WJgbv1Q8Va9/64
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-11 22:23:12 -------------------------------
+
+归属模块：Guess.php
+
+异常信息：获取一下头像:http://wx.qlogo.cn/mmopen/89JKE32FSydMJMnjMYwPf6wExicjoOhdWjepXvVMsZVg1HApyBoC1jOCFQ9woZe4DY9lYER3UrZm7niauicibgibw5WJgbv1Q8Va9/64
+
+错误等级：DEBUG

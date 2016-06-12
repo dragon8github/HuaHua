@@ -127,37 +127,15 @@ class GuessCtrl
         $data["id"] = $orderid;
         $data["type"] = $stype;
         $data["price"] =   $prict_count;
-		//$data["prop"] = $money*0.5;
         $data["happen_time"] = time();
         $data["uid"] = $openid;
         $data["question_id"] = $_GET['q'];    
         //插入语句
         $this->Sql->add($data);
-        
-        
-        //这是个bug
-        //获取道具比例 
-        //$DaoJuBiLi = $this->get_获取道具比例();      
-        //选择question表
-// 		$this->Sql->table = "question";
-// 		//重置
-// 		$this->Sql->reset();
-//         //条件语句
-//         $where = sprintf("id = '%s' ",$_GET['q']);
-//         //生成数据       
-//         $data2["prop"] =$this->C_金额转换($money)*floatval($DaoJuBiLi);
-// 		$data2["price"] =$this->C_金额转换($money);
-// 		$data2["price_count"] =$prict_count;
-// 		$data2["hongbao_count"]=$cot;
-// 		$data2["shengyu_count"]=$cot;
-//         //sql语句发送
-//         $this->Sql->where($where)->save($data2);
-		//************************************ko博 新增加道具金额问题**************************//
+                
 		
         $ko=new WX_INT();
         $jsApiParameters=$ko->Jspay("添加红包","添加红包",$prict_count,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$openid,$orderid);
-        //exit($jsApiParameters);
-        //AJAX接受的信息
         $arr = array('Msg' => '请求成功！' , 'Result' => array('order' => $orderid, 'wxjson' => $jsApiParameters) , 'Status' => '成功' );
         //返回为json
         exit(json_encode($arr));
@@ -386,41 +364,43 @@ class GuessCtrl
            //发送语句
            $this->Sql->where($where)->save($data);
            
-           
-
-           //获取用户余额
-           $statements_balance =   $this-> get_根据用户id获取余额($uid);
-            
-           //添加流水
-           $this->Sql->table = 'statements';
-           //重置
-           $this->Sql->reset();
-           //数据结构
-           $data2["question_id"] = $_GET['q']; 
-           $data2["type"] = '6';
-           $data2["uid"] = $uid;
-           $data2["flag"] = '1';
-           $data2["id"] = uniqid();
-           $data2["happen_time"] = time();
-           $data2["price"] = $price * $shengyu_count;
-           $data2["balance"] = $statements_balance + $price * $shengyu_count;
-           //添加语句
-           $this->Sql->add($data2);
-            
-           
-           
-           
-           //选择表
-           $this->Sql->table = 'user';
-           //重置
-           $this->Sql->reset();
-           //条件语句
-           $where = sprintf("openid = '%s' ",$uid);
-           //发送语句
-           $this->Sql->where($where)->sum('balance',$price * $shengyu_count);
-           
-        
-           Lee::alert("温馨提示：本题已过期，答对不触发奖励机制");
+           //退款金额大于0才触发
+           if($price * $shengyu_count > 0)
+           {            
+                       //获取用户余额
+                       $statements_balance =   $this-> get_根据用户id获取余额($uid);
+                        
+                       //添加流水
+                       $this->Sql->table = 'statements';
+                       //重置
+                       $this->Sql->reset();
+                       //数据结构
+                       $data2["question_id"] = $_GET['q']; 
+                       $data2["type"] = '6';
+                       $data2["uid"] = $uid;
+                       $data2["flag"] = '1';
+                       $data2["id"] = uniqid();
+                       $data2["happen_time"] = time();
+                       $data2["price"] = $price * $shengyu_count;
+                       $data2["balance"] = $statements_balance + $price * $shengyu_count;
+                       //添加语句
+                       $this->Sql->add($data2);
+                        
+                       
+                       
+                       
+                       //选择表
+                       $this->Sql->table = 'user';
+                       //重置
+                       $this->Sql->reset();
+                       //条件语句
+                       $where = sprintf("openid = '%s' ",$uid);
+                       //发送语句
+                       $this->Sql->where($where)->sum('balance',$price * $shengyu_count);
+                       
+                    
+                       Lee::alert("温馨提示：本题已过期，答对不触发奖励机制");
+           }
        }
        
        
@@ -738,13 +718,11 @@ class GuessCtrl
 		$this->Sql->where($where)->save($data);
 	}
     
-    
+    //抵达这一步，说明真的购买成功道具了
     public function Ajax_购买道具($order,$money,$bid,$tips_index,$tips)
     { 
         //获取用户余额
         $statements_balance =   $this-> get_根据用户id获取余额($bid);
-  
-                
         
         //选择流水表
         $this->Sql->table = 'statements';
@@ -753,10 +731,13 @@ class GuessCtrl
         //条件语句
         $where = sprintf(" id = '%s' ",$order);
         //数据结构
+        $data["happen_time"] = time();
         $data["flag"] = '1';
         $data["balance"] = $statements_balance + $money;
         //发送语句
         $this->Sql->where($where)->save($data);
+        
+        
         
         
         //插入道具流水
@@ -948,7 +929,7 @@ class GuessCtrl
         //选择流水表，先插入流水，等微信确定用户支付成功后，再从另外一个地方更改该表的‘flag’字段为1
         $this->Sql->table = 'statements';
         //数据结构
-        $data["id"] = $orderid;               //订单号，订单号，订单号，会传递给微信并且传递给前端然后在另外一个地方作为更新的标记
+        $data["id"] = $orderid;               //订单号，订单号，订单号
         $data["type"] = "2";                   //2:道具购买
         $data["price"] =  $daojujiage;    //道具的金额
         $data["happen_time"] = time();  //时间

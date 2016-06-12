@@ -1,6 +1,7 @@
 <?php 
 SESSION_START();
 
+
 //引用区 开始================================================
 include $_SESSION["APP_ROOT"].'/Lib/Class/Lee.class.php';                                   //加载辅助类库
 include $_SESSION["APP_ROOT"].'/Lib/wang/wx_class.php';                                  //加载微信类
@@ -15,6 +16,9 @@ include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                          
 $openid = $_SESSION["openid"];                       //openid
 $nickname = $_SESSION["nickname"];              //昵称
 $headimgurl = $_SESSION["headimgurl"];        //头像
+
+
+
 mylog::WriteLog("获取一下头像:".$headimgurl,"Guess.php");
 $q = $_GET["q"];                                               //题目编号
 $IsDrawer= false;                                              //是否画主本人
@@ -509,6 +513,7 @@ wx.config
         // 所有要调用的 API 都要加到这个列表中
     ]
 });
+
 
 //价值（）元，快来猜，手快有手慢无
 wx.ready(function ()  

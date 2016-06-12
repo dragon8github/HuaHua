@@ -11,11 +11,14 @@ include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                          
 
 
 
+
 //公共变量 开始==============================================
 $_DrawCtrl = new DrawCtrl();                            //Main对象
 $openid = $_SESSION["openid"];                       //openid
 $q = $_GET["q"];                                               //answer题目号码
 $Title =$_GET["word"];                                      //设置页面Title
+
+ 
 
 //判断画主是否重新打开这个界面
 $arr = $_DrawCtrl->If_判断是否画主重新打开这个页面($q, $openid);
@@ -57,10 +60,33 @@ if(count($arr))
  ?>
  <style type="text/css">
  #KaiShiZhizuo{background-color:#2ED146;color:#fff;max-width:45%;border-color:#ddd;text-shadow:0 1px 0 #f3f3f3;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto;text-shadow:0 0 0 #000;text-decoration:none}
- 
+#k_h1{height:26px;background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h1.png);margin:0 auto;background-repeat:no-repeat;padding:5px 5px 5px 35px;background-position:5px center;float:left}
+#k_h2{height:26px;background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h2.png);margin:0 auto;background-repeat:no-repeat;padding:5px 5px 5px 35px;background-position:5px center;float:left}
+#k_h3{height:26px;background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h3.png);margin:0 auto;background-repeat:no-repeat;padding:5px 5px 5px 15px;background-position:5px center;float:left}
+#k_h4{height:26px;background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h4.png);margin:0 auto;background-repeat:no-repeat;padding:5px 5px 5px 21px;background-position:5px center;float:left}
+#k_h5{height:26px;background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h5.png);margin:0 auto;background-repeat:no-repeat;padding:5px 5px 5px 27px;background-position:5px center;float:left}
+.cjjssll{background-color:#FFF;border:solid 1px #DBDBEA;-moz-border-radius:5px;-webkit-border-radius:5px;border-radius:5px}
+.cjjssll22{background-color:#FFF;border:solid 1px #DBDBEA;-moz-border-radius:5px;-webkit-border-radius:5px;border-radius:5px}
+#k_c1{width:40px;height:40px;background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c1.png);margin:0 auto;background-repeat:no-repeat;padding:5px;background-position:center}
+#k_c2{width:40px;height:40px;background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c2.png);margin:0 auto;background-repeat:no-repeat;padding:5px;background-position:center}
+#k_c3{width:40px;height:40px;background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c3.png);margin:0 auto;background-repeat:no-repeat;padding:5px;background-position:center}
+#k_c4{width:40px;height:40px;background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c4.png);margin:0 auto;background-repeat:no-repeat;padding:5px;background-position:center}
+#k_c5{width:40px;height:40px;background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c5.png);margin:0 auto;background-repeat:no-repeat;padding:5px;background-position:center}
+.fl_left{float:left;height:38px}
+.fl_left:nth-of-type(1){width:25%}
+.fl_left:nth-of-type(2){width:25%}
+.fl_left:nth-of-type(3){width:15%}
+.fl_left:nth-of-type(4){width:15%}
+.fl_left:nth-of-type(5){width:20%}
+.fl_left_n{float:left;width:20%;height:50px}
+#gongju{background-color:#f0f0f0}
+#k_color{padding:10px 0}
+#k_hua{border-bottom:dashed 1px #DBDBEA;padding:10px 0}
+.ui-content{padding:1px}
+#controlgroup .ui-controlgroup-controls{display:block} 
  </style>
 	<body>
-        	<div data-role="page">
+        	<div data-role="page" style="min-height: 667px;background: #f0f0f0;">
         	  	<!--<div data-role="header" class="ui-shadow" data-theme = 'a'>
         	  	<a role="button" data-role="button"   data-rel="back" class="ui-btn-left ui-alt-icon ui-nodisc-icon ui-btn ui-icon-carat-l ui-btn-icon-notext ui-corner-all">Back</a>	
         	        <h1><?php echo $Title ?></h1>
@@ -68,108 +94,30 @@ if(count($arr))
         	  
         	    <div role="main" class="ui-content">
         	    		<div id="gongju" >
-													<div id='k_hua'>
-														<div class="fl_left"><div id="k_h1" >清屏</div></div>
-														<div class="fl_left"><div id="k_h2"  val='8'>橡皮</div></div>
-														<div class="fl_left"><div id="k_h3" val="2" >细</div></div>
-														<div class="fl_left"><div id="k_h4" val="4" class="cjjssll current" >中</div></div>
-														<div class="fl_left"><div id="k_h5" val="6" >粗</div></div>
-															<div style="clear:both"></div>
-													</div>
-													<div id='k_color'>
-													<div class="fl_left_n"><div id="k_c1" ></div></div>
-													<div class="fl_left_n"><div id="k_c2" class="cjjssll22" ></div></div>
-													<div class="fl_left_n"><div id="k_c3" ></div></div>
-													<div class="fl_left_n"><div id="k_c4" ></div></div>
-													<div class="fl_left_n"><div id="k_c5" ></div></div>
-														
-														<div style="clear:both"></div>
-													</div>
-        	    
-        			<div class="ui-grid-solo" style="position:relative;">
-                     				<?php
-                     				       if(count($arr) && $flag == 0)
-                     				       {
-                     				?> 
-                     							<div class="ui-corner-all custom-corners"  style="margin:15px auto">
-                                                      <div class="ui-bar ui-bar-a">
-                                                        <h3>温馨提示</h3>
-                                                      </div>
-                                                      <div class="ui-body ui-body-a">
-                                                        	<p>目前本题处于冷却状态，需要满足以下其中一个条件即可重新发布</p>
-                                                        	<p>1、当前时间<span style="font-size:20px;color:#333">（<?php echo date('Y-m-d H:i:s',time()) ?>）<span>大于过期时间<span style="font-size:20px;color:#333">（<?php echo date('Y-m-d H:i:s',$expire_time) ?>）</span></p>
-                                                        	<p>2、红包发送完毕（剩余红包： <span style="font-size:20px;color:#333"><?php echo $shengyu_count ?></span>个，每个红包奖励 ：<span style="font-size:20px;color:#333">￥<?php echo round($price,1) ?></span>）</p>
-                                                        	<p>3、<a href="<?php echo $_SESSION["STATIC_ROOT"]."/Module/HuaHua/List.php" ?>">点击这里</a>，选择其他题目进行绘制</p>
-                                                      </div>
-                                            	</div>
-                                            	<a href="#" id="Share" onClick="DrawDir.ShareFriend()" class="ui-btn  ui-corner-all ui-shadow  ui-icon-action ui-btn-icon-right " style="text-indent: 30px;margin-top:20px;">分享到朋友圈</a>
-                                            	
-                     				<?php
-                     				       }
-                     				       else
-                     				       {
-        							?>			    
-            									<div id="replace_images">
-                    								<canvas id="canvas"  style="border:dashed 1px #333333;width:99.8%; "></canvas>
-                    							</div>
-												
-												
-                    							
-												
-												
-												
-											
-                                  			 
-                            					<a href="#" data-role="none" id="KaiShiZhizuo" style="margin-top:20px;">生成作品</a>
-        							<?php 
-                     				       }
-        							?>
-        			
-        			</div>
-        	
-        			
-        			
-        			
-                    <div data-role='popup' id='Cy-Tp-Alert' data-overlay-theme='b' data-theme='b' data-dismissible='false' style='min-width:300px;'>
-                        <a href='#' id='A1' data-rel='back' class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
-                	        <div data-role='header' data-theme='b'>
-                	        <h1 id='H1'  style='margin:0px; padding: 0.7em 0;'>温馨提示</h1>
-                	        </div>
-                	        <div role='main' class='ui-content'>
-                                    <div id='Cy-Tp-Alert-Content' style='text-align:center;margin:15px;font-size:16px;'></div>					          
-                                <p style='margin:0px auto;text-align:center;'>
-                		            <a href='#' id='A2' data-rel='back'  class='ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-check ui-btn-icon-left'  data-transition='flow'>确定</a>  
-                		        </p>
-                	        </div>
-               		 </div>
-                    <div data-role="popup" id="cy-tp-dialog" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="min-width:300px;" data-transition="pop"  >
-                        <a href="#" id="Cy-tp-CloseDialogBtn" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-        				    <div data-role="header" data-theme="b">
-        				    <h1 id="Cy-tp-PopupTitle"  style="margin:0px; padding: 0.7em 0;">请确认转出信息</h1>
-        				    </div>
-        				    <div role="main" class="ui-content">
-                                    <div id="Cy-tp-DialogInfo" style="margin:0px 15px;font-size:16px;">
-                                       
-                                        			<div class="ui-field-contain">
-                                        			    <label for="textinput-1">红包金额:（单位：￥）</label>
-                                        			    <input name="HongBaoJinE" id="HongBaoJinE" placeholder="请输入红包金额" value="1"  type="text">
-                                        			</div>
-                                        			
-                                        			<div class="ui-field-contain">
-                                        			    <label for="textinput-1">红包个数:（单位：个）</label>
-                                        			    <input name="HongBaoCount" id="HongBaoCount" placeholder="请输入红包个数" value="1"  type="text">
-                                        			</div>
-                                        			<div class="ui-field-contain">
-                                        			    <label for="textinput-1">道具金额:（单位：￥）</label>
-                                        			    <input name="DaoJuJinE" id="DaoJuJinE"  class="ui-state-disabled"  placeholder="请输入道具金额" value="0.1" type="text" readonly>
-                                        			</div>
-                                    </div>					          
-                                <p style="margin:0px auto;text-align:center;">
-        					        <a href="#" id="Cy-tp-DialogYes" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-check ui-btn-icon-left">确认</a> 
-        					        <a href="#" id="Cy-tp-DialogNo"  class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-delete ui-btn-icon-left" data-rel="back" data-transition="flow">取消</a>
-                                </p>
-        				    </div>
-        			</div>      
+									<div id='k_hua'>
+										<div class="fl_left"><div id="k_h1" >清屏</div></div>
+										<div class="fl_left"><div id="k_h2"  val='8'>橡皮</div></div>
+										<div class="fl_left"><div id="k_h3" val="2" >细</div></div>
+										<div class="fl_left"><div id="k_h4" val="4" class="cjjssll current" >中</div></div>
+										<div class="fl_left"><div id="k_h5" val="6" >粗</div></div>
+											<div style="clear:both"></div>
+									</div>
+									<div id='k_color'>
+									<div class="fl_left_n"><div id="k_c1" ></div></div>
+									<div class="fl_left_n"><div id="k_c2" class="cjjssll22" ></div></div>
+									<div class="fl_left_n"><div id="k_c3" ></div></div>
+									<div class="fl_left_n"><div id="k_c4" ></div></div>
+									<div class="fl_left_n"><div id="k_c5" ></div></div>														
+								    <div style="clear:both"></div>
+									</div>
+
+                        			<div class="ui-grid-solo" style="position:relative;">
+                            									<div id="replace_images">
+                                    								<canvas id="canvas"  style="border:dashed 1px #333333;width:99.8%; "></canvas>
+                                    							</div>
+                                            					<a href="#" data-role="none" id="KaiShiZhizuo" style="margin-top:20px;">生成作品</a>
+                        			</div>
+        	            </div>
         	    </div><!-- /content -->
         	</div><!-- /page -->	
     	</body>
@@ -209,78 +157,8 @@ wx.config
 	share(mylink,wxshare_title,wxshare_imgUrl,des);
 });
 
-</script>
-<style type="text/css">
- #k_h1 {  height:26px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h1.png); margin:0 auto; background-repeat: no-repeat; padding: 5px 5px 5px 35px; background-position: 5px center;float:left;}
-#k_h2 {  height:26px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h2.png); margin:0 auto; background-repeat: no-repeat; padding: 5px 5px 5px 35px; background-position: 5px center;float:left;}
-#k_h3 {  height:26px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h3.png); margin:0 auto; background-repeat: no-repeat; padding: 5px 5px 5px 15px; background-position: 5px center;float:left;}
-#k_h4 {height:26px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h4.png); margin:0 auto; background-repeat: no-repeat; padding: 5px 5px 5px 21px; background-position: 5px center;float:left;}
-#k_h5 {  height:26px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/h5.png); margin:0 auto; background-repeat: no-repeat; padding: 5px 5px 5px 27px; background-position: 5px center;float:left;}
-
-
-.cjjssll
-{
-background-color:#FFFFFF;
-border:solid 1px #DBDBEA;
--moz-border-radius: 5px; 
--webkit-border-radius: 5px; 
-
-border-radius: 5px; 
-}
-
-.cjjssll22
-{
-background-color:#FFFFFF;
-border:solid 1px #DBDBEA;
--moz-border-radius: 5px; 
--webkit-border-radius: 5px; 
-
-border-radius: 5px; 
-}
- #k_c1 { width:40px; height:40px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c1.png); margin:0 auto;background-repeat: no-repeat;padding:5px;background-position:center;}
-#k_c2 { width:40px; height:40px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c2.png); margin:0 auto;background-repeat: no-repeat;padding:5px;background-position:center;}
-#k_c3 { width:40px; height:40px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c3.png); margin:0 auto;background-repeat: no-repeat;padding:5px;background-position:center;}
-#k_c4 { width:40px; height:40px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c4.png); margin:0 auto;background-repeat: no-repeat;padding:5px;background-position:center;}
-#k_c5 { width:40px; height:40px; background-image:url(<?php echo $_SESSION["STATIC_ROOT"];?>/Img/c5.png); margin:0 auto;background-repeat: no-repeat;padding:5px;background-position:center;}
-.fl_left { float:left;
-height:38px }
-
-.fl_left:nth-of-type(1){
-	width:25%
-}
-.fl_left:nth-of-type(2){
-	width:25%
-}
-.fl_left:nth-of-type(3){
-	width:15%
-}
-.fl_left:nth-of-type(4){
-	width:15%
-}
-.fl_left:nth-of-type(5){
-	width:20%
-}
-
-.fl_left_n
-{
-float:left;
-width:20%;
-height:50px;
-}
-#gongju { background-color: #f0f0f0; }
-#k_color { padding:10px 0;}
-#k_hua
-{
-border-bottom:dashed 1px #DBDBEA;
-padding:10px 0;}
- .ui-content { padding:1px;}
- #controlgroup .ui-controlgroup-controls{ display:block}
-</style>
-<script type="text/javascript">
 	$(document).ready(function()
 	{
-		
-			
 			//点击其他按钮需要修改N
 			//橡皮擦
 		  $("#k_h2") .click(function() 
