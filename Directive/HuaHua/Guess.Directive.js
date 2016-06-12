@@ -8,7 +8,7 @@ GuessDir.ReadMe = function()
 	console.log("避免污染全局空间，请开发者遵循我的做法");
 }
 
-//重新添加红包，重新添加红包，重新添加红包
+//微信回调：正式添加红包或者更新画画题目的数据
 GuessDir.UpdateWxResult2 = function(res,myData)
 {	
 	if(res.err_msg.indexOf("ok") >= 0)
@@ -106,7 +106,7 @@ GuessDir.UpdateWxResult = function(res,myData)
 }
 
 
-
+//提交画画的红包和模式的数据更新
 GuessDir.DialogYes2 = function()
 {
 
@@ -241,7 +241,7 @@ $(function()
 		({
 				data: { type:"weixinzhifu"},			
 				success:function(jsonstrdata)
-				{  
+				{ 
 					var obj = JSON.parse(jsonstrdata);
 					var order = obj["Result"].order;			//流水订单号
 					var wxjson = obj["Result"].wxjson;		//微信核心json

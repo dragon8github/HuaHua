@@ -5,7 +5,6 @@ SESSION_START();
 //引用区 开始================================================
 include $_SESSION["APP_ROOT"].'/Lib/Class/Lee.class.php';                                   //加载辅助类库
 include $_SESSION["APP_ROOT"].'/Lib/wang/wx_class.php';                                  //加载微信类
-include $_SESSION["APP_ROOT"].'/Lib/Class/Log.class.php';                                  //加载微信类
 include $_SESSION["APP_ROOT"].'/Controller/HuaHua/Guess.Controller.php';      //加载List页面控制器
 include $_SESSION["APP_ROOT"].'/Inc/CssLoader.inc.php';                                  //加载CSS组件库
 include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                                   //加载JS组件库
@@ -19,7 +18,6 @@ $headimgurl = $_SESSION["headimgurl"];        //头像
 
 
 
-mylog::WriteLog("获取一下头像:".$headimgurl,"Guess.php");
 $q = $_GET["q"];                                               //题目编号
 $IsDrawer= false;                                              //是否画主本人
 $Time = "0";                                                      //冷却时间
@@ -43,8 +41,10 @@ $hongbao_count = $arr["hongbao_count"];                      //红包个数
 $shengyu_count = $arr["shengyu_count"];                        //红包余额
 $prop = $arr["prop"];                                                       //道具比例
 $daoju =$prop;                                                               //道具价格
-//$Title =$arr["wx_name"]." - 成语作品";                                                  //设置页面Title
-$Title ="看图猜成语";
+//$Title =$arr["wx_name"]." - 成语作品";                           //设置页面Title
+$Title ="看图猜成语";                                                        //设置页面Title
+$model = $arr["model"];                                                  //该题目的模式
+
 
 //判断openid是否存在用户表，没有的话先插入
 if(!$_GuessCtrl->Openid是否存在用户表中())

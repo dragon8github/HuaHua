@@ -25,6 +25,7 @@ class GuessCtrl
         $this->Sql =  Mysql::start($dsn);
     }
     
+    
     //根据传入的id，找到用户的余额，然后根据
     public function get_根据用户id获取余额($uid)
     {
@@ -108,6 +109,15 @@ class GuessCtrl
 	   $dd=$this->Sql->where("id=1")->select();
 	   $prop =  @$dd[0]["prop"]; 
 	   return $prop;
+	}
+	
+	public function get_获取答题花销比例()
+	{
+	    $this->Sql->table = "setting";
+	    $this->Sql->reset();
+	    $dd=$this->Sql->where("id=1")->select();
+	    $prop =  @$dd[0]["model_prop"];
+	    return $prop;
 	}
     
      public function  C_金额转换($money)
@@ -609,7 +619,7 @@ class GuessCtrl
         //条件语句
         $myql = sprintf("
                                     SELECT 
-                                                    a.answer 
+                                                    a.answer,b.model  
                                       FROM 
                                                     question_library AS a 
                                         JOIN 
@@ -622,7 +632,7 @@ class GuessCtrl
         //发送语句
         $readContent = $this->Sql->field("answer")->query($myql);
         $readContent = $readContent[0]["answer"];
-        
+        $model = $readContent[0]["model"];    //获取模式，暂未使用
         
 
         if($readContent == $content)
@@ -767,6 +777,8 @@ class GuessCtrl
     }
     
     
+    
+    
     public function Ajax_重新添加红包($order,$HongBaoJinE,$HongBaoCount)
     {
         //选择流水表
@@ -818,6 +830,99 @@ class GuessCtrl
         $this->Sql->where($where)->save($data);
     } 
     
+    public function get_生成提示($answer,&$tips_index)
+    {
+        //重置
+        $this->Sql->reset();
+        //选择表
+        $this->Sql->table = 'daojuinfo';
+        //条件语句
+        $where = sprintf("question_id = '%s' AND openid = '%s' ",$_GET["q"],$this->Openid) ;
+        //查询语句
+        $word_index =  $this->Sql->where($where)->find();
+        //获取结果
+        $word_index = $word_index['word_index'];
+        //先假设用户没有购买的记录，随机从答案中抽取一个出来返回
+        $re = chunk_split($answer,3,",");
+        //再利用explode将字符串分割为数组
+        $re = explode(",",$re);
+        
+        
+      
+        //赋值,并且加上逗号
+        $tips = $re[$tips_index];
+        
+        
+         
+        //判断用户有购买记录
+        IF(strlen($word_index) > 0)
+        {
+            //数组
+            $word_index_arr = explode(",",$word_index);
+            	
+            if(count($word_index_arr) >= 4)
+            {
+                //答案已经全部展示给用户了。没什么好展示的了。除非以后扩展
+                $tips = "";
+                //索引也设置为空
+                $tips_index = "";
+            }
+            else
+            {
+                //生成一个数组
+                $gsarr = array("0","1","2","3");
+                //差集
+                $array_diff = array_diff($gsarr,$word_index_arr);
+                //打乱数组
+                shuffle($array_diff);
+                //直接返回第一个,将这个数据作为索引
+                $tips_index = $array_diff[0];
+                //获取随机提示,获取随机提示,获取随机提示
+                $tips = $re[$tips_index];
+                
+                 
+                //加上三个字
+                $txt = file_get_contents(dirname(__FILE__)."/a.txt");
+                $len = mb_strlen($txt,'utf-8');
+                for($i = 0;$i< 3;$i++)
+                {
+                    $rand =  rand(0, $len - 1);
+                    $word = mb_substr($txt, $rand,1,"utf-8");
+                    if(in_array($word, $re))
+                    {
+                        //..如果随机获取的值中居然有答案的词，那么返回
+                        $i--;
+                        continue;
+                    }                   
+                    $tips .= ",".$word;
+                }
+            }
+        }
+        else
+        {
+            //加上三个字
+            $txt = file_get_contents(dirname(__FILE__)."/a.txt");
+            $len = mb_strlen($txt,'utf-8');
+            for($i = 0;$i< 3;$i++)
+            {
+                $rand =  rand(0, $len - 1);
+                $word = mb_substr($txt, $rand,1,"utf-8");
+                if(in_array($word, $re))
+                {
+                    //..如果随机获取的值中居然有答案的词，那么返回
+                    $i--;
+                    continue;
+                }
+                $tips .= ",".$word;
+            }
+        }
+        
+        
+        return Lee::shuffle_打散并且洗牌字符串($tips);
+        
+         
+    }
+    
     //购买道具,购买道具,购买道具
     public function Ajax_微信支付json()
     {
@@ -838,89 +943,13 @@ class GuessCtrl
         $answer = $daoju[0]['answer'];         //正确答案
         
         
+     
         
         
-        
-        
-        
-        //-----------------------------------------------
-        
-        //重置
-        $this->Sql->reset();
-        //选择表
-        $this->Sql->table = 'daojuinfo';
-        //条件语句
-        $where = sprintf("question_id = '%s' AND openid = '%s' ",$q,$this->Openid) ;
-        //查询语句
-        $word_index =  $this->Sql->where($where)->find();
-        //获取结果
-        $word_index = $word_index['word_index'];
-        //先假设用户没有购买的记录，随机从答案中抽取一个出来返回
-        $re = chunk_split($answer,3,",");
-        //再利用explode将字符串分割为数组
-        $re = explode(",",$re);
-        
-                
         //获取tips的索引
         $tips_index = rand(0, 3);
-        //赋值
-        $tips = $re[$tips_index];     
-        
-        
-        
-       
-        //判断用户有购买记录
-        IF(strlen($word_index) > 0) 
-        {
-            //数组
-            $word_index_arr = explode(",",$word_index);
-			
-            if(count($word_index_arr) >= 4)  
-            {
-                    //答案已经全部展示给用户了。没什么好展示的了。除非以后扩展
-                    $tips = "";
-                    //索引也设置为空
-                    $tips_index = "";
-            }
-            else
-            {
-                   //生成一个数组
-                   $gsarr = array("0","1","2","3");
-                   //差集
-                   $array_diff = array_diff($gsarr,$word_index_arr);
-                   //打乱数组
-                   shuffle($array_diff); 
-                   //直接返回第一个,将这个数据作为索引
-                   $tips_index = $array_diff[0];   
-                   //获取随机提示,获取随机提示,获取随机提示
-                   $tips = $re[$tips_index];
-                   
-                   //加上三个字
-                   $txt = file_get_contents(dirname(__FILE__)."/a.txt");
-                   $len = mb_strlen($txt,'utf-8');
-                   for($i = 0;$i< 3;$i++)
-                   {
-                       $rand =  rand(0, $len - 1);
-                       $word = mb_substr($txt, $rand,1,"utf-8");
-                       $tips .= $word . ",";
-                   }
-            }
-        }
-        else
-        {
-            //加上三个字
-            $txt = file_get_contents(dirname(__FILE__)."/a.txt");
-            $len = mb_strlen($txt,'utf-8');
-            for($i = 0;$i< 3;$i++)
-            {
-                $rand =  rand(0, $len - 1);
-                $word = mb_substr($txt, $rand,1,"utf-8");
-                $tips .= $word . ",";
-            }
-        }
-        
-        
-        $tips = Lee::shuffle_打散并且洗牌字符串($tips);
+        //获取生成的提示
+        $tips =$this->get_生成提示($answer,$tips_index);
      
         
         
