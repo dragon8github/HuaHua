@@ -344,11 +344,11 @@ class UserCtrl
                                     JOIN user AS B ON uid = openid
                                     WHERE 
                                     A.type IN ( 2, 3, 4, 5, 6,7) 
-                                    AND uid =  '%s' 
-                                    AND A.flag =  '1'
+                                     AND (uid =  '%s' 
+                                    AND A.flag =  '1'  AND A.type<>7 AND A.type<>2 )
                                     OR 
-                                    bid = '%s' 
-                                    AND A.flag =  '1'
+                                    ( bid = '%s' 
+                                    AND A.flag =  '1' )
                                     ORDER BY happen_time DESC 
                                  ",$this->Openid,$this->Openid,$this->Openid);
         

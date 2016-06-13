@@ -85,6 +85,9 @@ $tips_word = $_GuessCtrl->get_tips_for_word();
 //获取道具比例
 $prop = $_GuessCtrl->get_获取道具比例();
 
+//获取答题消费比例
+$model_prop = $_GuessCtrl->get_获取答题花销比例();
+
 ?>
 
 
@@ -122,26 +125,30 @@ $prop = $_GuessCtrl->get_获取道具比例();
             							<?php } ?>
                             			
                             			<!-- 输入框 -->
-                            			<div class="ui-grid-solo" style="margin:15px auto 0px;">
-											<label for="search" style="float:left;line-height:35px"></label>
-                                    		<input data-role="none" id="search"  name="answerInput"  maxlength="4" <?php if(@$IsReal) { echo "disabled='disabled'";} ?> <?php if($IsDrawer) { echo "disabled='disabled'";} ?> placeholder="<?php   if($IsDrawer) {echo "您是画主无法作答";}else{echo "请填写四字成语";} ?>"   style="float:left;max-width:160px;padding-left: 12px;text-shadow: 0 1px 0 #f3f3f3;border:solid 1px #777;height:43px;margin:9px 10px 9px 1px" type="text" />
-											<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
-        			 					    <a href="#" data-role="none" id='share_hy' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  >分享给好友</a>
+                            			<div class="ui-grid-solo"  style="margin:15px 0px 7px;">
+                            			     <div style="margin:0 auto;width:169px">
+    											<label for="search" style="float:left;line-height:35px"></label>
+                                        		<input data-role="none" id="search"  name="answerInput"  maxlength="4" <?php if(@$IsReal) { echo "disabled='disabled'";} ?> <?php if($IsDrawer) { echo "disabled='disabled'";} ?> placeholder="<?php   if($IsDrawer) {echo "您是画主无法作答";}else{echo "请填写四字成语";} ?>"   style="max-width:160px;text-align:left;text-shadow: 0 1px 0 #f3f3f3;border:solid 1px #777;height:43px;margin:9px 10px 9px 1px" type="text" />
+                            			     </div>
+                            			</div>
+                            			
+                            			
+										<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
+        			 					    <a href="#" data-role="none" id='share_hy' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  style="margin:auto;" >分享给好友</a>
                                     		<?php } else if (@$IsReal) {    //如果猜主已经答对了，无法参与答题 ?>
                                     				<?php if(@$IsRealButNotMoney) { ?>
-                                    				        <a style="margin-top:8px;" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了</a>
-                                    				 <?php } else {?>
-                                				            <a style="margin-top:8px;" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了，去提现</a>  
+                                    				        <a style="margin-top:8px;margin: auto;" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了</a>
+                                    				 <?php } else { //如果你已经答对这道题，那么无法再次回答，只能去个人中心兑换奖励  ?>
+                                				            <a style="margin-top:8px;margin: auto;" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了，去提现</a>  
                                     		          <?php } ?>
-                                    		<?php } else { ?>
-                    	    				 		<a href="#" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a <?php if($Time != '' && $Time < 0)  echo "ui-state-disabled"; ?>"  id="submit">提交答案 <span style="font-size:11px; color:#ffff00; "><?php if(!$Is_Out) {echo "猜中奖".($price/100)."元";} ?></span></a>
+                                    		<?php } else { //你终于可以正常回答了  ?>
+                    	    				 		<a href="#" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a <?php if($Time != '' && $Time < 0)  echo "ui-state-disabled"; ?>"  style="margin: auto;max-width: 75%;" id="submit">提交答案 <span style="font-size:11px; color:#ffff00; "><?php if(!$Is_Out) {echo "须支付".$price * $model_prop."元，猜中奖".($price/100)."元";} ?></span></a>                	    				
                     	    				<?php } ?>
-                            			</div>
-										
+                    	    				 <p  class='ziti' style='text-align: center;color:#747485'>(每猜一次须支付给画主<?php echo $price/100 * $model_prop; ?>元，猜中奖<span style=""><?php echo $price/100 ; ?>元</span>,猜错送一个提示)</p>
 										
 										<!-- 成语提示 -->
 										 <div  id="chengyutishi" class="ui-corner-all custom-corners"  style="margin:15px auto; <?php if($tips_word == null){ echo "display:none";} ?>">
-                                                      <div id="cyts_k" class="ui-bar ui-bar-a"> <h3>答案提示 </h3>  <span id="chengyutishilate" style="font-size:12px;color:#666">下面<span id="chengyunum">4</span>个字有<span id="chengyunum2">1</span>个为成语的字</span> </div>
+                                                      <div id="cyts_k" class="ui-bar ui-bar-a"> <h3>答案提示 </h3>  <span id="chengyutishilate" style="font-size:12px;color:#666;">下面<span id="chengyunum">4</span>个字有<span id="chengyunum2">1</span>个为成语的字</span> </div>
                                                       <div class="ui-body ui-body-a"  id="panelbody">                                                            
 															<?php 
 															     if($tips_word != null)
@@ -188,8 +195,8 @@ $prop = $_GuessCtrl->get_获取道具比例();
                                     	           
                                     	 <!-- 各种场景下的按钮 -->     
                                 		<?php   if($IsDrawer&&$Is_Out) {   //如果是画主自己，可继续添加红包 ?>
-                                								<a href="#" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" data-role="none"  id="reputHongBao" onClick="reputHongBao()">充值奖金</a>
-                                									<p  class='ziti' style='text-align: center;color:#747485'>(充值奖金后可销售提示，收入你可100%提现)</p>
+                                								<a href="#" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" data-role="none"  id="reputHongBao" onClick="reputHongBao()" style="max-width:75%;">充值奖金</a>
+                                							    <p  class='ziti' style='text-align: center;color:#747485'>(充值奖金后可销售提示，收入你可100%提现)</p>
                     					<?php } ?>
 													
 									
@@ -243,11 +250,13 @@ $prop = $_GuessCtrl->get_获取道具比例();
     									
     									
                                 	 	<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
-                								<a href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id="huahua1" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a">再去画一题</a>
+                								<a href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id="huahua1" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" style="float: left; width: 37%;">再去画一题</a>
+                                                <a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" style="float: right; width: 38%;">去提现</a>
                                 		<?php } ?>
                                 		<?php   if(!$IsDrawer)  {    //如果猜主已经答对了，无法参与答题 ?>
                                 				<!-- <a href="<?php //echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id='huahua2' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  >我也要画一题</a> -->
-                                				<a href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=1&sn=4ccd46aa6b0833bf8b4a485253a6d416#rd" id='huahua2' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  >我也要画一题</a>
+                                				<a href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=1&sn=4ccd46aa6b0833bf8b4a485253a6d416#rd" id='huahua2' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  style="float: left; width: 37%;" >我也要画一题</a>
+                                				<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" style="float: right; width: 38%;">去提现</a>
                                 		<?php } ?>          
                                     	  
                 	    			

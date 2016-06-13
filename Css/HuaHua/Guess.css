@@ -1,8 +1,8 @@
 
 .ui-body-a img{border-radius:25px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.5);-moz-box-shadow:inset 0 1px 5px rgba(0,0,0,.5);box-shadow:inset 0 1px 1px rgba(0,0,0,.5)}
 .ui_ko span{margin:0 3px;float:left}
-#submit{background-color:#2ED146;color:#FFF;max-width:45%}
-#share_hy{background-color:#3aa7ff;color:#FFF;max-width:45%}
+#submit{background-color:#2ED146;color:#FFF;max-width:75%}
+#share_hy{background-color:#3aa7ff;color:#FFF;max-width:75%}
 #search{border-radius:.3125em}
 #clsm_k,#clsm_k2,#cyts_k,#szw_k,#zhuyi{border-top-left-radius:.3125em;border-top-right-radius:.3125em}
 #panelbody,#panelbody2,#pann_k,#pnnn_k,#pnnn_k2{border-bottom-left-radius:.3125em;border-bottom-right-radius:.3125em}
