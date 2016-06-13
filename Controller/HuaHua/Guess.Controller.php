@@ -68,9 +68,23 @@ class GuessCtrl
         //条件语句
         $where = sprintf(" question_id = '%s' ",$_GET["q"]); 
         //发送语句
-        $arr = $this->Sql->where($where)->field('wx_litpic,flag,daojuflag')->order("visitime desc")->select();
+        $arr = $this->Sql->where($where)->field('wx_litpic,flag,daojuflag')->order("visitime desc")->limit(50)->select();
         //返回结果
         return $arr;
+    }
+    
+    public function get_headpic_count()
+    {
+        //选择表
+        $this->Sql->table = "visitor";
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf(" question_id = '%s' ",$_GET["q"]);
+        //发送语句
+        $count = $this->Sql->where($where)->getCount();
+        //返回结果
+        return $count;
     }
     
     
@@ -81,11 +95,26 @@ class GuessCtrl
         //重置
         $this->Sql->reset();
         //条件语句
-        $mysql = sprintf("SELECT A.content,B.wx_litpic,B.wx_name FROM `answer_details` AS A JOIN user AS B ON  A.user_id = B.openid WHERE A.question_id = '%s' order by A.content desc limit 10",$_GET["q"]);
+        $mysql = sprintf("SELECT A.content,B.wx_litpic,B.wx_name FROM `answer_details` AS A JOIN user AS B ON  A.user_id = B.openid WHERE A.question_id = '%s' order by A.answer_time desc limit 15",$_GET["q"]);
         //发送语句
         $arr = $this->Sql->query($mysql);
         //返回结果
         return $arr;
+    }
+    
+   
+    public function get_answerList_count()
+    {
+        //选择表
+        $this->Sql->table = "answer_details";
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf(" question_id = '%s' ",$_GET["q"]);
+        //发送语句
+        $count = $this->Sql->where($where)->getCount();
+        //返回结果
+        return $count;
     }
     
     public function Update_更新流水状态($order,$type)

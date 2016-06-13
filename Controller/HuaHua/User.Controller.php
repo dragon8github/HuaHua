@@ -309,25 +309,25 @@ class UserCtrl
         switch ($type)
         {
             case 1:
-                $Reuslt = "画主充值 -";
+                $Reuslt = "画主充值 <span style='color:red'>-</span>";
                 break;
             case 2:
-                $Reuslt = "使用道具 -";
+                $Reuslt = "使用道具 <span style='color:red'>-</span>";
                 break;
             case 3:
-                $Reuslt = "道具收益 +";
+                $Reuslt = "道具收益 <span style='color:red'>+</span>";
                 break;
             case 4:
-                $Reuslt = "提现 -";
+                $Reuslt = "提现 <span style='color:red'>-</span>";
                 break;
             case 5:
-                $Reuslt = "猜中谜题 +";
+                $Reuslt = "猜中谜题 <span style='color:red'>+</span>";
                 break;
             case 6:
-                $Reuslt = "充值奖金退回 +";
+                $Reuslt = "充值奖金退回 <span style='color:red'>+</span>";
                 break;
             case 7:
-                $Reuslt = "别人答题支付 +";
+                $Reuslt = "别人答题支付 <span style='color:red'>+</span>";
                 break;
         }
         return  $Reuslt;

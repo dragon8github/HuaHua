@@ -88,13 +88,14 @@ CssLoader::LoadCss("Copy", "User.css");
                      {
                          $img = $arr_ls[$i]["wx_litpic"];
                          $des_date = date('Y-m-d',$arr_ls[$i]["happen_time"]);
+                         $des_date2 = date('H:i:s',$arr_ls[$i]["happen_time"]);
                          $zhengfu = $_UserCtrl->get_根据不同的type获取正负($arr_ls[$i]["realtype"]);
                          $jine = $arr_ls[$i]["price"];
                  ?>
                        	   <a class="item" href="javascript:;">
                         		<div class="ff icon"><img src="<?php echo $img; ?>" width="100%" height="45px" /></div>
-                    			<span class="des_tit"><?php echo $des_date; ?></span>
-                                <span class="tit"><?php echo $zhengfu; ?> ￥ <?php echo $jine / 100; ?></span>
+                    			<span class="des_tit"><?php echo $des_date; ?><span class="des_tit2"><?php echo $des_date2; ?></span></span>
+                                <span class="tit"><?php echo $zhengfu; ?>  <span style="color:red;"><?php echo $jine / 100; ?>元</span> </span>
                             </a>
                  <?php 
                     }

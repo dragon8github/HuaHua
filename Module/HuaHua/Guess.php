@@ -133,7 +133,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                             			
                             			
 										<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
-        			 					    <a href="#" data-role="none" id='share_hy' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  style="margin:auto;" >分享给好友</a>
+        			 					    <a href="#" data-role="none" id='share_hy' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  style="margin:auto;width:60%;" >分享给好友</a>
                                     		<?php } else if (@$IsReal) {    //如果猜主已经答对了，无法参与答题 ?>
                                     				<?php if(@$IsRealButNotMoney) { ?>
                                     				        <a style="margin-top:8px;margin: auto;" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了</a>
@@ -236,7 +236,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
 																					 </div>
                                                             			</span>
     															<?php } ?>
-																<h5 style='color:#747485'>共<?php echo count($piclist); ?>人正在玩</h5>
+																<h5 style='color:#747485'>共<?php echo $_GuessCtrl->get_headpic_count(); ?>人正在玩</h5>
                                                           </div>
                                                 </div>
     									<?php } ?>
@@ -257,6 +257,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                                                      </tr>
 																<?php } ?>
                                                                 </table>
+                                                                <h5 style='color:#747485'>共有<?php echo $_GuessCtrl->get_answerList_count(); ?>个回答</h5>
                                                           </div>
                                                 </div>
     									<?php } else if($IsDrawer){?>

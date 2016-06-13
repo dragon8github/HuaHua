@@ -10,10 +10,10 @@ if(@$_GET["model"] == "test")
     $_SESSION["nickname"] = "李钊鸿";      //昵称
     $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Draw.php?q=1&word=金蝉脱壳";
-    // $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Guess.php?q=575";
+     $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Guess.php?q=578";
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/UserList.php"; 
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/List.php"; 
-    $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/User.php";
+    //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/User.php";
     header("Location:".$Wxurl); 
     exit();
 }   

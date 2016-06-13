@@ -4,7 +4,7 @@ SESSION_START();
 //引用区 开始================================================
 include $_SESSION["APP_ROOT"].'/Lib/Class/Lee.class.php';                                //加载辅助类库
 include $_SESSION["APP_ROOT"].'/Lib/wang/wx_class.php';                                 //加载微信类
-include $_SESSION["APP_ROOT"].'/Controller/HuaHua/UserHistory.Controller.php';      //加载List页面控制器
+include $_SESSION["APP_ROOT"].'/Controller/HuaHua/Maidan.Controller.php';      //加载List页面控制器
 include $_SESSION["APP_ROOT"].'/Inc/CssLoader.inc.php';                                 //加载CSS组件库
 include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                                   //加载JS组件库
 
@@ -13,12 +13,12 @@ include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                          
 //公共变量 开始==============================================
 $Title = "分享历史";                                    //设置页面Title
 $openid = $_SESSION["openid"];                //openid
-$_UserHistoryCtrl = new UserHistoryCtrl();
+$_MaidanCtrl = new MaidanCtrl();
 
 
 //业务逻辑 开始=================================================
 
-$arr = $_UserHistoryCtrl->get_获取分享列表();
+$arr = $_MaidanCtrl->get_获取分享列表();
 
 
 
@@ -43,13 +43,12 @@ $arr = $_UserHistoryCtrl->get_获取分享列表();
                            		   {
                            		       $url =  sprintf("http://huahua.ncywjd.com/Home.php?p=guess&q=".$arr[$i]["id"]);
                            		       $pic = $arr[$i]['question_pic'];
-                           		       $des_date = date('Y-m-d ',$arr[$i]["release_time"]);
-                           		       $des_date2 = date('H:i:s',$arr[$i]["release_time"]);
+                           		       $des_date = date('Y-m-d H:i:s',$arr[$i]["release_time"]);
                            		       $answer =  $arr[$i]["answer"] ;
                        		       ?>  
                                		   <a class="item" href="<?php echo $url; ?>">
                                         		<div class="ff icon"><img src="<?php echo  $pic;  ?>" width="100%" height="45px" /></div>
-                                    			<span class="des_tit"><?php echo $des_date;?><span class="des_tit2"><?php echo $des_date2; ?></span></span>
+                                    			<span class="des_tit"><?php echo $des_date;?></span>
                                                 <span class="tit"><?php echo $answer;?></span>
                                        </a> 
                                <?php 
