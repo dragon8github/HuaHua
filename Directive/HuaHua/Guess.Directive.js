@@ -236,9 +236,10 @@ function update_p(num,t)
 function Send()
 {
 	var v = $("#search").val();
-	if(v.length > 4 || v.length == 0 || !/^[\u4E00-\u9FA5]+$/.test(v))
+	if(v.length < 4 || v.length == 0 || !/^[\u4E00-\u9FA5]+$/.test(v))
 	{
 		//layer.tips("请输入四字成语",$("#search"), { tips: [1, '#000'], time: 4000 })
+		//layer.open({ title: '信息', content: '请输入四字成语',btn:["好的"],yes:function(){layer.closeAll();} });
 		return false;
 	} 
 	else
@@ -270,6 +271,7 @@ function Send()
 				data: { type:"DaTiHuaXiao"},
 				success:function(data)
 				{  
+					
 					var obj = JSON.parse(data);
 					var order = obj["Result"].order;			//流水订单号
 					var money = obj["Result"].money;	    //需要花销的金额
@@ -279,7 +281,17 @@ function Send()
 					myobj.content = v;						   //将”用户提交的答案“插入数据集中传递给回调函数
 				    myobj.money = money;				   //将”答题花销“插入数据集中传递给回调函数
 				    
-					callpay(wxjson,myobj,GuessDir.UpdateWxResult3);
+				    if(money != 0)
+				    {
+				    	callpay(wxjson,myobj,GuessDir.UpdateWxResult3);
+				    }
+				    else
+			    	{
+				    	layer.open({ title: '信息', content: '题目红包为0，答题失败!',btn:["好的"],yes:function(){layer.closeAll();} });
+			    	}
+				    	
+				    
+					
 				}
 		})
 			
@@ -377,7 +389,7 @@ $(function()
 								 $("#HongBaoJinE").val(val);
 								 $("#jinddd").text(val*$("#HongBaoCount").val());
 								 $("#DaoJuJinE").val(($("#HongBaoJinE").val()*3)/10);
-								
+								 $("#model_price").text(($("#HongBaoJinE").val()*3)/10);
 								 })
 	
 	$("#HongBaoCount").blur(function()

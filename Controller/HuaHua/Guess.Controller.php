@@ -680,6 +680,8 @@ class GuessCtrl
             //猜主回答错误
            // if($model)
            // {
+            if($money != 0)
+            {
                 //获取tips的索引
                 $tips_index = rand(0, 3);
                 //获取生成的提示
@@ -687,8 +689,10 @@ class GuessCtrl
                 if($tips != "" && $tips_index != "")
                 {
                     //插入数据库
-                    $this->Daoju_添加道具购买标识($tips_index,$tips);   
+                    $this->Daoju_添加道具购买标识($tips_index,$tips); 
+                    $this->Daoju_添加访客道具购买标识();
                 }
+            }
            // }
         }
         
@@ -856,7 +860,7 @@ class GuessCtrl
         $data2["hongbao_count"] = $HongBaoCount;
         $data2["shengyu_count"] = $HongBaoCount;
         $data2["prop"] = $this->C_金额转换($HongBaoJinE) * floatval($DaoJuBiLi);  
-        $data2["expire_time"] = strtotime("+1 hours");
+        $data2["expire_time"] = strtotime("+24 hours");
         $data2["flag"] = '0';
         //条件语句
         $where = sprintf(" id = '%s' ",$_GET["q"]);
@@ -1034,6 +1038,9 @@ class GuessCtrl
         //生成订单号
         $orderid = uniqid();
         
+        //微信json
+        $jsApiParameters = "";
+        
         //----------------------------------------
         
       $datihuaxiaobili =   $this->get_获取答题花销比例();
@@ -1045,7 +1052,7 @@ class GuessCtrl
         //发送查找
         $ret = $this->Sql->where($where)->find();
         //获取消费
-        $model_price = $ret["price_count"] * $datihuaxiaobili;
+        $model_price = $ret["price"] * $datihuaxiaobili;
         //获取画主
         $uid  = $ret["uid"];
         
@@ -1067,8 +1074,11 @@ class GuessCtrl
         
         //------------------------------------
         
-        $ko=new WX_INT();
-        $jsApiParameters=$ko->Jspay("添加红包","添加红包",$model_price,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
+        if($model_price != 0)
+        {
+             $ko=new WX_INT();
+             $jsApiParameters=$ko->Jspay("添加红包","添加红包",$model_price,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
+        }
         
        //发送请求
        $this->Sql->add($data);

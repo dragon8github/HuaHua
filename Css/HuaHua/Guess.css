@@ -1,8 +1,9 @@
-
+.ui-page-theme-a .ui-btn:hover, html .ui-bar-a .ui-btn:hover, html .ui-body-a .ui-btn:hover, html body .ui-group-theme-a .ui-btn:hover, html head + body .ui-btn.ui-btn-a:hover{text-shadow:none;}
+.ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper{text-shadow:none;}
 .ui-body-a img{border-radius:25px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.5);-moz-box-shadow:inset 0 1px 5px rgba(0,0,0,.5);box-shadow:inset 0 1px 1px rgba(0,0,0,.5)}
 .ui_ko span{margin:0 3px;float:left}
-#submit{background-color:#2ED146;color:#FFF;max-width:75%}
-#share_hy{background-color:#3aa7ff;color:#FFF;max-width:75%}
+#submit{background-color:#2ED146;color:#FFF;max-width:60%}
+#share_hy{background-color:#3aa7ff;color:#FFF;max-width:90%}
 #search{border-radius:.3125em}
 #clsm_k,#clsm_k2,#cyts_k,#szw_k,#zhuyi{border-top-left-radius:.3125em;border-top-right-radius:.3125em}
 #panelbody,#panelbody2,#pann_k,#pnnn_k,#pnnn_k2{border-bottom-left-radius:.3125em;border-bottom-right-radius:.3125em}
@@ -12,7 +13,6 @@
 #tupian_wrap{box-shadow:0 0 8px #ccc;-moz-box-shadow:0 0 8px #ccc;-webkit-box-shadow:0 0 8px #ccc;border-radius:6px}
 #Cy-tp-DialogYes2{text-decoration:none}
 .tipsFont{line-height:1.3rem;margin:6px 3px;border-radius:.2rem;border:solid 1px #ccc;display:inline-block;padding:1px 3px;background-color:#F6F5F7;color:#747485}
-$panelbody{white-space:normal;word-break:break-all}
 #bdbd a,#bdbd div,#bdbd h3,#bdbd h4,#bdbd h5,#bdbd input,#bdbd p{font-family:"黑体"}
 #Cy-tp-PopupTitle{background-color:#2ED146}
 #cy-tp-dialog2{border-color:#2ED146}

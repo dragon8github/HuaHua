@@ -93,6 +93,21 @@ header("Content-type: text/html; charset=utf-8");
         $newstr = implode($re);         //把数据转为字符串
         return $newstr;
     }
+    
+    public static function WriteLog($msg,$module = null,$logLevel = "DEBUG")
+    {
+        $filepath = $_SESSION["APP_ROOT"]."/log/";
+        if(!is_dir($filepath)) mkdir($filepath,'0777');
+        $MyLogFile = @fopen($filepath.date("Y-m-d").".txt",'a+');
+    
+        $time = date("Y-m-d H:i:s");
+        if(isset($module)){$module =  sprintf("\r\n归属模块：".$module."\r\n");}
+        $logLine = "\r\n-------------------------------  $time -------------------------------\r\n";
+        $logLine .= $module;
+        $logLine .= "\r\n异常信息：$msg\r\n";
+        $logLine .= "\r\n错误等级：$logLevel\r\n";
+        fwrite($MyLogFile,$logLine);
+    }
 }
 
 

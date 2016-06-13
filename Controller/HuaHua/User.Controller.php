@@ -324,9 +324,10 @@ class UserCtrl
                 $Reuslt = "猜中谜题 +";
                 break;
             case 6:
-                $Reuslt = "红包退回 +";
+                $Reuslt = "充值奖金退回 +";
+                break;
             case 7:
-                $Reuslt = "答题消费 +";
+                $Reuslt = "别人答题支付 +";
                 break;
         }
         return  $Reuslt;
