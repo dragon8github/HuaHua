@@ -4,7 +4,7 @@ ini_set('date.timezone','Asia/Shanghai');
 
 
 //控制器专用累
-class GuessCtrl
+class GuessCtrl extends Lee
 {
     private  $Sql;	          //该sql类的全局对象
     
@@ -706,23 +706,26 @@ class GuessCtrl
         } 
         else 
         {
-            //猜主回答错误
-           // if($model)
-           // {
+            //猜主回答错误          
             if($money != 0)
             {
                 //获取tips的索引
                 $tips_index = rand(0, 3);
                 //获取生成的提示
                 $tips =$this->get_生成提示($readContent,$tips_index);
-                if($tips != "" && $tips_index != "")
-                {
+                
+//                 if($this->Openid == "oYNn6wkL9Yti_xsEd9Ao5mh-DtA8" || $this->Openid == "oYNn6wi2Lg4qvvQDOFFTMXpY6ulY")
+//                 {
+//                     Lee::WriteLog(sprintf("微信号为：%s，当前生成的tips:%s,索引为：%s,题目id为：%s",$this->Openid,$tips,$tips_index,$_GET["q"]));
+//                 } 
+                
+                if($tips != "" && $tips_index !== "")
+                {                     
                     //插入数据库
                     $this->Daoju_添加道具购买标识($tips_index,$tips); 
-                    $this->Daoju_添加访客道具购买标识();
+                    $this->Daoju_添加访客道具购买标识(); 
                 }
             }
-           // }
         }
         
         
@@ -890,6 +893,7 @@ class GuessCtrl
         $data2["shengyu_count"] = $HongBaoCount;
         $data2["prop"] = $this->C_金额转换($HongBaoJinE) * floatval($DaoJuBiLi);  
         $data2["expire_time"] = strtotime("+24 hours");
+        $data2["release_time"] = time();
         $data2["flag"] = '0';
         //条件语句
         $where = sprintf(" id = '%s' ",$_GET["q"]);
@@ -943,8 +947,6 @@ class GuessCtrl
         {
             //数组
             $word_index_arr = explode(",",$word_index);
-            	
-        
             
             if(count($word_index_arr) >= 4)
             {

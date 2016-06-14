@@ -32,7 +32,7 @@ class MaidanCtrl
         $this->Sql->table = 'question';
         //重置
         $this->Sql->reset();
-        //条件语句
+        //条件语句 //  `model` is null
         $mysql = sprintf("            
                                     SELECT 
                                     		                * 
@@ -50,6 +50,8 @@ class MaidanCtrl
                                                             price > 0
                                           AND
                                                             shengyu_count > 0
+                                          AND 
+                                                           `model`  = 1
                                         ORDER BY
                                         		            price 
                                         DESC
@@ -66,7 +68,7 @@ class MaidanCtrl
         $this->Sql->reset();
         //条件语句
         $mysql = sprintf("
-                                        SELECT 
+                                     SELECT 
                                     		               * 
                                     FROM 
                                         		            question AS A
@@ -81,7 +83,9 @@ class MaidanCtrl
                                          AND
                                                             price > 0
                                         AND
-                                                            shengyu_count > 0
+                                                           shengyu_count > 0
+                                        AND 
+                                                           `model` = 1
                                         ORDER BY
                                         		            release_time
                                         DESC

@@ -28,17 +28,19 @@ $arr = $_AdminCtrl->get_所有信息();
 </head>
 <body>
 	
-	<table class="table table-hover" style="vertical-align: middle">
+	
+	<table class="table table-hover table-bordered" style="vertical-align: middle">
       <thead>
         <tr>
           <th>#</th>
           <th>编号</th>
           <th>用户头像</th>
           <th>用户名</th>
+          <th>用户id</th>
           <th>题目答案</th>
           <th>题目画像</th>
-          <th>金额</th>
-          <th>发布时间</th>
+          <th><a href="?orderby=descmoney">剩余金额</a></th>          
+          <th><a href="?orderby=desctime">发布时间</a></th>
           <th></th>
         </tr>
       </thead>
@@ -50,34 +52,89 @@ $arr = $_AdminCtrl->get_所有信息();
                 $username = $arr[$i]["wx_name"];
                 $answer = $arr[$i]["answer"];
                 $wx_litpic = $arr[$i]["wx_litpic"];
-                $question_pic = $arr[$i]["question_pic"];
-                $price_count = $arr[$i]["price_count"];
+                $question_pic = $arr[$i]["question_pic"];         
                 $release_time = $arr[$i]["release_time"];
+                $userid = $arr[$i]["openid"];
+                $model = $arr[$i]["model"];
                 if($release_time != "") { $release_time = date("Y-m-d H:i:s",$release_time); }
+                $shengyujine =$arr[$i]["shengyujine"];
         ?>
         <tr>                
               <td><?php echo $i; ?></td>
               <td><?php echo $id; ?></td>
               <td><img width="100" height="100" src="<?php echo $wx_litpic; ?>" /></td>
               <td><?php echo $username; ?></td>
-              <td><?php echo $answer; ?></td>
+              <td><?php echo $userid; ?></td>
+              <td><?php echo $answer; ?></td>                
               <td><img width="300" height="280" src="<?php echo $question_pic; ?>" /></td>
-              <td>￥ <?php echo $price_count; ?></td>
+              <td>￥ <?php echo $shengyujine / 100; ?></td>
               <td><?php echo $release_time ?></td>
+              <?php if($model == "") { ?>
+                    <td>
+                            <button type="button" class="btn btn-warning jinzhita" data-id="<?php echo $id; ?>" data-model="0">禁止它</button>
+                            <button type="button" class="btn btn-primary kaiqita" data-id="<?php echo $id; ?>" data-model="1">开启它</button>                            
+                    </td>
+              <?php } else if($model == "0") { ?>
+                   <td>
+                             <button type="button" class="btn btn-danger" data-id="<?php echo $id; ?>">作弊者，已禁止</button>
+                            <button type="button" class="btn btn-primary kaiqita" data-id="<?php echo $id; ?>" data-model="1">开启它</button>
+                    </td>   
+               <?php } else if($model == "1"){ ?>
+                    <td>
+                            <button type="button" class="btn btn-warning jinzhita" data-id="<?php echo $id; ?>" data-model="0">禁止它</button>
+                            <button type="button" class="btn btn-default " data-id="<?php echo $id; ?>" >本题已开启</button>                            
+                    </td>
+               <?php } ?>
         </tr>
-        <?php } ?>
+      <?php } ?>
       </tbody>
     </table>
 	
+	
+	<?php
+    	JsLoader::Jquery();    //加载jquery
+    	JsLoader::Layermobile();
+	?>
 	<script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </body>
 </html>
 <script type="text/javascript" >
-            
-	$(function(){ 
-			
+	$(function()
+	{ 
+		$(".jinzhita,.kaiqita").click(function()
+		{
+				var self = $(this);
+				var id = $(this).attr("data-id");
+				var m = $(this).attr("data-model") || "0";
+				var content = "你确定" +  $(this).text() + "吗？"; 
 
-		}) 
+
+				layer.open({
+					 title: '信息', 
+					 content: content, 
+					 btn:["确定","取消"],
+					yes:function()
+					{
+						$.ajax
+						({
+								type:"post",
+								data:
+								{
+									type:"update",
+									question_id : id,
+									model:m
+								},
+								success:function(data)
+								{
+									//	alert(data);	 
+									self.html("修改完成");									
+								}
+						})
+						layer.closeAll();
+					} 
+				});
+		  })
+	}) 
 
 
 </script> 

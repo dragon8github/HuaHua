@@ -40,10 +40,9 @@ function deleteMenu($acc){
 
 
 
-
 $data = '{"button":[{ "type": "view",  "name": "我也画", "url": "http://huahua.ncywjd.com/Home.php?p=list"},
-                           	   { "type": "view", "name": "\ue12f猜画有奖", "url": "http://huahua.ncywjd.com/Home.php?p=Maidan"},
-                           	   { "type": "view", "name": "提现", "url": "http://huahua.ncywjd.com/Home.php?p=user"}]}';
+                           	   { "type": "view", "name": "猜画有奖", "url": "http://huahua.ncywjd.com/Home.php?p=Maidan"},
+                           	   { "name": "用户中心", "sub_button":[{"type":"view","name":"去提现","url": "http://huahua.ncywjd.com/Home.php?p=user"},{"type":"view","name":"我的作品","url": "http://huahua.ncywjd.com/Home.php?p=UserHistory"]}]}';
 
 
 //$str_json = json_encode($data);

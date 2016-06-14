@@ -131,9 +131,12 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                             			     </div>
                             			</div>
                             			
-                            			
+                            			 <!-- 各种场景下的按钮 -->     
+                                		<?php   if($IsDrawer&&$Is_Out) {   //如果是画主自己，可继续添加红包 ?>
+                                								<a href="#" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" data-role="none"  id="reputHongBao" onClick="reputHongBao()" style="max-width:90%;">充值奖金</a>
+                                							    <p  class='ziti' style='text-align: center;color:#747485'>(充值奖金后可销售提示，收入你可100%提现)</p>
+                    					<?php } ?>
 										<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
-        			 					    <a href="#" data-role="none" id='share_hy' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  style="margin:auto;width:60%;" >分享给好友</a>
                                     		<?php } else if (@$IsReal) {    //如果猜主已经答对了，无法参与答题 ?>
                                     				<?php if(@$IsRealButNotMoney) { ?>
                                     				        <a style="margin-top:8px;margin: auto;" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了</a>
@@ -163,6 +166,8 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
 													<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=Maidan" style="float: left; width: 19%;">更多题</a>
                                     		<?php } ?>          
                                     	  </div>
+										  
+										  <a href="#" data-role="none" id='share_hy' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  style="margin:auto;width:60%;" >分享给好友一起玩</a>
 										  
 										
 										
@@ -215,11 +220,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                          
                                                         
                                     	           
-                                    	 <!-- 各种场景下的按钮 -->     
-                                		<?php   if($IsDrawer&&$Is_Out) {   //如果是画主自己，可继续添加红包 ?>
-                                								<a href="#" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" data-role="none"  id="reputHongBao" onClick="reputHongBao()" style="max-width:90%;">充值奖金</a>
-                                							    <p  class='ziti' style='text-align: center;color:#747485'>(充值奖金后可销售提示，收入你可100%提现)</p>
-                    					<?php } ?>
+                                    	
 													
 									
                                        
@@ -325,7 +326,9 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                                     				</tr>                                                    			
                                                     			</table>
                                                     			<!--  <p class='ziti'>(提示售价为单份奖金的30%，收入你可百分百提现)</p>-->
-                                                    			<p style="margin:10px auto;color:#000;">别人每猜一次，须向您支付<span id="model_price">0.9</span>元，金额可百分比提现</p>
+                                                    			<p style="margin:2px auto;padding:0;font-size:12px;text-align:center">别人每猜一次，须向您支付<span id="model_price">0.9</span>元</p>
+																<p style="margin:2pxpx auto;padding:0;font-size:12px;text-align:center;color:#ff0000">24小时内奖金未领完退回到你的余额</p>
+																<p style="margin:2px auto;padding:0;font-size:12px;text-align:center">所有金额可100%提现</p>
                                                     </div>					          
                                                     <p style="margin:0px auto;text-align:center;">
                             					               <a href="#" id="Cy-tp-DialogYes2" data-role="none" >充值奖金<span style='color:#FEFF00'><font id='jinddd'>3</font>元</span></a> 

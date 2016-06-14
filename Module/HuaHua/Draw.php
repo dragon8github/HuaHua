@@ -104,10 +104,10 @@ if(count($arr))
 									</div>
 									<div id='k_color'>
 									<div class="fl_left_n"><div id="k_c1" ></div></div>
-									<div class="fl_left_n"><div id="k_c2" class="cjjssll22" ></div></div>
+									<div class="fl_left_n"><div id="k_c2"  ></div></div>
 									<div class="fl_left_n"><div id="k_c3" ></div></div>
 									<div class="fl_left_n"><div id="k_c4" ></div></div>
-									<div class="fl_left_n"><div id="k_c5" ></div></div>														
+									<div class="fl_left_n"><div id="k_c5" class="cjjssll22" ></div></div>														
 								    <div style="clear:both"></div>
 									</div>
 
@@ -115,7 +115,8 @@ if(count($arr))
                             									<div id="replace_images">
                                     								<canvas id="canvas"  style="border:dashed 1px #333333;width:99.8%; "></canvas>
                                     							</div>
-                                            					<a href="#" data-role="none" id="KaiShiZhizuo" style="margin-top:20px;">生成作品</a>
+																<p style="font-size:12px;color:#FF0000;text-align:center;margin:8px 0 0 0;padding:0">画得有诚意些，才会有人愿意作答</p>
+                                            					<a href="#" data-role="none" id="KaiShiZhizuo" style="margin-top:8px;">生成作品</a>
                         			</div>
         	            </div>
         	    </div><!-- /content -->
@@ -194,8 +195,8 @@ wx.config
 		{
 			if(!$(".cjjssll22").length)
 			{
-			$("#k_c2").addClass("cjjssll22");
-			line_color = "#cc0000";
+			$("#k_c5").addClass("cjjssll22");
+			line_color = "#33cc66";
 			}
 			$(".cjjssll").removeClass("cjjssll");
 		$(this).addClass("cjjssll");
@@ -206,8 +207,8 @@ wx.config
 		{
 		if(!$(".cjjssll22").length)
 			{
-			$("#k_c2").addClass("cjjssll22");
-			line_color = "#cc0000";
+			$("#k_c5").addClass("cjjssll22");
+			line_color = "#33cc66";
 			}
 			$(".cjjssll").removeClass("cjjssll");
 		$(this).addClass("cjjssll");
@@ -218,8 +219,8 @@ wx.config
 		{
 		if(!$(".cjjssll22").length)
 			{
-			$("#k_c2").addClass("cjjssll22");
-			line_color = "#cc0000";
+			$("#k_c5").addClass("cjjssll22");
+			line_color = "#33cc66";
 			}
 			$(".cjjssll").removeClass("cjjssll");
 		$(this).addClass("cjjssll");

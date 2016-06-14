@@ -371,6 +371,7 @@ $(function()
 	
 	
 	$("#share_hy").click(function() {
+								   $('html, body').animate({scrollTop:0}, 'slow');
 		$("#zhezhaocheng").width($(document).width());
 		$("#zhezhaocheng").height($(document).height());
 		$("#zhezhaocheng").show();

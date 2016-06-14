@@ -115,8 +115,9 @@ color:#FF0000;}
 
             
             <div style="min-height: 638px;" id="cotne" class="content content-user-index">
-			<ul class="tab_li"><li class="dds"><a href="#">最新作品</a></li><li class="dds dddssss"><a href="#">奖金最高</a></li></ul>
-                	<div id="dds1" class="navigate clearfix currr" style="display:none">
+			<ul class="tab_li"><li class="dds dddssss"><a href="#">最新作品</a></li><li class="dds"><a href="#">奖金最高</a></li></ul>
+                	<div id="dds1" class="navigate clearfix currr">
+					<p style="text-align:center;color:#FF0000;margin:6px 0 0 0;padding:0">以下题目为小编推荐的有诚意的题目</p>
                            		 <?php 
                            		   for($i = 0;$i<count($arr_top);$i++)
                            		   {
@@ -138,7 +139,8 @@ color:#FF0000;}
                                     }
                                ?> 
                     </div>
-					<div id="dds2" class="navigate clearfix currr" >
+					<div id="dds2" class="navigate clearfix currr" style="display:none">
+					<p style="text-align:center;color:#FF0000;margin:6px 0 0 0;padding:0">以下题目为小编推荐的有诚意的题目</p>
                            		 <?php 
                            		   for($i = 0;$i<count($arr_top);$i++)
                            		   {

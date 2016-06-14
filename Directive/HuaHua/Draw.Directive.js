@@ -142,7 +142,7 @@ function ReadMe()
 {
 	console.log("不建议这样使用，但特殊情况譬如为了开发速度也无需顾虑");
 }
-var line_color="#cc0000";
+var line_color="#33cc66";
 // 从 canvas 提取图片 image  
 function convertCanvasToImage(canvas) {  
     //新Image对象，可以理解为DOM  

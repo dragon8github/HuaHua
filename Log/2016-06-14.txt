@@ -1,0 +1,48 @@
+
+-------------------------------  2016-06-14 18:01:30 -------------------------------
+
+异常信息：这里是Send的sql操作：insert into  daojuinfo  (word_index,openid,question_id,tips) values ('0','oYNn6wkVrj2wz5Bu31gTSptEQ71s','714','不万不步')  
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-14 18:01:39 -------------------------------
+
+异常信息：这里是Send的sql操作：insert into  daojuinfo  (word_index,openid,question_id,tips) values ('3','oYNn6wsntFGucW0VeMkpamNGeGvE','804','肠不间毓')  
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-14 18:01:49 -------------------------------
+
+异常信息：这里是Send的sql操作：update daojuinfo set word_index = concat(word_index,',0'),tips = concat(tips,',安小往曾') where openid = 'oYNn6woiiqV7iKw1C9J_0xvH-HA4' AND question_id = '802'  
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-14 18:02:08 -------------------------------
+
+异常信息：这里是Send的sql操作：insert into  daojuinfo  (word_index,openid,question_id,tips) values ('1','oYNn6wo6ounXY2-bXDSVKYbE38N0','682','底空井鬼')  
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-14 18:03:58 -------------------------------
+
+异常信息：这里是Send的sql操作：insert into  daojuinfo  (word_index,openid,question_id,tips) values ('0','oYNn6wtXdSnf2F-EJaThiIskCKto','682','刺渐釜若')  
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-14 18:04:36 -------------------------------
+
+异常信息：微信号为：oYNn6wkL9Yti_xsEd9Ao5mh-DtA8，当前生成的tips:郎无丝若,索引为：1,题目id为：816
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-14 18:04:36 -------------------------------
+
+异常信息：这里是Send的sql操作：insert into  daojuinfo  (word_index,openid,question_id,tips) values ('1','oYNn6wkL9Yti_xsEd9Ao5mh-DtA8','816','郎无丝若')  
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-14 18:04:49 -------------------------------
+
+异常信息：这里是Send的sql操作：insert into  daojuinfo  (word_index,openid,question_id,tips) values ('2','oYNn6wrueJHp2xCDWHzItND7TsQk','816','人不簇内')  
+
+错误等级：DEBUG

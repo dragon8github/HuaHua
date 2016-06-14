@@ -62,7 +62,8 @@
  * 		//删除数据
  * 		$Sql->where($where)->delete();
  */
-class Mysql{
+class Mysql extends Lee
+{
 	private $host;   //主机地址
 	private $dbname; //数据库名
 	private $port;  //数据库端口
@@ -294,10 +295,10 @@ class Mysql{
 	        //执行语句
 	        $this->pre->execute();
 	        //重置各种条件
-	        $this->reset();
+	        $this->reset();     
 	    }
 	    catch(PDOException $e)
-	    {
+	    {	        
 	        exit("错误：".$e->getMessage());
 	    }
 	}
