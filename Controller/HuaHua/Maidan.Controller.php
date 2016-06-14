@@ -22,30 +22,82 @@ class MaidanCtrl
         	
         //返回数据库对象
         $this->Sql =  Mysql::start($dsn);
-    }
+    }   
     
-    public function get_获取用户余额()
-    {
-        //选择表
-        $this->Sql->table = 'user';
-         //条件语句
-        $where = sprintf("openid = '%s' ",$this->Openid);
-        //发送语句
-        $arr =  $this->Sql->field("balance")->where($where)->find();
-        //返回余额
-        return $arr["balance"];
-        
-    }
     
-    public function get_获取分享列表()
+    
+    public  function get_money()
     {
         //选择表
         $this->Sql->table = 'question';
+        //重置
+        $this->Sql->reset();
         //条件语句
-        $mysql = sprintf("SELECT a.id,question_pic,b.answer,a.release_time FROM question AS a JOIN question_library AS b ON a.answer = b.id WHERE a.uid =  '%s' ORDER BY release_time DESC",$this->Openid) ;
-         
+        $mysql = sprintf("            
+                                    SELECT 
+                                    		                * 
+                                    FROM 
+                                         		           question AS A
+                                  LEFT JOIN 
+                                        		           (SELECT question_id, COUNT(*) AS COUNT FROM visitor GROUP BY  question_id) AS C 
+                                        ON 
+                                        		            A.id = C.question_id
+                                        WHERE
+                                        	 	            flag <> '2' 
+                                         AND 
+                                     	 	                expire_time > UNIX_TIMESTAMP() 
+                                        AND
+                                                            price > 0
+                                          AND
+                                                            shengyu_count > 0
+                                        ORDER BY
+                                        		            price 
+                                        DESC
+                                  ",$this->Openid) ;
         //发送语句
         return $this->Sql->query($mysql);
+    }
+    
+    public function get_New()
+    {
+        //选择表
+        $this->Sql->table = 'question';
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $mysql = sprintf("
+                                        SELECT 
+                                    		               * 
+                                    FROM 
+                                        		            question AS A
+                                    LEFT  JOIN 
+                                        		            (SELECT question_id, COUNT(*) AS COUNT FROM visitor GROUP BY  question_id) AS C 
+                                        ON 
+                                        		            A.id = C.question_id
+                                        WHERE
+                                        	 	            flag <> '2'
+                                         AND
+                                     	 	                expire_time > UNIX_TIMESTAMP()
+                                         AND
+                                                            price > 0
+                                        AND
+                                                            shengyu_count > 0
+                                        ORDER BY
+                                        		            release_time
+                                        DESC
+            
+                                  ",$this->Openid) ;
+        //发送语句
+        return $this->Sql->query($mysql);
+    }
+    
+    public function get_获取答题花销比例()
+    {
+        $this->Sql->table = "setting";
+        $this->Sql->reset();
+        $dd=$this->Sql->where("id=1")->select();
+        $prop =  @$dd[0]["model_prop"];
+        return $prop;
     }
     
 }

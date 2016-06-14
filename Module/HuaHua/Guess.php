@@ -150,15 +150,17 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
 										     <?php } ?>
 										     
 										
-										<div style="clear:both;margin:15px auto;height:45px;max-width:73%;">
+										<div style="clear:both;margin:15px auto;height:45px;max-width:96%;">
     								       	<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
-                    								<a href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id="huahua1" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" style="float: left; width: 35%;">去画题</a>
-                                                    <a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" style="float: right; width: 35%;">去提现</a>
+                    								<a href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id="huahua1" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" style="float: left; width: 19%;margin-right:2%;">去画题</a>
+                                                    <a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" style="float: left; width: 19%;margin-right:2%;">去提现</a>
+													<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=Maidan" style="float: left; width: 19%;">更多题</a>
                                     		<?php } ?>
                                     		<?php   if(!$IsDrawer)  {    //如果猜主已经答对了，无法参与答题 ?>
                                     				<!-- <a href="<?php //echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id='huahua2' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  >我也要画一题</a> -->
-                                    				<a href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=1&sn=4ccd46aa6b0833bf8b4a485253a6d416#rd" id='huahua2' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  style="float: left; width: 35%;" >去画题</a>
-                                    				<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" style="float: right; width: 35%;">去提现</a>
+                                    				<a href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=1&sn=4ccd46aa6b0833bf8b4a485253a6d416#rd" id='huahua2' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  style="float: left; width: 19%;margin-right:2%;" >去画题</a>
+                                    				<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" style="float: left; width: 19%;margin-right:2%">去提现</a>
+													<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=Maidan" style="float: left; width: 19%;">更多题</a>
                                     		<?php } ?>          
                                     	  </div>
 										  
@@ -334,6 +336,11 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
             	</div><!-- /page -->
 				<div id="zhezhaocheng" style="background-color:#191919;display:none;position:absolute;left:0;top:0"><img width="100%" src="<?php echo $_SESSION["STATIC_ROOT"]?>/Img/83358PICrqB_1024.jpg" /></div>	
 	 	</body>
+		<style type="text/css">
+			#huahua1, #huahua2
+			{
+			padding: 0.7rem 6%}
+		</style>
 </html>
 
 		

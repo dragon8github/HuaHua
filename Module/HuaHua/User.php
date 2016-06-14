@@ -63,6 +63,9 @@ CssLoader::LoadCss("Copy", "User.css");
 				        .ui-loader-default{ display:none}
       .ui-mobile-viewport{ border:none;}
       .ui-page {padding: 0; margin: 0; outline: 0} 
+	  
+	  
+	 #sdfw3e{background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:0 1px 0 #f3f3f3;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto;text-shadow:0 0 0 #000}
             </style>
 			
             
@@ -74,6 +77,7 @@ CssLoader::LoadCss("Copy", "User.css");
                             <span class="nick"> <?php echo $nickname ?></span>
                             <span class="tip">欢迎回来~</span>
                         </div>
+						<a  id='sdfw3e' style="display:block;float:right;margin-right:35px;margin-top:35px;" href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=UserHistory">历史作品</a>
                     </div>
                     <div class="stat clearfix">
                         <div class="yyee">余额: <?php echo $balance/100; ?></div> 
