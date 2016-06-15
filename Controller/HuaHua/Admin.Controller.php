@@ -31,10 +31,24 @@ class AdminCtrl
         //条件语句
         $mysql = sprintf("
                                 SELECT 
-                                                *,(B.shengyu_count * B.price) AS shengyujine,
-                                                B.id AS AID
+                                                mysum,
+                                                C.answer,                                                
+                                                D.openid,
+                                                D.wx_name,
+                                                D.wx_litpic,
+                                                B.question_pic,
+                                                B.release_time,
+                                                B.model, 
+                                                (B.shengyu_count * B.price) AS shengyujine,
+                                                B.id AS AID,
+                                                D.balance AS money_balance
+
                                 FROM 
                                                   statements  AS A
+                              LEFT  JOIN
+                                                 (SELECT uid,sum(price) as mysum FROM statements where type = '4' GROUP BY uid) AS SUM
+                                 on
+                                        A.uid = SUM.uid                        
                                 JOIN 
                                         question AS B 
                                 ON 

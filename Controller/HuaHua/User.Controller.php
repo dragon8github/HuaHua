@@ -75,11 +75,7 @@ class UserCtrl
     
     public function Is_如果用户存在过期的信息就归还金钱()
     {
-        if($this->Openid != "oYNn6wg0qYDkqNVomc78AUctYfRM")
-        {
-            return false;      
-        }
-        
+     
         //选择表
         $this->Sql->table = 'question';
         //sql语句
@@ -328,6 +324,9 @@ class UserCtrl
                 break;
             case 7:
                 $Reuslt = "别人答题支付 <span style='color:red'>+</span>";
+				break;
+			case 8:
+                $Reuslt = "猜题费用退回 <span style='color:red'>+</span>";
                 break;
         }
         return  $Reuslt;
@@ -344,7 +343,7 @@ class UserCtrl
                                     FROM statements AS A
                                     JOIN user AS B ON uid = openid
                                     WHERE 
-                                    A.type IN ( 2, 3, 4, 5, 6,7) 
+                                    A.type IN ( 2, 3, 4, 5, 6,7,8) 
                                      AND (uid =  '%s' 
                                     AND A.flag =  '1'  AND A.type<>7 AND A.type<>2 )
                                     OR 

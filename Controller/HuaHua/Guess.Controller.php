@@ -155,29 +155,39 @@ class GuessCtrl extends Lee
      }
 	
     
-    public function Ajax_流水记录和微信支付json($stype,$money,$openid,$cot)
+    public function Ajax_流水记录和微信支付json($money,$openid,$cot)
     {
-        $orderid = WxPayConfig::MCHID.uniqid();             //订单号   	
-		$prict_count=$this->C_金额转换($money)*$cot;     //价格
 		
-        //选择表
-        $this->Sql->table = 'statements';
-        //数据结构
-        $data["id"] = $orderid;
-        $data["type"] = $stype;
-        $data["price"] =   $prict_count;
-        $data["happen_time"] = time();
-        $data["uid"] = $openid;
-        $data["question_id"] = $_GET['q'];    
-        //插入语句
-        $this->Sql->add($data);
-                
+		if(is_numeric($money) && is_numeric($cot) && $cot >= 1 && $money >= 1)
+		{
+		      $orderid = WxPayConfig::MCHID.uniqid();             //订单号
+		      $prict_count=$this->C_金额转换($money)*$cot;     //价格
+		    
+		    
+                //选择表
+                $this->Sql->table = 'statements';
+                //数据结构
+                $data["id"] = $orderid;
+                $data["type"] = "1";
+                $data["price"] =   $prict_count;
+                $data["happen_time"] = time();
+                $data["happen_time"] = time();
+                $data["uid"] = $openid;
+                $data["question_id"] = $_GET['q'];    
+                //======经过bug加上的字段 20160615
+                $data["hongbao_count"] = $cot;
+                $data["hongbao_price"] = $this->C_金额转换($money);
+                //插入语句
+                $this->Sql->add($data);
+                        
+        		
+                $ko=new WX_INT();
+                $jsApiParameters=$ko->Jspay("添加红包","添加红包",$prict_count,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$openid,$orderid);
+                $arr = array('Msg' => '请求成功！' , 'Result' => array('order' => $orderid, 'wxjson' => $jsApiParameters) , 'Status' => '成功' );
+                //返回为json
+                exit(json_encode($arr));
+		}
 		
-        $ko=new WX_INT();
-        $jsApiParameters=$ko->Jspay("添加红包","添加红包",$prict_count,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$openid,$orderid);
-        $arr = array('Msg' => '请求成功！' , 'Result' => array('order' => $orderid, 'wxjson' => $jsApiParameters) , 'Status' => '成功' );
-        //返回为json
-        exit(json_encode($arr));
     
     }
     
@@ -493,7 +503,7 @@ class GuessCtrl extends Lee
            $data["uid"] = $this->Openid;
            $data["flag"] = "1";
            $data["question_id"] = $_GET["q"];
-           $data["balance"] = $statements_balance + $price; //回来
+           $data["balance"] = $statements_balance + $price; 
            //发送语句
            $this->Sql->add($data);
            
@@ -644,13 +654,18 @@ class GuessCtrl extends Lee
         $price = 0;
         //tips
         $tips = "";
+   
         
         //获取正确答案
         $this->Sql->table = 'question_library';
         //条件语句
         $myql = sprintf("
                                     SELECT 
-                                                    a.answer,b.model,b.uid  
+                                                    a.answer,
+                                                    b.uid, 
+                                                    b.shengyu_count, 
+                                                    b.price, 
+                                                    b.price_count  
                                       FROM 
                                                     question_library AS a 
                                         JOIN 
@@ -659,16 +674,20 @@ class GuessCtrl extends Lee
                                                     a.id = b.answer 
                                     WHERE 
                                                     b.id = '%s' 
+                                     LIMIT      
+                                                    1
 					   ",$id);         
         //发送语句
         $ret = $this->Sql->query($myql);
         $readContent = $ret[0]["answer"];
         $bid = $ret[0]["uid"];
-        //$model =@$readContent[0]["model"];    //获取模式，暂未使用
+        $shengyu_count = $ret[0]["shengyu_count"];
+        $price = $ret[0]["price"];
+        $price_count = $ret[0]["price_count"];
         
-        
-        //说明当前在答题消费模式下
-        IF($orderid != null && $money != null)
+        //说明当前在答题消费模式下.
+        //20160615.如果画主的红包个数为0，那么不该让猜主提供支付费用。并且会在后续代码返回用户余额
+        IF($orderid != null && $money != null && $shengyu_count >= 1 && $price != "0" && $price_count != "0")
         {
             //获取用户余额
             $statements_balance =   $this-> get_根据用户id获取余额($bid);
@@ -703,6 +722,35 @@ class GuessCtrl extends Lee
             $this->Update_访客是否答对($this->Openid, $_GET['q']);            
             $flag = 1;
             $price = $this->Add_猜主回答正确添加流水并且减掉红包数量();
+            IF($price == 0)
+            {
+                //...红包发送完毕，退还金额
+                $statements_balance =   $this-> get_根据用户id获取余额($this->Openid);
+                
+                //选择流水表
+                $this->Sql->table = 'statements';
+                //重置
+                $this->Sql->reset();
+                //条件语句
+                $where = sprintf(" id = '%s' ",$orderid);
+                //数据结构
+                $data2["happen_time"] = time();
+                $data2["flag"] = '1';
+                $data2["type"] = '8';
+                $data2["bid"] = "";
+                $data2["balance"] = $statements_balance + $money;
+                //发送语句
+                $this->Sql->where($where)->save($data2);
+                
+                //添加用户余额
+                $this->Sql->table = 'user';
+                //重置
+                $this->Sql->reset();
+                //条件语句
+                $where = sprintf(" openid = '%s' ",$this->Openid);
+                //添加金额
+                $this->Sql->where($where)->sum("balance",$money);
+            }
         } 
         else 
         {
@@ -866,47 +914,62 @@ class GuessCtrl extends Lee
     
     
     
-    public function Ajax_重新添加红包($order,$HongBaoJinE,$HongBaoCount)
+    public function Ajax_重新添加红包($order,$HongBaoJinE,$HongBaoCount,$model)
     {
+        
+        //============================ 在经历bug攻击后，加入判断======================================
         //选择流水表
         $this->Sql->table = 'statements';
         //条件语句
-        $where = sprintf(" id = '%s' ",$order);
-        //数据结构
-        $data["flag"] = '1';
-        //发送语句
-        $this->Sql->where($where)->save($data);
+        $where = sprintf(" id = '%s' AND type = '1' ",$order);
+        //获取金额
+        $rett = $this->Sql->field("price,hongbao_price,hongbao_count")->where($where)->find();
+        //获取用户充值完成的金额
+        $rett_price = $rett["price"];                                      //用户充值的流水金额
+        $rett_hongbao_price =  $rett["hongbao_price"];      //红包单价
+        $rett_hongbao_count =  $rett["hongbao_count"];   //红包数量
+        //用户提交的金额
+        $rett_count= $HongBaoJinE * $HongBaoCount;
         
-        
-        //获取道具比例
-        $DaoJuBiLi = $this->get_获取道具比例();
-        
-      
-        //选择流水表
-        $this->Sql->table = 'question';
-        //重置
-        $this->Sql->reset();        
-        //数据结构
-        $data2["price"] = $this->C_金额转换($HongBaoJinE);
-        $data2["price_count"] = $this->C_金额转换($HongBaoJinE)*$HongBaoCount;
-        $data2["hongbao_count"] = $HongBaoCount;
-        $data2["shengyu_count"] = $HongBaoCount;
-        $data2["prop"] = $this->C_金额转换($HongBaoJinE) * floatval($DaoJuBiLi);  
-        $data2["expire_time"] = strtotime("+24 hours");
-        $data2["release_time"] = time();
-        $data2["flag"] = '0';
-        //条件语句
-        $where = sprintf(" id = '%s' ",$_GET["q"]);
-        //发送语句
-        $this->Sql->where($where)->save($data2);
-        
-        
-        
-        
-        //拼接json
-        $arr = array('Msg' => '添加成功！' , 'Result' =>"", 'Status' => '成功' );
-        //返回结果
-        exit(json_encode($arr));
+        if($rett_price != null && $rett_price >= 100 && ($rett_price / 100) == $rett_count && ($rett_hongbao_price / 100) == $HongBaoJinE && $rett_hongbao_count  ==$HongBaoCount)
+        {                           
+                //修改更新标识
+                $data["flag"] = '1';
+                //发送语句
+                $this->Sql->where($where)->save($data);
+                
+                
+                //获取道具比例
+                $DaoJuBiLi = $this->get_获取道具比例();
+                
+              
+                //选择流水表
+                $this->Sql->table = 'question';
+                //重置
+                $this->Sql->reset();        
+                //数据结构
+                $data2["price"] = $this->C_金额转换($HongBaoJinE);
+                $data2["price_count"] = $this->C_金额转换($HongBaoJinE)*$HongBaoCount;
+                $data2["hongbao_count"] = $HongBaoCount;
+                $data2["shengyu_count"] = $HongBaoCount;
+                $data2["prop"] = $this->C_金额转换($HongBaoJinE) * floatval($DaoJuBiLi);  
+                $data2["expire_time"] = strtotime("+24 hours");
+                $data2["release_time"] = time();
+                $data2["model"] = $model;
+                $data2["flag"] = '0';
+                //条件语句
+                $where = sprintf(" id = '%s' ",$_GET["q"]);
+                //发送语句
+                $this->Sql->where($where)->save($data2);
+                
+                
+                //拼接json
+                $arr = array('Msg' => '添加成功！' , 'Result' =>"", 'Status' => '成功' );
+                //返回结果
+                exit(json_encode($arr));
+         }
+         
+         exit();
     }
     
     public function Update_访客是否答对($openid,$question_id)
@@ -1161,10 +1224,9 @@ IF(@$_POST['type'] == 'weixinzhifu2')
 {
     $price = $_POST["price"];
     $openid = $_SESSION["openid"]; 
-    $stype = $_POST["stype"];
-	 $cot = $_POST["cot"];
+	$cot = $_POST["cot"];
     $_GuessCtrl = new GuessCtrl();
-    $_GuessCtrl->Ajax_流水记录和微信支付json($stype, $price, $openid,$cot);
+    $_GuessCtrl->Ajax_流水记录和微信支付json($price, $openid,$cot);
 }
 
 
@@ -1174,9 +1236,15 @@ IF(@$_POST["type"] == 'ChongXinTianJiaHongBao')
     //实例化
     $_GuessCtrl = new GuessCtrl();
     $order = $_POST["order"];
-    $HongBaoJinE = $_POST["HongBaoJinE"];
-    $HongBaoCount = $_POST["HongBaoCount"];
-    $_GuessCtrl->Ajax_重新添加红包($order,$HongBaoJinE,$HongBaoCount);
+    $HongBaoJinE = $_POST["HongBaoJinE"];       //金额
+    $HongBaoCount = $_POST["HongBaoCount"]; //数量
+    $model = $_POST["model"];  
+    
+    
+   if(is_numeric($HongBaoCount) && is_numeric($HongBaoJinE) && $HongBaoCount >= 1 && $HongBaoJinE >= 1)
+    {
+          $_GuessCtrl->Ajax_重新添加红包($order,$HongBaoJinE,$HongBaoCount,$model); 
+   }    
 }
 
 IF(@$_POST["type"] == 'GouMaiDaoJu')

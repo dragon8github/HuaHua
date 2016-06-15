@@ -97,6 +97,16 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
        CssLoader::LoadCss("HuaHua", "Guess.css");       //加载本页样式
  ?>
 	
+<?php 
+	JsLoader::Jquery();    //加载jquery
+	JsLoader::Jqm();       //加载jqm
+    JsLoader::Layermobile();    //加载layermobile
+	JsLoader::weixin();   //加载微信官方JS
+	JsLoader::LoadDirective('HuaHua', 'Ajax.Directive.js');
+	JsLoader::LoadDirective('HuaHua', 'WeiXin.Directive.js');   //加载个人封装的微信JS指令
+	JsLoader::LoadDirective('HuaHua', 'Guess.Directive.js');
+?>	
+	
 <html>
     	<body id="bdbd">
             	<div data-role="page">
@@ -317,16 +327,11 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                                     					</td>
                                                     				</tr>
                                                     			     <tr>
-                                                    					<!-- 
-                                                    					<td>购买售价:</td>
-                                                    					<td>
-                                                    			    	<input data-role="none" class='wbkk' name="DaoJuJinE" id="DaoJuJinE"  disabled = "disabled"  placeholder="请输入道具金额" value="<?php //echo $prop*3;?>" type="text" readonly>
-                                                    					</td>
-                                                    					 -->
+                                                    				<td>是否推荐：</td><td><input id="tuijiansf" type="checkbox" checked="checked"  /><span style="font-size:11px;display:inline;margin-left:30px">(有诚意的题有几率推荐至首页)</span></td>
                                                     				</tr>                                                    			
                                                     			</table>
                                                     			<!--  <p class='ziti'>(提示售价为单份奖金的30%，收入你可百分百提现)</p>-->
-                                                    			<p style="margin:2px auto;padding:0;font-size:12px;text-align:center">别人每猜一次，须向您支付<span id="model_price">0.9</span>元</p>
+                                                    			<p style="margin:8px auto 2px auto;padding:0;font-size:12px;text-align:center">别人每猜一次，须向您支付<span id="model_price">0.9</span>元</p>
 																<p style="margin:2pxpx auto;padding:0;font-size:12px;text-align:center;color:#ff0000">24小时内奖金未领完退回到你的余额</p>
 																<p style="margin:2px auto;padding:0;font-size:12px;text-align:center">所有金额可100%提现</p>
                                                     </div>					          
@@ -347,15 +352,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
 </html>
 
 		
-<?php 
-	JsLoader::Jquery();    //加载jquery
-	JsLoader::Jqm();       //加载jqm
-    JsLoader::Layermobile();    //加载layermobile
-	JsLoader::weixin();   //加载微信官方JS
-	JsLoader::LoadDirective('HuaHua', 'Ajax.Directive.js');
-	JsLoader::LoadDirective('HuaHua', 'WeiXin.Directive.js');   //加载个人封装的微信JS指令
-	JsLoader::LoadDirective('HuaHua', 'Guess.Directive.js');
-?>
+
 
 
 <script>

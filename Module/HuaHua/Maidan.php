@@ -107,6 +107,10 @@ background-color:#f0f0f0}
 background-color:#f0f0f0}
 .uujj{
 color:#FF0000;}
+
+.good_ny{
+background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:0 1px 0 #f3f3f3;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto;text-shadow:0 0 0 #000
+}
 </style>
 <body>
             <style type="text/css">
@@ -127,7 +131,11 @@ color:#FF0000;}
                            		       $answer =  $arr_new[$i]["answer"] ;
 									    $count =  $arr_new[$i]["COUNT"] ;
 										$price =  $arr_new[$i]["price"]/100;
+										
                        		       ?>  
+								  
+								   
+								  
                                		   <a class="itemss" href="<?php echo $url; ?>">
 									 
                                         		<div  class="bhnn"><img class="jkkkk" src="<?php echo  $pic;  ?>" width="100%"  /></div>
@@ -135,6 +143,13 @@ color:#FF0000;}
                                                 <p class="tittt"><?php echo "共".$count."人在玩";?></p>
                                     			
                                        </a> 
+									  <?php if(($i+1)%6==0)
+								   {
+								   	echo "<a class='good_ny' style='text-align:center;float:left;width:100%'>分享给好友一起大家一起玩</a>";
+								   }
+								   ?>  
+									  
+									 
                                <?php 
                                     }
                                ?> 

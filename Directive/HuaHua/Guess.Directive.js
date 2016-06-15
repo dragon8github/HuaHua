@@ -27,8 +27,9 @@ GuessDir.UpdateWxResult3 = function(res,myData)
 				var json = JSON.parse(mydata);
 				var price = json["Result"].price;
 				var tips =  json["Result"].tips;		//其实可以不要这个的，反正要刷新页面。但是还是准备好以防万一吧
-				var info = "";
+				var info = "";				
 				if(price != 0) { info = "获得 ￥" + (price/100) + "元红包，请前往<a href='http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd'>用户中心</a>查看"; }
+				else { info = "红包已被领完，答题花费的金额已退入您的<a href='http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd'>用户中心</a>"; }
 				$("#submit").addClass("ui-state-disabled").unbind("tap",Send);	 
 				if(json.Status == "成功")
 				{
@@ -67,10 +68,9 @@ GuessDir.UpdateWxResult2 = function(res,myData)
 		$("#cy-tp-dialog2").popup('close');  
 		$.ajax
 		({
-			data: { type:"ChongXinTianJiaHongBao", order:myData.order,HongBaoJinE:myData.HongBaoJinE,HongBaoCount:myData.HongBaoCount },
+			data: { type:"ChongXinTianJiaHongBao", order:myData.order,HongBaoJinE:myData.HongBaoJinE,HongBaoCount:myData.HongBaoCount,model:myData.model },
 			success:function(Resultdata)
 			{
-				//alert(Resultdata);
 				var json = JSON.parse(Resultdata);
 				if (json.Status == '成功') { $("#reputHongBao").addClass("ui-state-disabled").unbind("click"); layer.open ({ title: "信息", content:json.Msg,btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); }  }); }
 				else { alert(json.Msg);  }
@@ -163,6 +163,17 @@ GuessDir.DialogYes2 = function()
 	var myData = {};																//发送给回调函数的参数
 	myData.HongBaoJinE = $("#HongBaoJinE").val();				//红包金额
 	myData.HongBaoCount = $("#HongBaoCount").val();		//红包个数
+	//是否推荐
+	 var checkbox = $("#tuijiansf")[0];
+	 var n=0;  //0 接受审核
+	if(checkbox.checked)
+	{
+		n="-1"; 
+		}else
+		{
+			n=2;
+			}
+	
 	
 	//数据验证
 	if(myData.HongBaoJinE.length == 0 ||  /^[1-9]+/.test(myData.HongBaoJinE) == false)
@@ -180,13 +191,15 @@ GuessDir.DialogYes2 = function()
 	
 	$.ajax
 	({     //KO 新增加红包个数
-			data: { type:"weixinzhifu2", price:myData.HongBaoJinE,cot:myData.HongBaoCount, stype:'1' },
+			data: { type:"weixinzhifu2", price:myData.HongBaoJinE,cot:myData.HongBaoCount},
 			success:function(dddddd)
 			{  
 				var obj = JSON.parse(dddddd);
 				var order = obj["Result"].order;			//流水订单号
 				var wxjson = obj["Result"].wxjson;		//微信核心json
+				var model = obj["Result"].model;			//模式
 				myData.order = order;							//将流水号插入数据集中传递给回调函数
+				myData.model = n; 
 				callpay(wxjson,myData,GuessDir.UpdateWxResult2);
 			}
 	})
@@ -371,7 +384,6 @@ $(function()
 	
 	
 	$("#share_hy").click(function() {
-								   $('html, body').animate({scrollTop:0}, 'slow');
 		$("#zhezhaocheng").width($(document).width());
 		$("#zhezhaocheng").height($(document).height());
 		$("#zhezhaocheng").show();

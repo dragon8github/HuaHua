@@ -33,12 +33,14 @@ $arr = $_AdminCtrl->get_所有信息();
       <thead>
         <tr>
           <th>#</th>
+          <th>用户提现总额</th>  
+          <th>用户余额</th>
           <th>编号</th>
           <th>用户头像</th>
           <th>用户名</th>
-          <th>用户id</th>
+          <th>用户id</th>     
           <th>题目答案</th>
-          <th>题目画像</th>
+          <th>题目画像</th>          
           <th><a href="?orderby=descmoney">剩余金额</a></th>          
           <th><a href="?orderby=desctime">发布时间</a></th>
           <th></th>
@@ -56,11 +58,15 @@ $arr = $_AdminCtrl->get_所有信息();
                 $release_time = $arr[$i]["release_time"];
                 $userid = $arr[$i]["openid"];
                 $model = $arr[$i]["model"];
+                $money_balance = $arr[$i]["money_balance"];
                 if($release_time != "") { $release_time = date("Y-m-d H:i:s",$release_time); }
                 $shengyujine =$arr[$i]["shengyujine"];
+                $mysum = $arr[$i]["mysum"];
         ?>
-        <tr>                
+        <tr>                 
               <td><?php echo $i; ?></td>
+              <td><?php echo $mysum / 100; ?></td>
+              <td><?php echo $money_balance / 100; ?></td>
               <td><?php echo $id; ?></td>
               <td><img width="100" height="100" src="<?php echo $wx_litpic; ?>" /></td>
               <td><?php echo $username; ?></td>
@@ -69,7 +75,7 @@ $arr = $_AdminCtrl->get_所有信息();
               <td><img width="300" height="280" src="<?php echo $question_pic; ?>" /></td>
               <td>￥ <?php echo $shengyujine / 100; ?></td>
               <td><?php echo $release_time ?></td>
-              <?php if($model == "") { ?>
+              <?php if($model == "" || $model == "-1") { ?>
                     <td>
                             <button type="button" class="btn btn-warning jinzhita" data-id="<?php echo $id; ?>" data-model="0">禁止它</button>
                             <button type="button" class="btn btn-primary kaiqita" data-id="<?php echo $id; ?>" data-model="1">开启它</button>                            
