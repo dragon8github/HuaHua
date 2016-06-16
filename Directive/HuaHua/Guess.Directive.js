@@ -11,6 +11,7 @@ GuessDir.ReadMe = function()
 //微信回调：正式提交答案
 GuessDir.UpdateWxResult3 = function(res,myData)
 {
+	
 	if(res.err_msg.indexOf("ok") >= 0)
 	{				
 		$.ajax
@@ -24,10 +25,10 @@ GuessDir.UpdateWxResult3 = function(res,myData)
 				},
 			success:function(mydata)
 			{
-				var json = JSON.parse(mydata);
-				var price = json["Result"].price;
-				var tips =  json["Result"].tips;		//其实可以不要这个的，反正要刷新页面。但是还是准备好以防万一吧
-				var info = "";				
+				var json = JSON.parse(mydata);	
+				var price = json["Result"].price;		//如果用户回答正确，获取的奖励
+				var tips =  json["Result"].tips;		//暂时没有用到
+				var info = "";								
 				if(price != 0) { info = "获得 ￥" + (price/100) + "元红包，请前往<a href='http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd'>用户中心</a>查看"; }
 				else { info = "红包已被领完，答题花费的金额已退入您的<a href='http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd'>用户中心</a>"; }
 				$("#submit").addClass("ui-state-disabled").unbind("tap",Send);	 

@@ -109,7 +109,7 @@ background-color:#f0f0f0}
 color:#FF0000;}
 
 .good_ny{
-background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:0 1px 0 #f3f3f3;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto;text-shadow:0 0 0 #000
+background-color:#3aa7ff;color:#fff;max-width:60%;border-color:#ddd;text-shadow:0 1px 0 #f3f3f3;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto;text-shadow:0 0 0 #000
 }
 </style>
 <body>
@@ -145,7 +145,7 @@ background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:
                                        </a> 
 									  <?php if(($i+1)%6==0)
 								   {
-								   	echo "<a class='good_ny' style='text-align:center;float:left;width:100%'>分享给好友一起大家一起玩</a>";
+								   	echo "<p style='text-align:center;float:left;width:100%;margin:11px 0 0 0'><a class='good_ny' style='width:90%' >分享给好友大家一起玩</a><p><div style='clear:both'></div>";
 								   }
 								   ?>  
 									  
@@ -173,6 +173,11 @@ background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:
                                                 <p class="tittt"><?php echo "共".$count."人在玩";?></p>
                                     			
                                        </a> 
+									    <?php if(($i+1)%6==0)
+								   {
+								   	echo "<p style='text-align:center;float:left;width:100%;margin:11px 0 0 0'><a class='good_ny' style='width:90%' >分享给好友大家一起玩</a><p><div style='clear:both'></div>";
+								   }
+								   ?>  
                                <?php 
                                     }
                                ?> 
@@ -268,6 +273,7 @@ background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:
     margin-right: 5px;
 }*/
 </style>
+	<div id="zhezhaocheng" style="background-color:#191919;display:none;position:absolute;left:0;top:0"><img width="100%" src="<?php echo $_SESSION["STATIC_ROOT"]?>/Img/83358PICrqB_1024.jpg" /></div>
 </body>
 </html>
 
@@ -281,6 +287,17 @@ background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:
 			$(document).ready(function()
 			{
 				//$(".itemss").height($(".itemss").width());
+			
+				$(".good_ny").click(function() {
+		$("#zhezhaocheng").width($(document).width());
+		$("#zhezhaocheng").height($(document).height());
+		$("#zhezhaocheng").show();
+		$('html, body').animate({scrollTop:0}, 'slow');
+	})
+	$("#zhezhaocheng").click(function() {
+		$(this).hide();
+	})
+			
 			
 				$(".bhnn").height($(".itemss").height()-70);
 				$(".dds").click(function()

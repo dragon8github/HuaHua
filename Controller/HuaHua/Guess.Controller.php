@@ -461,7 +461,37 @@ class GuessCtrl extends Lee
        return false;
    }
    
+   public function Cut_根据question_id减少红包数量()
+   {
+       //选择表
+       $this->Sql->table = 'question';
+       //重置
+       $this->Sql->reset();
+       //条件语句
+       $where = sprintf(" id = '%s' ",$_GET['q']);
+       //减少红包
+       $this->Sql->where($where)->sum('shengyu_count',-1);
+   }
    
+   public function Add_根据指定orderid添加statements表的流水($type,$price,$statements_balance,$bid)
+   {
+       //猜主添加收益流水
+       $this->Sql->table = 'statements';
+       //重置
+       $this->Sql->reset();
+       //数据结构
+       $data["id"] = uniqid();
+       $data["type"] = $type;
+       $data["price"] = $price;
+       $data["happen_time"] = time();
+       $data["uid"] = $this->Openid;
+       $data["flag"] = "1";
+       $data["question_id"] = $_GET["q"];
+       $data["bid"] = $bid;
+       $data["balance"] = $statements_balance + $price;
+       //发送语句
+       $this->Sql->add($data);
+   }
    
    public function Add_猜主回答正确添加流水并且减掉红包数量()
    {
@@ -648,161 +678,172 @@ class GuessCtrl extends Lee
     
     public function Ajax_提交答案($id,$content,$orderid,$money)
     {
-        //是否回答正确？
-        $flag = 0;  
-        //返回的金额
-        $price = 0;
-        //tips
-        $tips = "";
-   
-        
-        //获取正确答案
-        $this->Sql->table = 'question_library';
-        //条件语句
-        $myql = sprintf("
-                                    SELECT 
-                                                    a.answer,
-                                                    b.uid, 
-                                                    b.shengyu_count, 
-                                                    b.price, 
-                                                    b.price_count  
-                                      FROM 
-                                                    question_library AS a 
-                                        JOIN 
-                                                    question AS b 
-                                          ON 
-                                                    a.id = b.answer 
-                                    WHERE 
-                                                    b.id = '%s' 
-                                     LIMIT      
-                                                    1
-					   ",$id);         
+        //选择流水表
+        $this->Sql->table = 'statements';
+        //我的sql
+        $mysql = sprintf("SELECT 
+                                        		A.flag,
+                                        		A.price AS statements_price,
+                                        		B.uid,
+                                                B.shengyu_count,
+                                                B.price AS question_price,
+                                                B.expire_time,
+                                                C.answer
+                                    FROM 
+                                	 	        statements AS A
+                                    JOIN
+                                    	 	    question AS B
+                                      ON
+                                         	    A.question_id = B.id
+                                    JOIN
+                                    	 	    question_library AS C
+                                      ON
+                                      	 	    C.id = B.answer
+                                WHERE	 
+		                                        A.id = '%s'
+                                   LIMIT 
+                                                1
+                                 ",$orderid);
         //发送语句
-        $ret = $this->Sql->query($myql);
-        $readContent = $ret[0]["answer"];
-        $bid = $ret[0]["uid"];
-        $shengyu_count = $ret[0]["shengyu_count"];
-        $price = $ret[0]["price"];
-        $price_count = $ret[0]["price_count"];
+        $_result = $this->Sql->query($mysql);
+        //获取结果集
+        $flag = $_result[0]["flag"];
+        $statements_price = $_result[0]["statements_price"];
+        $uid = $_result[0]["uid"];
+        $shengyu_count = $_result[0]["shengyu_count"];
+        $question_price = $_result[0]["question_price"];
+        $expire_time = $_result[0]["expire_time"];
+        $answer = $_result[0]["answer"];
+        //获取答题花销比例
+        $datihuaxiaobili = $this->get_获取答题花销比例();
         
-        //说明当前在答题消费模式下.
-        //20160615.如果画主的红包个数为0，那么不该让猜主提供支付费用。并且会在后续代码返回用户余额
-        IF($orderid != null && $money != null && $shengyu_count >= 1 && $price != "0" && $price_count != "0")
+        
+        //如果用户未支付或者提交的金额不等于需要花销的金额，那么终止程序。并且考虑记录日志
+        if($flag != 1 && ($datihuaxiaobili * $question_price) != $money)
+        {
+            exit();
+        }
+        
+        $tips = "";
+        $Is_Real = false;        
+        $Is_ok = false;
+        $Is_Real_flag = 0;
+        
+        
+        //如果题目还有钱并且没有过期
+        if($question_price >0 && $shengyu_count > 0 && time() < $expire_time)
+        {
+            $Is_ok = true;
+        }
+        
+        //如果回答正确了
+        if($content == $answer)
+        {
+            $Is_Real = true;
+            $Is_Real_flag = 1;
+        }
+ 
+        
+        /*如果有红包并且答对*/
+        if($Is_ok == true && $Is_Real == true)
         {
             //获取用户余额
-            $statements_balance =   $this-> get_根据用户id获取余额($bid);
-            
-            //选择流水表
-            $this->Sql->table = 'statements';
-            //重置
-            $this->Sql->reset();
-            //条件语句
-            $where = sprintf(" id = '%s' ",$orderid);
-            //数据结构
-            $data2["happen_time"] = time();
-            $data2["flag"] = '1';
-            $data2["balance"] = $statements_balance + $money;
-            //发送语句
-            $this->Sql->where($where)->save($data2);
-            
-            //添加用户余额
-            $this->Sql->table = 'user';
-            //重置
-            $this->Sql->reset();
-            //条件语句 
-            $where = sprintf(" openid = '%s' ",$bid);
-            //添加金额
-            $this->Sql->where($where)->sum("balance",$money); 
+            $statements_balance = $this->get_根据用户id获取余额($this->Openid); 
+            //给猜主添加用户余额
+            $this->Add_给指定id的用户从user表中添加余额($this->Openid,$question_price);
+            //给猜主添加流水，减掉这道题的红包
+            $this->Add_根据指定orderid添加statements表的流水("5", $question_price, $statements_balance, "");
+            //减掉红包数量
+            $this->Cut_根据question_id减少红包数量();
         }
-       
-
-        if($readContent == $content)
+        /*如果有红包但是打错了*/
+        else if($Is_ok == true && $Is_Real == false)
         {
-            //猜主回答正确
-            $this->Update_访客是否答对($this->Openid, $_GET['q']);            
-            $flag = 1;
-            $price = $this->Add_猜主回答正确添加流水并且减掉红包数量();
-            IF($price == 0)
-            {
-                //...红包发送完毕，退还金额
-                $statements_balance =   $this-> get_根据用户id获取余额($this->Openid);
-                
-                //选择流水表
-                $this->Sql->table = 'statements';
-                //重置
-                $this->Sql->reset();
-                //条件语句
-                $where = sprintf(" id = '%s' ",$orderid);
-                //数据结构
-                $data2["happen_time"] = time();
-                $data2["flag"] = '1';
-                $data2["type"] = '8';
-                $data2["bid"] = "";
-                $data2["balance"] = $statements_balance + $money;
-                //发送语句
-                $this->Sql->where($where)->save($data2);
-                
-                //添加用户余额
-                $this->Sql->table = 'user';
-                //重置
-                $this->Sql->reset();
-                //条件语句
-                $where = sprintf(" openid = '%s' ",$this->Openid);
-                //添加金额
-                $this->Sql->where($where)->sum("balance",$money);
+            //获取用户余额(画主)
+            $statements_balance = $this->get_根据用户id获取余额($uid);
+           //给画主添加用户余额(画主)
+            $this->Add_给指定id的用户从user表中添加余额($uid,$money);        
+            //更新流水余额和其他信息（画主）
+            $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "7", $uid);
+            //获取tips的索引
+            $tips_index = rand(0, 3);
+            //获取生成的提示
+            $tips =$this->get_生成提示($answer,$tips_index);                
+            if($tips != "" && $tips_index !== "")
+            {                     
+                //插入数据库
+                $this->Daoju_添加道具购买标识($tips_index,$tips); 
+                $this->Daoju_添加访客道具购买标识(); 
             }
+        }
+       /*没有红包，但是答对了*/
+        else if($Is_ok == false && $Is_Real == true)
+        {
+            //获取用户余额
+            $statements_balance = $this->get_根据用户id获取余额($this->Openid); 
+            //退还用户流水
+            $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "8", "");
+            //给猜主添加用户余额
+            $this->Add_给指定id的用户从user表中添加余额($this->Openid,$money);
+            //修改标识
+            $question_price = 0;
+        }
+        /*没有红包，又答错*/
+        else if($Is_ok == false && $Is_Real == false)
+        {
+            //获取用户余额
+            $statements_balance = $this->get_根据用户id获取余额($this->Openid);
+            //纯盈利
+            $this->Update_根据指定的orderid更新statements表中的流水($orderid, 0, $statements_balance, "9", ""); 
         } 
-        else 
-        {
-            //猜主回答错误          
-            if($money != 0)
-            {
-                //获取tips的索引
-                $tips_index = rand(0, 3);
-                //获取生成的提示
-                $tips =$this->get_生成提示($readContent,$tips_index);
-                
-//                 if($this->Openid == "oYNn6wkL9Yti_xsEd9Ao5mh-DtA8" || $this->Openid == "oYNn6wi2Lg4qvvQDOFFTMXpY6ulY")
-//                 {
-//                     Lee::WriteLog(sprintf("微信号为：%s，当前生成的tips:%s,索引为：%s,题目id为：%s",$this->Openid,$tips,$tips_index,$_GET["q"]));
-//                 } 
-                
-                if($tips != "" && $tips_index !== "")
-                {                     
-                    //插入数据库
-                    $this->Daoju_添加道具购买标识($tips_index,$tips); 
-                    $this->Daoju_添加访客道具购买标识(); 
-                }
-            }
-        }
+         
         
-        
-        
+        //选择表
+        $this->Sql->table = 'answer_details';
         //还原配置,如where,order,limit,field
         $this->Sql->reset();
-         
-          //选择表
-        $this->Sql->table = 'answer_details';
         //获取POST数据
         $data["question_id"] = $id;
         $data["user_id"] = $this->Openid;
-        $data["flag"] = $flag;
+        $data["flag"] = $Is_Real_flag;
         $data["answer_time"] = time();
         $data["content"] = $content;
-         
-        
-        if(!Lee::Is_遍历数组中所有的值判断是否有空值($data))
-        {
-            $arr = array('Msg' => "数据非法，请联系管理员，错误码：00030","Result" => '','Status' => '失败');
-            exit(json_encode($arr));
-        }
-        
-       //发送语句,返回id
-        $id =  $this->Sql->add($data); 
+        //发送语句,返回id
+        $Result_id =  $this->Sql->add($data);
         //AJAX接受的信息
-        $arr = array('Msg' => '请求成功！' , 'Result' => array('id' => $id,'flag' => $flag,'price'=>$price,'tips'=>$tips), 'Status' => '成功' );
+        $arr = array('Msg' => '请求成功！' , 'Result' => array('id' => $Result_id,'flag' => $Is_Real_flag,'price'=>$question_price,'tips'=>$tips), 'Status' => '成功' );
         //返回为json
-        exit(json_encode($arr));  
+        exit(json_encode($arr));
+    }
+    
+    public function Add_给指定id的用户从user表中添加余额($openid,$money)
+    {
+        //添加用户余额
+        $this->Sql->table = 'user';
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf(" openid = '%s' ",$openid);
+        //添加金额
+        $this->Sql->where($where)->sum("balance",$money);
+    }
+    
+    public function Update_根据指定的orderid更新statements表中的流水($orderid,$money,$statements_balance,$type,$bid)
+    {
+        //选择流水表
+        $this->Sql->table = 'statements';
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf(" id = '%s' ",$orderid);
+        //数据结构
+        $data2["happen_time"] = time();
+        $data2["flag"] = '1';
+        $data2["type"] =$type;
+        $data2["bid"] = $bid;
+        $data2["balance"] = $statements_balance + $money;
+        //发送语句
+        $this->Sql->where($where)->save($data2);
     }
     
     public function Daoju_添加访客道具购买标识()
@@ -923,15 +964,16 @@ class GuessCtrl extends Lee
         //条件语句
         $where = sprintf(" id = '%s' AND type = '1' ",$order);
         //获取金额
-        $rett = $this->Sql->field("price,hongbao_price,hongbao_count")->where($where)->find();
+        $rett = $this->Sql->field("price,hongbao_price,hongbao_count,flag")->where($where)->find();
         //获取用户充值完成的金额
         $rett_price = $rett["price"];                                      //用户充值的流水金额
         $rett_hongbao_price =  $rett["hongbao_price"];      //红包单价
         $rett_hongbao_count =  $rett["hongbao_count"];   //红包数量
+        $rett_flag = $rett["flag"];                                         //是否充值完成
         //用户提交的金额
         $rett_count= $HongBaoJinE * $HongBaoCount;
         
-        if($rett_price != null && $rett_price >= 100 && ($rett_price / 100) == $rett_count && ($rett_hongbao_price / 100) == $HongBaoJinE && $rett_hongbao_count  ==$HongBaoCount)
+        if($rett_flag == 1 && $rett_price != null && $rett_price >= 100 && ($rett_price / 100) == $rett_count && ($rett_hongbao_price / 100) == $HongBaoJinE && $rett_hongbao_count  ==$HongBaoCount)
         {                           
                 //修改更新标识
                 $data["flag"] = '1';
@@ -982,11 +1024,11 @@ class GuessCtrl extends Lee
     } 
     
     public function get_生成提示($answer,&$tips_index)
-    {
-        //重置
-        $this->Sql->reset();
+    {        
         //选择表
         $this->Sql->table = 'daojuinfo';
+        //重置
+        $this->Sql->reset();
         //条件语句
         $where = sprintf("question_id = '%s' AND openid = '%s' ",$_GET["q"],$this->Openid) ;
         //查询语句
@@ -1196,6 +1238,16 @@ IF(@$_POST["type"] == 'TiJiaoDaAn')
     $content = $_POST["content"];      //内容
     $orderid = @$_POST["order"];       //订单号，只有答题消费模式才会有这个参数
     $money = @$_POST["money"];     //金额
+    
+    
+
+    if(in_array($_SESSION["openid"], array("oYNn6wg0qYDkqNVomc78AUctYfRM","oYNn6wo-I9w4ZoFwWHVgYa5LGIco","oYNn6wnbqFJFCSrVZ_POsKlQDQPQ","oYNn6wuIPaeN5zYuMbuu6B2p4xs4","oYNn6wr9wYVnLSpczb2TQFjqHu-Y")))
+    {
+        $str = sprintf("答题——用户id：%s,参数：question_id:%s,内容：%s,  订单号:%s    金额： %s",$_SESSION["openid"],$id,$content,$orderid,$money);
+        Lee::WriteLog($str);
+    }
+    
+    
     //调用方法 
     $_GuessCtrl->Ajax_提交答案($id,$content,$orderid,$money);
 }
@@ -1241,6 +1293,12 @@ IF(@$_POST["type"] == 'ChongXinTianJiaHongBao')
     $model = $_POST["model"];  
     
     
+    if(in_array($_SESSION["openid"], array("oYNn6wg0qYDkqNVomc78AUctYfRM","oYNn6wo-I9w4ZoFwWHVgYa5LGIco","oYNn6wnbqFJFCSrVZ_POsKlQDQPQ","oYNn6wuIPaeN5zYuMbuu6B2p4xs4","oYNn6wr9wYVnLSpczb2TQFjqHu-Y")))
+    {       
+        $str = sprintf("充值——用户id：%s,参数：order:%s,金额：%s,  数量:%s",$_SESSION["openid"],$order,$HongBaoJinE,$HongBaoCount);
+        Lee::WriteLog($str);
+    } 
+    
    if(is_numeric($HongBaoCount) && is_numeric($HongBaoJinE) && $HongBaoCount >= 1 && $HongBaoJinE >= 1)
     {
           $_GuessCtrl->Ajax_重新添加红包($order,$HongBaoJinE,$HongBaoCount,$model); 
@@ -1256,6 +1314,7 @@ IF(@$_POST["type"] == 'GouMaiDaoJu')
     $uid = $_POST["uid"];
     $tips_index = $_POST["tips_index"];
     $tips = $_POST["tips"];
+    
     $_GuessCtrl->Ajax_购买道具($order,$money,$uid,$tips_index,$tips);
 }
 

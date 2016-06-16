@@ -62,7 +62,7 @@
  * 		//删除数据
  * 		$Sql->where($where)->delete();
  */
-class Mysql extends Lee
+class Mysql
 {
 	private $host;   //主机地址
 	private $dbname; //数据库名
