@@ -95,7 +95,7 @@ class GuessCtrl extends Lee
         //重置
         $this->Sql->reset();
         //条件语句
-        $mysql = sprintf("SELECT A.content,B.wx_litpic,B.wx_name FROM `answer_details` AS A JOIN user AS B ON  A.user_id = B.openid WHERE A.question_id = '%s' order by A.answer_time desc limit 15",$_GET["q"]);
+        $mysql = sprintf("SELECT A.content,B.wx_litpic,B.wx_name FROM `answer_details` AS A JOIN user AS B ON  A.user_id = B.openid WHERE A.question_id = '%s' AND  A.Is_Hongbao = '1' order by A.answer_time desc limit 15",$_GET["q"]);
         //发送语句
         $arr = $this->Sql->query($mysql);
         //返回结果
@@ -684,6 +684,7 @@ class GuessCtrl extends Lee
         $mysql = sprintf("SELECT 
                                         		A.flag,
                                         		A.price AS statements_price,
+                                                A.Is_Use,
                                         		B.uid,
                                                 B.shengyu_count,
                                                 B.price AS question_price,
@@ -705,7 +706,26 @@ class GuessCtrl extends Lee
                                                 1
                                  ",$orderid);
         //发送语句
-        $_result = $this->Sql->query($mysql);
+        $_result = array();
+        
+        
+        //循环、等待0秒、1秒、2秒、3秒.避免异步带来的影响
+        for ($run = 0;$run <= 3;$run++)
+        {
+            sleep($run * 1000);
+        
+            $_result = $this->Sql->query($mysql);
+        
+            $rett_flag = $_result[0]["flag"];                                        //是否充值完成
+        
+            if($rett_flag == 1)
+            {
+                break;
+            }
+        }
+        
+        
+        
         //获取结果集
         $flag = $_result[0]["flag"];
         $statements_price = $_result[0]["statements_price"];
@@ -714,12 +734,13 @@ class GuessCtrl extends Lee
         $question_price = $_result[0]["question_price"];
         $expire_time = $_result[0]["expire_time"];
         $answer = $_result[0]["answer"];
+        $Is_Use = $_result[0]["Is_Use"];
         //获取答题花销比例
         $datihuaxiaobili = $this->get_获取答题花销比例();
         
         
-        //如果用户未支付或者提交的金额不等于需要花销的金额，那么终止程序。并且考虑记录日志
-        if($flag != 1 && ($datihuaxiaobili * $question_price) != $money)
+        //如果用户未支付或者提交的金额不等于需要花销的金额、或者该订单已经使用过了，那么终止程序。并且考虑记录日志
+        if($flag != 1 && ($datihuaxiaobili * $question_price) != $money && $Is_Use == "1")
         {
             exit();
         }
@@ -728,12 +749,13 @@ class GuessCtrl extends Lee
         $Is_Real = false;        
         $Is_ok = false;
         $Is_Real_flag = 0;
-        
+        $Is_HongBao = 0;
         
         //如果题目还有钱并且没有过期
         if($question_price >0 && $shengyu_count > 0 && time() < $expire_time)
         {
             $Is_ok = true;
+            $Is_HongBao = 1;
         }
         
         //如果回答正确了
@@ -751,10 +773,18 @@ class GuessCtrl extends Lee
             $statements_balance = $this->get_根据用户id获取余额($this->Openid); 
             //给猜主添加用户余额
             $this->Add_给指定id的用户从user表中添加余额($this->Openid,$question_price);
-            //给猜主添加流水，减掉这道题的红包
+            //给猜主添加流水
             $this->Add_根据指定orderid添加statements表的流水("5", $question_price, $statements_balance, "");
+            //获取用户余额
+            $statements_balance = $this->get_根据用户id获取余额($uid);
+            //更新流水
+            $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "7", $uid);
+            //添加画主余额
+            $this->Add_给指定id的用户从user表中添加余额($uid,$money);
             //减掉红包数量
             $this->Cut_根据question_id减少红包数量();
+            //访客答对了
+            $this->Update_访客是否答对($this->Openid,$_GET["q"]); 
         }
         /*如果有红包但是打错了*/
         else if($Is_ok == true && $Is_Real == false)
@@ -808,6 +838,7 @@ class GuessCtrl extends Lee
         $data["flag"] = $Is_Real_flag;
         $data["answer_time"] = time();
         $data["content"] = $content;
+        $data["Is_Hongbao"] = $Is_HongBao;
         //发送语句,返回id
         $Result_id =  $this->Sql->add($data);
         //AJAX接受的信息
@@ -842,6 +873,7 @@ class GuessCtrl extends Lee
         $data2["type"] =$type;
         $data2["bid"] = $bid;
         $data2["balance"] = $statements_balance + $money;
+        $data2["Is_Use"] = '1';
         //发送语句
         $this->Sql->where($where)->save($data2);
     }
@@ -963,20 +995,39 @@ class GuessCtrl extends Lee
         $this->Sql->table = 'statements';
         //条件语句
         $where = sprintf(" id = '%s' AND type = '1' ",$order);
-        //获取金额
-        $rett = $this->Sql->field("price,hongbao_price,hongbao_count,flag")->where($where)->find();
+        //待获取结果
+        $rett = array();    
+        //循环、等待0秒、1秒、2秒、3秒.避免异步带来的影响
+        for ($run = 0;$run <= 3;$run++)
+        {
+            sleep($run * 1000);
+            
+            $rett = $this->Sql->field("price,hongbao_price,hongbao_count,flag,Is_Use")->where($where)->find();
+            
+            $rett_flag = $rett["flag"];                                         //是否充值完成
+            
+            if($rett_flag == 1)
+            {
+                break;
+            }
+        }
+        
         //获取用户充值完成的金额
         $rett_price = $rett["price"];                                      //用户充值的流水金额
         $rett_hongbao_price =  $rett["hongbao_price"];      //红包单价
         $rett_hongbao_count =  $rett["hongbao_count"];   //红包数量
         $rett_flag = $rett["flag"];                                         //是否充值完成
+        $rett_Is_Use = $rett["Is_Use"];                                 //订单是否已经使用
         //用户提交的金额
         $rett_count= $HongBaoJinE * $HongBaoCount;
         
-        if($rett_flag == 1 && $rett_price != null && $rett_price >= 100 && ($rett_price / 100) == $rett_count && ($rett_hongbao_price / 100) == $HongBaoJinE && $rett_hongbao_count  ==$HongBaoCount)
+         
+        //$rett_Is_Use如果为0，说明订单未使用
+        if($rett_Is_Use == "0" && $rett_flag == 1 && $rett_price != null && $rett_price >= 100 && ($rett_price / 100) == $rett_count && ($rett_hongbao_price / 100) == $HongBaoJinE && $rett_hongbao_count  ==$HongBaoCount)
         {                           
                 //修改更新标识
-                $data["flag"] = '1';
+                //$data["flag"] = '1';   //(已更新版本为异步完成1)
+                $data["Is_Use"] = "1"; 
                 //发送语句
                 $this->Sql->where($where)->save($data);
                 

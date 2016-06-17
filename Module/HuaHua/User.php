@@ -79,8 +79,9 @@ CssLoader::LoadCss("Copy", "User.css");
                         </div>
 						<a  id='sdfw3e' style="display:block;float:right;margin-right:35px;margin-top:35px;" href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=UserHistory">历史作品</a>
                     </div>
-                    <div class="stat clearfix">
-                        <div class="yyee">余额: <?php echo $balance/100; ?></div> 
+                    <div class="stat clearfix" style="position:relative">
+					<span style="font-size:12px;position:absolute;top:55px;left:18px;color:#999999">微信规则限制最少需要1元才能提现</span>
+                        <div class="yyee" style="position:relative">余额: <?php echo $balance/100; ?></div> 
             			<div class="ssyy"><span id="laod" style="display: none;">30</span><span id="old_jine" style="display: none;">30</span><i style="background-position: 0px -120px;"></i><i style="background-position: 0px 0px;"></i></div>
                         <div class="xgmm"><a href="javascript:;" id="tixian">提现</a></div>        </div>
                 </div>
@@ -95,6 +96,13 @@ CssLoader::LoadCss("Copy", "User.css");
                          $des_date2 = date('H:i:s',$arr_ls[$i]["happen_time"]);
                          $zhengfu = $_UserCtrl->get_根据不同的type获取正负($arr_ls[$i]["realtype"]);
                          $jine = $arr_ls[$i]["price"];
+                         
+                         if($jine == 0)
+                         {
+                             continue;
+                         }
+                         
+                         
                  ?>
                        	   <a class="item" href="javascript:;">
                         		<div class="ff icon"><img src="<?php echo $img; ?>" width="100%" height="45px" /></div>

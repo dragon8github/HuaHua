@@ -31,7 +31,7 @@ AjaxDir.Ajax_全局设置 = function ()
     $.ajaxSetup
     ({
         //公共参数
-        timeout: 10000,
+        timeout: 6000,
         type: "POST",
         //发送请求前触发
         beforeSend: function (xhr)
@@ -50,7 +50,7 @@ AjaxDir.Ajax_全局设置 = function ()
         //请求失败遇到异常触发
         error: function (xhr, status, e)
         {
-        	alert(	xhr.responseText);
+        	alert(	"数据库异常:" + xhr.responseText);
         	
         	if(status == "error")
     		{

@@ -14,6 +14,9 @@ include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                          
 $openid = $_SESSION["openid"];                       //openid
 $nickname = $_SESSION["nickname"];              //昵称
 $headimgurl = $_SESSION["headimgurl"];        //头像
+//是否关注了公众号
+//$subscribe=$_SESSION["subscribe"];
+
 $q = $_GET["q"];                                               //题目编号
 $IsDrawer= false;                                              //是否画主本人
 $Time = "0";                                                      //冷却时间
@@ -166,7 +169,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
 										<div style="clear:both;margin:15px auto;height:45px;max-width:96%;">
     								       	<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
                     								<a href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id="huahua1" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" style="float: left; width: 19%;margin-right:2%;">去画题</a>
-                                                    <a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" style="float: left; width: 19%;margin-right:2%;">去提现</a>
+                                                    <a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="" style="float: left; width: 19%;margin-right:2%;">去提现</a>
 													<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=Maidan" style="float: left; width: 19%;">更多题</a>
                                     		<?php } ?>
                                     		<?php   if(!$IsDrawer)  {    //如果猜主已经答对了，无法参与答题 ?>
@@ -327,7 +330,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                                     					</td>
                                                     				</tr>
                                                     			     <tr>
-                                                    				<td>是否推荐：</td><td><input id="tuijiansf" type="checkbox" checked="checked"  /><span style="font-size:11px;display:inline;margin-left:30px">(有诚意的题有几率推荐至首页)</span></td>
+                                                    				<td>是否推荐：</td><td><input style="width:14px;height:14px;margin-top:1px;" id="tuijiansf" type="checkbox" checked="checked"  /><span style="font-size:11px;display:inline;margin-left:30px">(有诚意的题有几率推荐至首页)</span></td>
                                                     				</tr>                                                    			
                                                     			</table>
                                                     			<!--  <p class='ziti'>(提示售价为单份奖金的30%，收入你可百分百提现)</p>-->
@@ -356,8 +359,8 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
 
 
 <script>
-
-var IsReal = "<?php echo $IsReal; ?>"; 
+ 
+var IsReal = "<?php echo @$IsReal; ?>"; 
 var time = <?php echo $Time; ?>;
 if(time < 0 && IsReal != "1")
 {

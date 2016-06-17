@@ -27,6 +27,7 @@ $arr = $_AdminCtrl->get_所有信息();
 	<link href="https://cdn.bootcss.com/bootstrap/3.3.6//css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
 	
 	
 	<table class="table table-hover table-bordered" style="vertical-align: middle">
@@ -97,9 +98,10 @@ $arr = $_AdminCtrl->get_所有信息();
     </table>
 	
 	
+	
 	<?php
     	JsLoader::Jquery();    //加载jquery
-    	JsLoader::Layermobile();
+    	JsLoader::Layer();
 	?>
 	<script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </body>

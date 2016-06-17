@@ -25,6 +25,7 @@ GuessDir.UpdateWxResult3 = function(res,myData)
 				},
 			success:function(mydata)
 			{
+				
 				var json = JSON.parse(mydata);	
 				var price = json["Result"].price;		//如果用户回答正确，获取的奖励
 				var tips =  json["Result"].tips;		//暂时没有用到
@@ -387,6 +388,7 @@ $(function()
 	$("#share_hy").click(function() {
 		$("#zhezhaocheng").width($(document).width());
 		$("#zhezhaocheng").height($(document).height());
+		$('html, body').animate({scrollTop:0}, 'slow');
 		$("#zhezhaocheng").show();
 	})
 	$("#zhezhaocheng").click(function() {
