@@ -257,44 +257,15 @@ $(function()
 					data:obj,
 					success:function(data)
 					{
-						var json = JSON.parse(data);
-						var file = json["Result"].file;
-						var htmlimg = "<img src='"+file+"' width='99%' />";
-						$("#controlgroup").hide();
-						$("#replace_images").html(htmlimg);
+						var json = JSON.parse(data);						
 						if(json.Status == "成功") 
 						{
-							var Result  =json["Result"].id;		
-							var Prop = json["Result"].prop;
-							//$("#cy-tp-dialog").popup("open");	
-							
+							//防止重复提交
+							$("#KaiShiZhizuo").unbind("tap").addClass("ui-state-disabled");	
+							//获取id
+							var Result  =json["Result"].id;									
 							//进行页面跳转
-							self.location='../../Home.php?p=guess&q='+Result; 
-							
-							$("#KaiShiZhizuo").unbind("tap").addClass("ui-state-disabled");							//防止重复提交
-							$("#Cy-tp-DialogYes").bind("tap",{'id':Result,'Prop':Prop},DrawDir.DialogYes);		//Dialog确定按钮
-							$("#Cy-tp-DialogNo").bind("tap",{'id':Result},DrawDir.DialogNo);					    //Dialog取消按钮
-							$("#HongBaoJinE,#HongBaoCount").keyup(function()
-							{
-									var v = $(this).val();
-									if(v.length == 0 || parseInt(v) != v || v == 0)
-									{
-										$("#Cy-tp-DialogYes").addClass("ui-state-disabled");
-										layer.tips("请输入整数型的数据",$(this),
-										{
-											tips: [2, '#000'],
-								            time: 4000
-										})
-									}
-									else
-									{
-										if($(this).attr("id") == "HongBaoJinE")
-										{
-											$("#DaoJuJinE").val((v * Prop).toFixed(1));
-										}
-										$("#Cy-tp-DialogYes").removeClass("ui-state-disabled");
-									}
-							})
+							self.location='http://huahua.ncywjd.com/Home.php?p=guess&q='+Result; 
 						}
 						else if(json.Status == "失败")
 						{

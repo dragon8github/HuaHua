@@ -26,6 +26,8 @@ class AdminCtrl
     
     public function get_所有信息()
     {
+	
+		$now_time=time();
         //选择表
         $this->Sql->table = 'question';
         //条件语句
@@ -62,6 +64,9 @@ class AdminCtrl
                                 ON 
                                         D.openid = B.uid
                                 WHERE 
+								
+									B.expire_time>'$now_time'
+									AND
                                         A.flag = '1' 
                                 AND 
                                         A.type = '1'

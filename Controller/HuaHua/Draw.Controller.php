@@ -148,19 +148,12 @@ class DrawCtrl
              //图片上传失败
              $arr = array('Msg' => "图片上传失败","Result" => '','Status' => '失败');
              exit(json_encode($arr));
-         }
+         }         
          
-         
-        $this->Get_生成tips答案提示();
-         
-         //选择表
-         $this->Sql->table = 'setting';
-         //发送语句，获取prop金额所占比重
-         $prop = $this->Sql->field('prop')->find();
-         //重置
-         $this->Sql->reset();
         //选择表
         $this->Sql->table = 'question';
+        //重置
+        $this->Sql->reset();
         //获取POST数据
         $data["uid"] = $this->Openid;
         $data["answer"] = $_GET["q"];
@@ -172,20 +165,12 @@ class DrawCtrl
         $data["release_time"] = time();
         $data["expire_time"] = strtotime("+24 hours");
         
-        if(!Lee::Is_遍历数组中所有的值判断是否有空值($data))
-        {
-           $arr = array('Msg' => "数据非法，请联系管理员，错误码：00029","Result" => '','Status' => '失败');
-           exit(json_encode($arr));
-        }
-        else 
-        {
-            //发送语句,返回id
-            $id =  $this->Sql->add($data); 
-            //AJAX接受的信息
-            $arr = array('Msg' => '图片生成成功！' , 'Result' => array('id' => $id, 'file' => $file,'prop' => $prop["prop"]) , 'Status' => '成功' );
-            //返回为json
-            exit(json_encode($arr)); 
-        } 
+       //发送语句,返回id
+        $id =  $this->Sql->add($data); 
+        //AJAX接受的信息
+        $arr = array('Msg' => '图片生成成功！' , 'Result' => array('id' => $id) , 'Status' => '成功' );
+        //返回为json
+        exit(json_encode($arr)); 
     }
     
     public function Update_更新流水状态($order,$type)

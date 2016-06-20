@@ -9,29 +9,55 @@ class QueryCtrl
     
     private $Openid;      //用户微信号
     
-    public  $answer_details_arr = array();
+    public static   $answer_details_arr = array();
     
-    public  $question_arr = array();
+    public static  $question_arr = array();
     
-    public  $user_arr = array();
+    public static  $user_arr = array();
     
-    public  $statements_arr = array();
+    public static  $statements_arr = array(); 
+    
+    public static $Tips_arr = array();
     
     function __construct()
     {
-        //引入核心sql类库
-        include $_SESSION["APP_ROOT"].'/Lib/Class/Mysql.class.php';
-    
+        
+        if(!class_exists("Mysql"))
+        {
+                //引入核心sql类库
+                include $_SESSION["APP_ROOT"].'/Lib/Class/Mysql.class.php';
+        } 
+        
         //引入数据库配置
         $dsn = include $_SESSION["APP_ROOT"].'/Lib/Config/Sql.config.php';
-        	
-        //Openid
-        $this->Openid = $_SESSION["openid"];
-        	
+                	
         //返回数据库对象
-        $this->Sql =  Mysql::start($dsn);
+        $this->Sql =  Mysql::start($dsn); 
+     
     }   
     
+    
+    public function get_获取用户生成的tips大全($openid)
+    {
+        //选择表
+        $this->Sql->table = 'statements';
+        //重置
+        $this->Sql->reset();
+        
+        $mysql = sprintf("
+                                        SELECT
+                                        		      *
+                                         FROM
+                                         		     daojuinfo
+                                         WHERE
+                                     		         openid = '%s'
+             order by id  desc
+                                 ",$openid);
+        //发送语句
+        $arr =  $this->Sql->query($mysql);
+        //赋值
+        $this::$Tips_arr = $arr;
+    }
 
     
     public function get_获取statements($openid)
@@ -54,9 +80,8 @@ class QueryCtrl
                                  ",$openid,$openid);
         //发送语句
         $arr =  $this->Sql->query($mysql);
-        
-        $this->statements_arr = $arr;
-        return $arr;
+        //赋值
+        $this::$statements_arr = $arr;
     }
     
     public function get_获取user($openid)
@@ -78,9 +103,7 @@ class QueryCtrl
         //发送语句
         $arr =  $this->Sql->query($mysql);
         //返回余额
-        $this->user_arr = $arr;
-        
-        return $arr;
+        $this::$user_arr = $arr;
     }
     
     public function get_获取question($openid)
@@ -92,21 +115,23 @@ class QueryCtrl
     
         $mysql = sprintf("
                                 SELECT 
-                                		*
+                                		      A.*,B.answer AS answer1
                                  FROM 
-                                 		question AS A
+                                 		     question AS A
                                  JOIN
-                                 		question_library AS B
+                                 		     question_library AS B
                                    ON
-                                   		A.answer = B.id
+                       		                 A.answer = B.id
                                  WHERE	
-                                 		A.uid = '%s'
-                                 order by id desc
+                                 		     A.uid = '%s'
+                                order by 
+                                            A.id 
+                                    desc
                                  ",$openid);
         //发送语句
         $arr =  $this->Sql->query($mysql);
         //返回余额
-        $this->question_arr = $arr;      return $arr;
+        $this::$question_arr = $arr;  
     }
     
     public function get_获取answer_details($openid)
@@ -118,21 +143,37 @@ class QueryCtrl
     
         $mysql = sprintf("
                                         SELECT 
-                                        		*
+                                        		      *
                                          FROM 
-                                         		answer_details
+                                         		     answer_details
                                          WHERE
-                                         		user_id = '%s'
-                                        order by id desc
+                                         		     user_id = '%s'
+                                        order by 
+                                                     id 
+                                            desc
                                  ",$openid);
-
-        
+                
         //发送语句
         $arr =  $this->Sql->query($mysql);
         //返回余额
-        $this->answer_details_arr = $arr;      return $arr;
+        $this::$answer_details_arr = $arr;    
     }
     
+    public   function  update_balance($openid,$money)
+    {
+        //选择表
+        $this->Sql->table = 'user';
+        
+        //重置
+        $this->Sql->reset();
+        
+        $data["balance"] = $money;
+        
+        $where = sprintf(" openid = '%s' ",$openid);
+        
+        $this->Sql->where($where)->save($data);
+    }
+     
     
 }
 
@@ -141,15 +182,23 @@ class QueryCtrl
 
 IF(@$_GET["action"] == "query")
 {
+    $_query =  new QueryCtrl();
     $openid = $_POST["openid"];
-    
-    $_query = new QueryCtrl();
     $_query->get_获取answer_details($openid);
     $_query->get_获取question($openid);
     $_query->get_获取statements($openid);
     $_query->get_获取user($openid);
-    
+    $_query->get_获取用户生成的tips大全($openid);
 }
 
+
+
+IF(@$_POST["type"] == "update_balance")
+{
+    $_query = new QueryCtrl();
+    $openid = $_POST["openid"];
+    $balance = $_POST["balance"];
+    $_query->update_balance($openid,$balance);
+}
 
 ?>

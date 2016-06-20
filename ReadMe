@@ -1,0 +1,7 @@
+上午 9:51 2016/6/20 星期一
+1、在服务器安装了Native for mysql
+2、新增了后台管理数据：昨天、今天、总共的提现/答题/出题情况
+3、新增了开发人员的专用查询后台Query.php
+4、对AJAX的超时时间增长为10秒
+5、优化了Draw.Directive.js  和 Draw.Controller.php 的一些历史版本遗留的冗余代码。
+6、后台管理数据新增了真实余额（statements）可以作为和用户余额（user）的对比

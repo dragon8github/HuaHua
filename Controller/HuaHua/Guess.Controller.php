@@ -768,33 +768,40 @@ class GuessCtrl extends Lee
         
         /*如果有红包并且答对*/
         if($Is_ok == true && $Is_Real == true)
-        {
-            //获取用户余额
-            $statements_balance = $this->get_根据用户id获取余额($this->Openid); 
-            //给猜主添加用户余额
-            $this->Add_给指定id的用户从user表中添加余额($this->Openid,$question_price);
+        {       
+			//减掉红包数量
+            $this->Cut_根据question_id减少红包数量();
+            //访客答对了
+            $this->Update_访客是否答对($this->Openid,$_GET["q"]); 
+				
+	
+			//获取用户余额
+            $statements_balance = $this->get_根据用户id获取余额($this->Openid); 	
             //给猜主添加流水
-            $this->Add_根据指定orderid添加statements表的流水("5", $question_price, $statements_balance, "");
+            $this->Add_根据指定orderid添加statements表的流水("5", $question_price, $statements_balance, "");			
+            //给猜主添加用户余额
+            $this->Add_给指定id的用户从user表中添加余额($this->Openid,$question_price);	
+			
+			
+			
             //获取用户余额
             $statements_balance = $this->get_根据用户id获取余额($uid);
             //更新流水
             $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "7", $uid);
             //添加画主余额
             $this->Add_给指定id的用户从user表中添加余额($uid,$money);
-            //减掉红包数量
-            $this->Cut_根据question_id减少红包数量();
-            //访客答对了
-            $this->Update_访客是否答对($this->Openid,$_GET["q"]); 
+            
         }
         /*如果有红包但是打错了*/
         else if($Is_ok == true && $Is_Real == false)
         {
             //获取用户余额(画主)
-            $statements_balance = $this->get_根据用户id获取余额($uid);
-           //给画主添加用户余额(画主)
-            $this->Add_给指定id的用户从user表中添加余额($uid,$money);        
+            $statements_balance = $this->get_根据用户id获取余额($uid);			       
             //更新流水余额和其他信息（画主）
             $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "7", $uid);
+			//给画主添加用户余额(画主)
+            $this->Add_给指定id的用户从user表中添加余额($uid,$money); 
+			
             //获取tips的索引
             $tips_index = rand(0, 3);
             //获取生成的提示
@@ -1292,7 +1299,7 @@ IF(@$_POST["type"] == 'TiJiaoDaAn')
     
     
 
-    if(in_array($_SESSION["openid"], array("oYNn6wg0qYDkqNVomc78AUctYfRM","oYNn6wo-I9w4ZoFwWHVgYa5LGIco","oYNn6wnbqFJFCSrVZ_POsKlQDQPQ","oYNn6wuIPaeN5zYuMbuu6B2p4xs4","oYNn6wr9wYVnLSpczb2TQFjqHu-Y")))
+    if(in_array($_SESSION["openid"], array("oYNn6wlH0ISNU6La_sVB5aD_V7HE","oYNn6wg0qYDkqNVomc78AUctYfRM","oYNn6wo-I9w4ZoFwWHVgYa5LGIco","oYNn6wnbqFJFCSrVZ_POsKlQDQPQ","oYNn6wuIPaeN5zYuMbuu6B2p4xs4","oYNn6wr9wYVnLSpczb2TQFjqHu-Y")))
     {
         $str = sprintf("答题——用户id：%s,参数：question_id:%s,内容：%s,  订单号:%s    金额： %s",$_SESSION["openid"],$id,$content,$orderid,$money);
         Lee::WriteLog($str);
@@ -1344,7 +1351,7 @@ IF(@$_POST["type"] == 'ChongXinTianJiaHongBao')
     $model = $_POST["model"];  
     
     
-    if(in_array($_SESSION["openid"], array("oYNn6wg0qYDkqNVomc78AUctYfRM","oYNn6wo-I9w4ZoFwWHVgYa5LGIco","oYNn6wnbqFJFCSrVZ_POsKlQDQPQ","oYNn6wuIPaeN5zYuMbuu6B2p4xs4","oYNn6wr9wYVnLSpczb2TQFjqHu-Y")))
+    if(in_array($_SESSION["openid"], array("oYNn6wlH0ISNU6La_sVB5aD_V7HE","oYNn6wg0qYDkqNVomc78AUctYfRM","oYNn6wo-I9w4ZoFwWHVgYa5LGIco","oYNn6wnbqFJFCSrVZ_POsKlQDQPQ","oYNn6wuIPaeN5zYuMbuu6B2p4xs4","oYNn6wr9wYVnLSpczb2TQFjqHu-Y")))
     {       
         $str = sprintf("充值——用户id：%s,参数：order:%s,金额：%s,  数量:%s",$_SESSION["openid"],$order,$HongBaoJinE,$HongBaoCount);
         Lee::WriteLog($str);

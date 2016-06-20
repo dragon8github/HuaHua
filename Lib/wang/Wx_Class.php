@@ -184,7 +184,7 @@ if(@$code != null && @$_SESSION["openid"] == null)
     //微信头像
     $_SESSION["headimgurl"] = substr($user_message['headimgurl'], 0,-1)."64"; 
 	
-	$_SESSION['subscribe']=$user_message['subscribe'];
+//	$_SESSION['subscribe']=$user_message['subscribe'];
     //openid
     $_SESSION["openid"] = $openid;
     //code
@@ -194,9 +194,9 @@ if(@$code != null && @$_SESSION["openid"] == null)
  
  
 //  IF($_SESSION["openid"] != "oYNn6wg0qYDkqNVomc78AUctYfRM" && $_SESSION["openid"] != "oYNn6wi2Lg4qvvQDOFFTMXpY6ulY" &&  $_SESSION["openid"] != "oYNn6wq36uud61x_9U3jSDpTN0bo")
-// {
-//      exit("<style type=\"text/css\">#face{margin:0px auto;background: #9ee675;/* for Webkit */background: -webkit-gradient(linear, left top, left bottom, from(#9ee675), to(#78cb4c));/* for Firefox */background: -moz-linear-gradient(top,  #9ee675,  #78cb4c);/* for IE */filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#9ee675',endColorstr='#78cb4c'); color:#fff;border:1px solid #fff;border-radius:200px;text-align:center;width:200px;height:200px;font-size:126px;letter-spacing: 5px;padding-top: 5px;}  *{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: \"微软雅黑\"; color: #333;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 3.8em;text-align: center; font-size: 36px }</style><div style=\"padding: 24px 48px;\"> <h1 id=\"face\">:(</h1><p style='font-size:66px'>程序正在升级中<br /><br />感谢您对我们的支持</p></div>");
-//  }  
+ //{
+  //    exit("<style type=\"text/css\">#face{margin:0px auto;background: #9ee675;/* for Webkit */background: -webkit-gradient(linear, left top, left bottom, from(#9ee675), to(#78cb4c));/* for Firefox */background: -moz-linear-gradient(top,  #9ee675,  #78cb4c);/* for IE */filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#9ee675',endColorstr='#78cb4c'); color:#fff;border:1px solid #fff;border-radius:200px;text-align:center;width:200px;height:200px;font-size:126px;letter-spacing: 5px;padding-top: 5px;}  *{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: \"微软雅黑\"; color: #333;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 3.8em;text-align: center; font-size: 36px }</style><div style=\"padding: 24px 48px;\"> <h1 id=\"face\">:(</h1><p style='font-size:66px'>程序正在升级中<br /><br />感谢您对我们的支持</p></div>");
+ // }  
   
 
 ?>
