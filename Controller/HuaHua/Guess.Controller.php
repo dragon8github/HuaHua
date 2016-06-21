@@ -182,7 +182,7 @@ class GuessCtrl extends Lee
                         
         		
                 $ko=new WX_INT();
-                $jsApiParameters=$ko->Jspay("添加红包","添加红包",$prict_count,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$openid,$orderid);
+                $jsApiParameters=$ko->Jspay("添加红包","添加红包",$prict_count,"http://hh.ncywjd.com/Module/HuaHua/Notify.php",$openid,$orderid);
                 $arr = array('Msg' => '请求成功！' , 'Result' => array('order' => $orderid, 'wxjson' => $jsApiParameters) , 'Status' => '成功' );
                 //返回为json
                 exit(json_encode($arr));
@@ -1221,7 +1221,7 @@ class GuessCtrl extends Lee
         
         
         $ko=new WX_INT();
-        $jsApiParameters=$ko->Jspay("道具购买","道具购买",$daojujiage,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
+        $jsApiParameters=$ko->Jspay("道具购买","道具购买",$daojujiage,"http://hh.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
         $arr = array('Msg' => '请求成功！' , 'Result' => array('order' => $orderid,'tips' =>$tips,'tips_index'=>$tips_index,'money' => $daojujiage, 'uid' =>$uid ,'wxjson' => $jsApiParameters) , 'Status' => '成功' );
         //返回为json
         exit(json_encode($arr));
@@ -1271,7 +1271,7 @@ class GuessCtrl extends Lee
         if($model_price != 0)
         {
              $ko=new WX_INT();
-             $jsApiParameters=$ko->Jspay("添加红包","添加红包",$model_price,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
+             $jsApiParameters=$ko->Jspay("添加红包","添加红包",$model_price,"http://hh.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
         }
         
        //发送请求
@@ -1341,7 +1341,7 @@ IF(@$_POST['type'] == 'weixinzhifu2')
 
 
 
-IF(@$_POST["type"] == 'ChongXinTianJiaHongBao')
+/*IF(@$_POST["type"] == 'ChongXinTianJiaHongBao')
 {
     //实例化
     $_GuessCtrl = new GuessCtrl();
@@ -1362,7 +1362,7 @@ IF(@$_POST["type"] == 'ChongXinTianJiaHongBao')
           $_GuessCtrl->Ajax_重新添加红包($order,$HongBaoJinE,$HongBaoCount,$model); 
    }    
 }
-
+*/
 IF(@$_POST["type"] == 'GouMaiDaoJu')
 {
     //实例化

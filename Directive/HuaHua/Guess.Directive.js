@@ -68,7 +68,7 @@ GuessDir.UpdateWxResult2 = function(res,myData)
 	{				
 		//先关闭原来的弹窗
 		$("#cy-tp-dialog2").popup('close');  
-		$.ajax
+		/*$.ajax
 		({
 			data: { type:"ChongXinTianJiaHongBao", order:myData.order,HongBaoJinE:myData.HongBaoJinE,HongBaoCount:myData.HongBaoCount,model:myData.model },
 			success:function(Resultdata)
@@ -77,7 +77,16 @@ GuessDir.UpdateWxResult2 = function(res,myData)
 				if (json.Status == '成功') { $("#reputHongBao").addClass("ui-state-disabled").unbind("click"); layer.open ({ title: "信息", content:json.Msg,btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); }  }); }
 				else { alert(json.Msg);  }
 			}
-		})
+		})*/
+		 layer.open ({ title: "信息", 
+					 content:'奖金充值成功',
+					 btn: ['好的'],
+					 yes:function(index) { 
+					 location.reload(); 
+					 layer.close(index); 
+					 },end:function(index) { 
+					 location.reload(); 
+					 layer.close(index); }  }); 
 	}
 	else if(res.err_msg.indexOf("fail") >= 0)
 	{

@@ -76,8 +76,8 @@ foreach($_GET as $key => $value)
 if($p != null)
 {
     $state = rand(0,9999);  //随机数解决缓存问题；
-    $appid = "wx92ea69e479013e3d";
-    $url= sprintf("http://huahua.ncywjd.com/Module/HuaHua/%s.php%s",$p,$q);
+    $appid = "wx911ae27f5e1197c3";
+    $url= sprintf("http://hh.ncywjd.com/Module/HuaHua/%s.php%s",$p,$q);
     $Wxurl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.$appid.'&redirect_uri='.$url.'&response_type=code&scope=snsapi_userinfo&state='.$state.'#wechat_redirect';
     header("Location:".$Wxurl);
 }

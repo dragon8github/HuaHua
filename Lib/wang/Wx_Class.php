@@ -10,8 +10,8 @@ require_once    $_SESSION["APP_ROOT"]."/Lib/wang/wxpay/api_test.php";  //用户�
 class WX_INT  
 {  
 
-	public $appid = "wx92ea69e479013e3d";  
-	public $secret= "814dcdacf3d9c92dd72bfab7914c1bd9";
+	public $appid = "wx911ae27f5e1197c3";  
+	public $secret= "f9eeb3c923f9f700031b907f5f953a51";
 	//服务号页面授权获取openid
 	public function getOpenid($code) {
 			$appid=$this->appid;  
@@ -94,7 +94,7 @@ class WX_INT
 	{
 			//echo "<br/>"."-----".$openids."*****";
 			$mch_appid=$this->appid;
-			$mchid='1330867001';//商户号
+			$mchid='1332747501';//商户号
 			$nonce_str='qyzf'.rand(100000, 999999);//随机数
 			$partner_trade_no='HW'.time().rand(10000, 99999);//商户订单号
 			$openid=$openid;//用户唯一标识

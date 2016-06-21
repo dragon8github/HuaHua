@@ -5,7 +5,7 @@ if(!@$_SESSION["test"])
 {
         return array(
             'DB_HOST'		=>	'127.0.0.1',	//主机地址
-            'DB_NAME'		=>	'huahua',			//数据库名
+            'DB_NAME'		=>	'hh',			//数据库名
             'DB_PORT'		=>	'',			//端口
             'DB_PREFIX'		=>	'',			//表前缀
             'DB_CHARSET'	=>	'utf8',			//数据库编码
@@ -16,7 +16,7 @@ if(!@$_SESSION["test"])
 
 return array(
     'DB_HOST'		=>	'localhost',	//主机地址
-    'DB_NAME'		=>	'huahua',			//数据库名
+    'DB_NAME'		=>	'hh',			//数据库名
     'DB_PORT'		=>	'',			//端口
     'DB_PREFIX'		=>	'',			//表前缀
     'DB_CHARSET'	=>	'utf8',			//数据库编码
