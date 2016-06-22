@@ -3,7 +3,7 @@
 ini_set('date.timezone','Asia/Shanghai');
 
 //控制器专用累
-class UserCtrl
+class UserCtrl extends Lee
 {
     private  $Sql;	          //该sql类的全局对象
     
@@ -74,8 +74,7 @@ class UserCtrl
     
     
     public function Is_如果用户存在过期的信息就归还金钱()
-    {
-     
+    {     
         //选择表
         $this->Sql->table = 'question';
         //sql语句
@@ -152,9 +151,6 @@ class UserCtrl
              $where = sprintf(" uid = '%s' AND  UNIX_TIMESTAMP() > expire_time AND flag != '2' ",$this->Openid);
              //发送语句
              $this->Sql->where($where)->save($data);
-                         
- 
-             
              
 
              //添加用户余额user
@@ -179,22 +175,136 @@ class UserCtrl
         $XML =  $ko->Zhifu($money,$this->Openid);
         return $XML;
     }
-     
+    
 
-    public function Ajax_获取用户余额()
+    public function get_获取真实正确的需要提现的数据()
     {
+        //用户openid
+        $openid = $this->Openid;        
         //选择表
-        $this->Sql->table = 'user';
-        //重置
+        $this->Sql->table = 'statements';
+        //重置sql
         $this->Sql->reset();
         //条件语句
-        $where = sprintf("openid = '%s' ",$this->Openid);
+        $mysql = sprintf("
+                                    SELECT
+                            					IFNULL(sum(price) / 100,0)  as user_balance
+                            		FROM
+                            					statements
+                            		where
+                            					happen_time >(SELECT happen_time from statements where type = '4' and uid = '%s' order by happen_time desc limit 1)
+                            			AND
+                            					flag = '1'
+                            			AND
+                            					(
+                                                        uid = '%s' AND (type = '5' or type = '6' or type = '8')
+                                    			OR
+                                    					bid = '%s' AND type = '7'
+                                                )
+                            ",$openid,$openid,$openid);
+    
         //发送语句
-        $arr =  $this->Sql->field("balance")->where($where)->find();
+        $rett=  $this->Sql->query($mysql);
+    
+        return $rett[0]["user_balance"];
+    }
+
+    
+    public function get_获取setting的提现规则()
+    {
+        //选择表
+        $this->Sql->table = 'setting';
+        //重置
+        $this->Sql->reset();
+        //发送语句
+        $arr =  $this->Sql->limit(1)->find();
         //返回余额
-        $balance = $arr["balance"];
+        return $arr["pending_balance"];
+    }
+    
+    public function Is_是否存在提现申请列表中()
+    {
+        //选择表
+        $this->Sql->table = 'statements';
+        //重置
+        $this->Sql->reset();        
+        //条件语句
+        $where = sprintf("uid = '%s' AND flag = '0' AND type = '4' ",$this->Openid);        
+          //获取总数
+        $count = $this->Sql->where($where)->getCount();
+        //如果大于0返回true
+        if($count > 0)
+        {
+            return true;
+        }
+        //否则返回false
+        return false;
+    }
+    
+
+    public function Ajax_提现()
+    {
+        $balance = $this->get_根据用户id获取余额($this->Openid);             
         
-        if($balance <= 0)
+        if($balance < 100)
+        {
+            //AJAX接受的信息
+            $arr = array('Msg' => '提现失败，您的余额不足以满足微信提现条件（金额 >=1）！' , 'Result' => '' , 'Status' => '失败' );
+            //返回为json
+            exit(json_encode($arr));
+        }      
+       
+       $pending_balance = $this->get_获取setting的提现规则();       
+       
+       IF($balance >= $pending_balance)
+       {
+           if(!$this->Is_是否存在提现申请列表中())
+           {              
+               //清空用户余额，并且插入一条flag 为 0 的数据
+              $this->清空用户余额和插入流水表($balance,0);              
+              //AJAX接受的信息
+              $arr = array('Msg' => '提现申请成功,请等待工作人员审核。（工作时间9:30~18:00）' , 'Result' => '' , 'Status' => '成功' );
+              //返回为json
+              exit(json_encode($arr));
+           }
+           else 
+           {
+               //AJAX接受的信息
+               $arr = array('Msg' => '你上一次的申请在队列中。请等待审核完毕' , 'Result' => '' , 'Status' => '失败' );
+               //返回为json
+               exit(json_encode($arr));
+           }
+       }
+       else 
+       {
+           //...调用转账接口
+           $XML = $this->wx_转账接口($balance);
+           
+           //解析XML
+           $XMLOBJ = simplexml_load_string($XML, 'SimpleXMLElement', LIBXML_NOCDATA);
+            
+           IF($XMLOBJ->result_code == "SUCCESS")
+           {
+               $this->清空用户余额和插入流水表($balance);
+           }
+           else IF($XMLOBJ->result_code == "FAIL")
+           {
+               //获取微信错误信息
+               $msg = $XMLOBJ->err_code_des;
+               //拼接数组
+               $arr = array('Msg' => $msg , 'Result' => '' , 'Status' => '失败' );
+               //返回为json
+               exit(json_encode($arr));
+           }
+       }
+    }
+    
+    
+    public function Ajax_获取用户余额()
+    {        
+        $balance = $this->get_根据用户id获取余额($this->Openid);    
+        
+        if($balance < 100)
         {
             //AJAX接受的信息
             $arr = array('Msg' => '提现失败，您的余额不足以满足微信提现条件（金额 >=0）！' , 'Result' => '' , 'Status' => '失败' );
@@ -230,7 +340,7 @@ class UserCtrl
     }
     
     
-    public function 清空用户余额和插入流水表($balance)
+    public function 清空用户余额和插入流水表($balance,$flag = 1)
     {
         //选择表
         $this->Sql->table = 'user';
@@ -253,11 +363,14 @@ class UserCtrl
         $data2["price"] = $balance;
         $data2["happen_time"] = time();
         $data2["uid"] = $this->Openid;
-        $data2["flag"] = "1";
+        $data2["flag"] = $flag;
         $data2["balance"] = "0";
         //发送语句
         $this->Sql->add($data2);
     }
+    
+    
+ 
     
     
     public function get_获取用户资料()
@@ -334,24 +447,49 @@ class UserCtrl
     
     public function get_获取流水列表()
     {
+        $openid = $this->Openid;
+        
         //选择表
         $this->Sql->table = 'statements';
         //查询语句
         $mysql = sprintf("
-                                    SELECT A. * , B.wx_name, B.wx_litpic, IF( bid =  '%s' AND TYPE <>7, 3, 
-                                    TYPE ) AS realtype
-                                    FROM statements AS A
-                                    JOIN user AS B ON uid = openid
+                                    SELECT 
+                                					A. * ,
+                                					B.wx_name,
+                                					B.wx_litpic, 
+                                					IF( bid =  '%s' AND TYPE <>7, 3,TYPE ) AS realtype
+                                     FROM 
+                                					statements AS A
+                                     JOIN 
+                                					user AS B 
+                            			 ON 
+                                					uid = openid
                                     WHERE 
-                                    A.type IN ( 2, 3, 4, 5, 6,7,8) 
-                                     AND (uid =  '%s' 
-                                    AND A.flag =  '1'  AND A.type<>7 AND A.type<>2 )
-                                    OR 
-                                    ( bid = '%s' 
-                                    AND A.flag =  '1' )
-                                    ORDER BY happen_time DESC 
-                                 ",$this->Openid,$this->Openid,$this->Openid);
-        
+                                                    A.type 
+                                            IN 
+                                                    (2,3,4,5,6,7,8)
+                                		 AND 
+                                					(
+                                								uid =  '%s'
+                                						AND 
+                                								A.flag =  '1'  
+                                						AND 
+                                								A.type<>7 
+                                						AND 
+                                								A.type<>2
+                                					)
+                                      OR 
+                                					( 
+                                									bid = '%s' 
+                                						AND 
+                                									A.flag =  '1' 
+                                					)
+                                ORDER BY 
+                                					happen_time 
+                                		DESC 
+                                
+                                    LIMIT 30
+                                 ",$openid,$openid,$openid);
         
         //发送语句
         return $this->Sql->query($mysql); 
@@ -365,7 +503,15 @@ class UserCtrl
 if(@$_POST["type"] == "UserYuE")
 {
     $_UserCtrl = new UserCtrl();
-    $_UserCtrl->Ajax_获取用户余额();
+    
+    IF($_SESSION["openid"] == "oYNn6wg0qYDkqNVomc78AUctYfRM")
+    {
+        $_UserCtrl->Ajax_提现(); 
+    } 
+    else
+    {
+       $_UserCtrl->Ajax_获取用户余额();
+    }
 }
 
 ?>

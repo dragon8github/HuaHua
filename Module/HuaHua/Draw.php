@@ -17,16 +17,7 @@ $_DrawCtrl = new DrawCtrl();                            //Main对象
 $openid = $_SESSION["openid"];                       //openid
 $q = $_GET["q"];                                               //answer题目号码
 $Title =$_GET["word"];                                      //设置页面Title
-
- 
-
-//判断画主是否重新打开这个界面
-$arr = $_DrawCtrl->If_判断是否画主重新打开这个页面($q, $openid);
-$expire_time = $arr["expire_time"];                 //过期时间
-$shengyu_count = $arr["shengyu_count"];      //剩余红包数量
-$price = $arr['price'];                                      //单价
-$flag = 0;                                                      //能否修改的标识
-$nickname = $_SESSION["nickname"];  
+$nickname = $_SESSION["nickname"];              //获取昵称，作为分享接口的数据
 
 //微信类 开始==============================================
 $ko=new WX_INT();
@@ -34,21 +25,6 @@ $signPackage = $ko->GetSignPackage();   //获取分享接口 相关信息
 
   
 
-//逻辑开始==================================================
-if(count($arr))
-{
-    //用户回来修改数据、但允许修改的是满足其中一个前提：
-    //..1、当前时间大于过期时间
-    //..2、红包剩余金额为0
-    if(time() > $expire_time || $shengyu_count == 0)
-    {
-        $flag = 1;
-    }
-    else
-    {
-        $flag = 0;
-    }
-}
 
 ?>
 

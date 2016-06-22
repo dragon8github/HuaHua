@@ -12,9 +12,11 @@ class GuessCtrl extends Lee
     
     function __construct()
     {
-        //引入核心sql类库
-        include $_SESSION["APP_ROOT"].'/Lib/Class/Mysql.class.php';              
-    
+        if(!class_exists("Mysql"))
+        {
+                //引入核心sql类库
+                include $_SESSION["APP_ROOT"].'/Lib/Class/Mysql.class.php';              
+        }
         //引入数据库配置
         $dsn = include $_SESSION["APP_ROOT"].'/Lib/Config/Sql.config.php';
         	
@@ -158,7 +160,7 @@ class GuessCtrl extends Lee
     public function Ajax_流水记录和微信支付json($money,$openid,$cot)
     {
 		
-		if(is_numeric($money) && is_numeric($cot) && $cot >= 1 && $money >= 1)
+		if(is_numeric($money) && is_numeric($cot) && $cot >= 1 && $money >= 0)
 		{
 		      $orderid = WxPayConfig::MCHID.uniqid();             //订单号
 		      $prict_count=$this->C_金额转换($money)*$cot;     //价格
@@ -182,7 +184,7 @@ class GuessCtrl extends Lee
                         
         		
                 $ko=new WX_INT();
-                $jsApiParameters=$ko->Jspay("添加红包","添加红包",$prict_count,"http://hh.ncywjd.com/Module/HuaHua/Notify.php",$openid,$orderid);
+                $jsApiParameters=$ko->Jspay("添加红包","添加红包",$prict_count,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$openid,$orderid);
                 $arr = array('Msg' => '请求成功！' , 'Result' => array('order' => $orderid, 'wxjson' => $jsApiParameters) , 'Status' => '成功' );
                 //返回为json
                 exit(json_encode($arr));
@@ -675,7 +677,20 @@ class GuessCtrl extends Lee
    }
    
     
-    
+      function get_根据openid获取用户名($openid)
+    {
+        //选择表
+        $this->Sql->table = "user";
+        //条件语句
+        $where = sprintf( " openid = '%s' ",$openid);
+        //发送查找
+        $ret = $this->Sql->where($where)->field("wx_name")->find();
+        //记录一下
+        //Lee::WriteLog("get_根据openid获取用户名:".$ret["wx_name"]);        
+        //返回结果
+        return $ret["wx_name"];
+    }
+
     public function Ajax_提交答案($id,$content,$orderid,$money)
     {
         //选择流水表
@@ -707,12 +722,12 @@ class GuessCtrl extends Lee
                                  ",$orderid);
         //发送语句
         $_result = array();
-        
-        
+                
+       
         //循环、等待0秒、1秒、2秒、3秒.避免异步带来的影响
         for ($run = 0;$run <= 3;$run++)
         {
-            sleep($run * 1000);
+            sleep($run * 1);
         
             $_result = $this->Sql->query($mysql);
         
@@ -723,7 +738,6 @@ class GuessCtrl extends Lee
                 break;
             }
         }
-        
         
         
         //获取结果集
@@ -768,7 +782,9 @@ class GuessCtrl extends Lee
         
         /*如果有红包并且答对*/
         if($Is_ok == true && $Is_Real == true)
-        {       
+        {     
+		
+		  
 			//减掉红包数量
             $this->Cut_根据question_id减少红包数量();
             //访客答对了
@@ -790,7 +806,19 @@ class GuessCtrl extends Lee
             $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "7", $uid);
             //添加画主余额
             $this->Add_给指定id的用户从user表中添加余额($uid,$money);
-            
+        		//uid 通知画主    
+				
+				
+				$data2 = json_decode(file_get_contents("../../Module/HuaHua/access_token.json"));
+				$access_token = $data2->access_token;
+					$wx_ko= new WX_INT();
+				//	$hz_ming=$this->get_根据openid获取用户名($uid);
+					$cz_ming=$this->get_根据openid获取用户名($this->Openid);
+					$mes_ko=$cz_ming."答对了您的《".$answer."》获得".($question_price/100)."元";
+					$website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
+					$wx_ko->SendMessage($website,$mes_ko,$access_token,$uid);
+					
+				
         }
         /*如果有红包但是打错了*/
         else if($Is_ok == true && $Is_Real == false)
@@ -812,6 +840,23 @@ class GuessCtrl extends Lee
                 $this->Daoju_添加道具购买标识($tips_index,$tips); 
                 $this->Daoju_添加访客道具购买标识(); 
             }
+					//uid 通知画主 
+					
+				
+				$data2 = json_decode(file_get_contents("../../Module/HuaHua/access_token.json"));
+				$access_token = $data2->access_token;
+					$wx_ko= new WX_INT();
+					$cz_ming=$this->get_根据openid获取用户名($this->Openid);
+					
+					//$wx_ko->SendMessage("http://baidu.com","大家好",$access_token,"oYNn6wg0qYDkqNVomc78AUctYfRM");
+					$mes_ko=$cz_ming."答错了您的《".$answer."》，您获得".($money/100)."元，他提交的答案是《".$content."》";
+					//$mes_ko="谁谁谁答多了您的万箭穿心，您获得多少元，他提交的答案是晚间穿心";
+					$website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
+					$yes=$wx_ko->SendMessage($website,$mes_ko,$access_token,$uid);
+					//Lee::WriteLog($website."--".$mes_ko."--".$access_token."---".$uid."---".$yes);  
+					
+					
+				
         }
        /*没有红包，但是答对了*/
         else if($Is_ok == false && $Is_Real == true)
@@ -1004,10 +1049,12 @@ class GuessCtrl extends Lee
         $where = sprintf(" id = '%s' AND type = '1' ",$order);
         //待获取结果
         $rett = array();    
+        
+        
         //循环、等待0秒、1秒、2秒、3秒.避免异步带来的影响
         for ($run = 0;$run <= 3;$run++)
         {
-            sleep($run * 1000);
+            sleep($run * 1);
             
             $rett = $this->Sql->field("price,hongbao_price,hongbao_count,flag,Is_Use")->where($where)->find();
             
@@ -1017,7 +1064,8 @@ class GuessCtrl extends Lee
             {
                 break;
             }
-        }
+        }  
+        
         
         //获取用户充值完成的金额
         $rett_price = $rett["price"];                                      //用户充值的流水金额
@@ -1030,7 +1078,7 @@ class GuessCtrl extends Lee
         
          
         //$rett_Is_Use如果为0，说明订单未使用
-        if($rett_Is_Use == "0" && $rett_flag == 1 && $rett_price != null && $rett_price >= 100 && ($rett_price / 100) == $rett_count && ($rett_hongbao_price / 100) == $HongBaoJinE && $rett_hongbao_count  ==$HongBaoCount)
+        if($rett_Is_Use == "0" && $rett_flag == 1 && $rett_price != null && $rett_price >= 0 && ($rett_price / 100) == $rett_count && ($rett_hongbao_price / 100) == $HongBaoJinE && $rett_hongbao_count  ==$HongBaoCount)
         {                           
                 //修改更新标识
                 //$data["flag"] = '1';   //(已更新版本为异步完成1)
@@ -1139,12 +1187,12 @@ class GuessCtrl extends Lee
                 {
                     $rand =  rand(0, $len - 1);
                     $word = mb_substr($txt, $rand,1,"utf-8");
-                    if(in_array($word, $re))
+                    if(in_array($word, $re) || mb_strlen($word) < 3)
                     {
                         //..如果随机获取的值中居然有答案的词，那么返回
                         $i--;
                         continue;
-                    }                   
+                    }                       
                     $tips .= ",".$word;
                 }
             }
@@ -1158,12 +1206,12 @@ class GuessCtrl extends Lee
             {
                 $rand =  rand(0, $len - 1);
                 $word = mb_substr($txt, $rand,1,"utf-8");
-                if(in_array($word, $re))
+                if(in_array($word, $re) || mb_strlen($word) < 3)
                 {
                     //..如果随机获取的值中居然有答案的词，那么返回
                     $i--;
                     continue;
-                }
+                }              
                 $tips .= ",".$word;
             }
         }
@@ -1221,7 +1269,7 @@ class GuessCtrl extends Lee
         
         
         $ko=new WX_INT();
-        $jsApiParameters=$ko->Jspay("道具购买","道具购买",$daojujiage,"http://hh.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
+        $jsApiParameters=$ko->Jspay("道具购买","道具购买",$daojujiage,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
         $arr = array('Msg' => '请求成功！' , 'Result' => array('order' => $orderid,'tips' =>$tips,'tips_index'=>$tips_index,'money' => $daojujiage, 'uid' =>$uid ,'wxjson' => $jsApiParameters) , 'Status' => '成功' );
         //返回为json
         exit(json_encode($arr));
@@ -1271,7 +1319,7 @@ class GuessCtrl extends Lee
         if($model_price != 0)
         {
              $ko=new WX_INT();
-             $jsApiParameters=$ko->Jspay("添加红包","添加红包",$model_price,"http://hh.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
+             $jsApiParameters=$ko->Jspay("添加红包","添加红包",$model_price,"http://huahua.ncywjd.com/Module/HuaHua/Notify.php",$this->Openid,$orderid);
         }
         
        //发送请求
@@ -1341,7 +1389,7 @@ IF(@$_POST['type'] == 'weixinzhifu2')
 
 
 
-/*IF(@$_POST["type"] == 'ChongXinTianJiaHongBao')
+IF(@$_POST["type"] == 'ChongXinTianJiaHongBao')
 {
     //实例化
     $_GuessCtrl = new GuessCtrl();
@@ -1357,12 +1405,12 @@ IF(@$_POST['type'] == 'weixinzhifu2')
         Lee::WriteLog($str);
     } 
     
-   if(is_numeric($HongBaoCount) && is_numeric($HongBaoJinE) && $HongBaoCount >= 1 && $HongBaoJinE >= 1)
+   if(is_numeric($HongBaoCount) && is_numeric($HongBaoJinE) && $HongBaoCount >= 1 && $HongBaoJinE >= 0)
     {
           $_GuessCtrl->Ajax_重新添加红包($order,$HongBaoJinE,$HongBaoCount,$model); 
    }    
 }
-*/
+
 IF(@$_POST["type"] == 'GouMaiDaoJu')
 {
     //实例化

@@ -41,7 +41,7 @@ DrawDir.UpdateWxResult = function(res,myData)
 				var json = JSON.parse(Resultdata);
 				if(json.Status == '成功')
 				{
-					var url = "http://hh.ncywjd.com/Home.php?p=guess&q="+myid;	//分享的链接.需要和微信接口对接
+					var url = "http://huahua.ncywjd.com/Home.php?p=guess&q="+myid;	//分享的链接.需要和微信接口对接
 					share(url);
 					AjaxDir.JqmAlert("制作成功");
 					$("#cy-tp-dialog").popup('close'); 
@@ -126,7 +126,7 @@ DrawDir.DialogYes = function(e)
 DrawDir.DialogNo = function(e)
 {
 	var id = e.id;		//获取id，作为分享页面的链接
-	var url = "http://hh.ncywjd.com/Home.php?p=guess&q="+id;	//分享的链接.需要和微信接口对接
+	var url = "http://huahua.ncywjd.com/Home.php?p=guess&q="+id;	//分享的链接.需要和微信接口对接
 	//...点击取消
 	$("#KaiShiZhizuo").removeClass("ui-state-disabled").text("分享到朋友圈").bind("tap",DrawDir.ShareFriend);
 }
@@ -265,7 +265,7 @@ $(function()
 							//获取id
 							var Result  =json["Result"].id;									
 							//进行页面跳转
-							self.location='http://hh.ncywjd.com/Home.php?p=guess&q='+Result; 
+							self.location='http://huahua.ncywjd.com/Home.php?p=guess&q='+Result; 
 						}
 						else if(json.Status == "失败")
 						{

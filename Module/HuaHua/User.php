@@ -40,7 +40,14 @@ else
     $balance = $arr["balance"];  //余额    
 }
 
-
+/*
+$Is_OkforBalance = false;
+$myhour = date("G");
+if($myhour  < 18 || $myhour > 9)
+{
+	$Is_OkforBalance = true;
+}*/
+ 
 
 ?>
 
@@ -57,16 +64,14 @@ CssLoader::LoadCss("Copy", "User.css");
 ?>
 
 <body>
-            <style type="text/css">
-                  .ssyy i{display:inline-block;height:40px;text-indent:-999em;width:26px}
-                  .layermanim h3{margin:0px;}
-				        .ui-loader-default{ display:none}
-      .ui-mobile-viewport{ border:none;}
-      .ui-page {padding: 0; margin: 0; outline: 0} 
-	  
-	  
-	 #sdfw3e{background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:0 1px 0 #f3f3f3;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto;text-shadow:0 0 0 #000}
-            </style>
+<style type="text/css">
+.ssyy i{display:inline-block;height:40px;text-indent:-999em;width:26px}
+.layermanim h3{margin:0}
+.ui-loader-default{display:none}
+.ui-mobile-viewport{border:none}
+.ui-page{padding:0;margin:0;outline:0}
+#sdfw3e{background-color:#3aa7ff;color:#fff;max-width:45%;border-color:#ddd;text-shadow:0 1px 0 #f3f3f3;border-radius:.3125em;font-weight:700;-moz-user-select:none;cursor:pointer;display:block;font-size:16px;margin:.5em 0;overflow:hidden;padding:.7em 1em;position:relative;text-align:center;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15);background-clip:padding-box;border-style:solid;border-width:1px;margin:0 auto;text-shadow:0 0 0 #000}
+</style>
 			
             
             <div style="min-height: 638px;" class="content content-user-index">
@@ -81,12 +86,13 @@ CssLoader::LoadCss("Copy", "User.css");
                     </div>
                     <div class="stat clearfix" style="position:relative">
 					<span style="font-size:12px;position:absolute;top:55px;left:18px;color:#999999">微信规则限制最少需要1元才能提现</span>
+					<!--<span style="font-size:12px;position:absolute;top:55px;left:18px;color:#999999">提现时间为9:30～18:00</span> -->
                         <div class="yyee" style="position:relative">余额: <?php echo $balance/100; ?></div> 
             			<div class="ssyy"><span id="laod" style="display: none;">30</span><span id="old_jine" style="display: none;">30</span><i style="background-position: 0px -120px;"></i><i style="background-position: 0px 0px;"></i></div>
                         <div class="xgmm"><a href="javascript:;" id="tixian">提现</a></div>        </div>
                 </div>
                 
-                <div class="navigate clearfix">
+                <div class="navigate clearfix"> 
                  
                    <?php 
                      for($i = 0;$i<count($arr_ls);$i++)
@@ -101,7 +107,6 @@ CssLoader::LoadCss("Copy", "User.css");
                          {
                              continue;
                          }
-                         
                          
                  ?>
                        	   <a class="item" href="javascript:;">
@@ -127,3 +132,17 @@ CssLoader::LoadCss("Copy", "User.css");
 	JsLoader::LoadDirective('HuaHua', 'WeiXin.Directive.js');   //加载个人封装的微信JS指令
 	JsLoader::LoadDirective('HuaHua', 'User.Directive.js');
 ?>
+
+<script>
+
+$(function()
+{
+	
+	$("#nottixian").click(function(){
+		alert("由于微信官网接口升级过程中出现了故障，导致我们没有办法充值给你们提现，微信客服反馈正在修复中，今天之内应该能好");
+		return false;
+	})
+	
+})
+
+</script>

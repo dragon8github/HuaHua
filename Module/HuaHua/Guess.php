@@ -315,16 +315,22 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                                     		<table>
                                                     				<tr>
                                                     					<td width='30%'>奖金金额:</td>
-                                                    					<td><input data-role="none" class='wbkk' name="HongBaoJinE" disabled = "disabled" id="HongBaoJinE"  placeholder="请输入红包金额" value="3"  type="text">
+                                                    					<td><input style="display:none" data-role="none" class='wbkk' name="HongBaoJinE" disabled = "disabled" id="HongBaoJinE"  placeholder="请输入红包金额" value="5"  type="text">
                                                     						 <p>
-                                                    						    <span class='jsj' val='1'>1元</span> 	
-                                                    							<span class='jsj crrtt' val='3'>3元</span>
-                                                    						 	<span class='jsj' val='5'>5元</span> 	
-                                                    							<span class='jsj' val='10'>10元</span> 
+																			    <span class='jsj' style="float:left;width:50px" val='0.3'>0.3元</span> 	
+                                                    						    <span class='jsj' style="float:left;width:50px"  val='1'>1元</span> 	
+                                                    							<span class='jsj '  style="float:left;width:50px" val='3'>3元</span>
+																				
+																				</p>
+																				<p style="margin-top:10px;">
+																				
+                                                    						 	<span class='jsj crrtt' style="float:left;width:50px"  val='5'>5元</span> 	
+                                                    							<span class='jsj' style="float:left;width:50px" val='10'>10元</span> 
+																				<span class='jsj' style="float:left;width:50px" val='20'>20元</span> 
                                                     						</p> 
                                                     					</td>
                                                     				</tr>
-                                                    			    <tr>
+                                                    			    <tr style="display:none">
                                                     					<td>奖金份数:</td><td>
                                                     			    	<input maxlength="2" onKeyUp="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" data-role="none" class='wbkk' name="HongBaoCount" id="HongBaoCount" placeholder="请输入红包个数" value="1"  type="text">
                                                     					</td>
@@ -339,7 +345,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
 																<p style="margin:2px auto;padding:0;font-size:12px;text-align:center">所有金额可100%提现</p>
                                                     </div>					          
                                                     <p style="margin:0px auto;text-align:center;">
-                            					               <a href="#" id="Cy-tp-DialogYes2" data-role="none" >充值奖金<span style='color:#FEFF00'><font id='jinddd'>3</font>元</span></a> 
+                            					               <a href="#" id="Cy-tp-DialogYes2" data-role="none" >充值奖金<span style='color:#FEFF00'><font id='jinddd'>5</font>元</span></a> 
                                                     </p>
                         				    </div>
                     			    </div>    

@@ -1,0 +1,96 @@
+
+-------------------------------  2016-06-22 16:18:20 -------------------------------
+
+异常信息：答题——用户id：oYNn6wg0qYDkqNVomc78AUctYfRM,参数：question_id:2103,内容：呵呵呵呵,  订单号:576a49c5a0842    金额： 9
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:18:20 -------------------------------
+
+异常信息：get_根据openid获取用户名:李钊鸿
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:18:20 -------------------------------
+
+异常信息：http://huahua.ncywjd.com/home.php?p=guess&q=2103--谁谁谁答多了您的万箭穿心，您获得多少元，他提交的答案是晚间穿心--4fSnkQFPMYWRqs7mpUQK12-PFd29XAcoBM8_io68OnzbNdTPIPy98xq_9yr1LZIfcN7cC7GlFmMA4ZM-Vhnwhbnzu0de1tq-ywt1h1kFsTs---oYNn6wl4Mmeo_SGkkRgz9KafUK_Q---123
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:20:50 -------------------------------
+
+异常信息：答题——用户id：oYNn6wg0qYDkqNVomc78AUctYfRM,参数：question_id:2029,内容：呵呵呵呵,  订单号:576a4a5c8dadb    金额： 150
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:20:50 -------------------------------
+
+异常信息：get_根据openid获取用户名:李钊鸿
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:20:50 -------------------------------
+
+异常信息：http://huahua.ncywjd.com/home.php?p=guess&q=2029--谁谁谁答多了您的万箭穿心，您获得多少元，他提交的答案是晚间穿心--4fSnkQFPMYWRqs7mpUQK12-PFd29XAcoBM8_io68OnzbNdTPIPy98xq_9yr1LZIfcN7cC7GlFmMA4ZM-Vhnwhbnzu0de1tq-ywt1h1kFsTs---oYNn6wnPIa_e_NqzyLchhVyUDVgM---123
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:25:12 -------------------------------
+
+异常信息：答题——用户id：oYNn6wg0qYDkqNVomc78AUctYfRM,参数：question_id:2029,内容：呵呵呵呵,  订单号:576a4b6317d54    金额： 150
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:26:26 -------------------------------
+
+异常信息：答题——用户id：oYNn6wg0qYDkqNVomc78AUctYfRM,参数：question_id:2029,内容：呵呵呵呵,  订单号:576a4babe2204    金额： 150
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:40:09 -------------------------------
+
+异常信息：答题——用户id：oYNn6wg0qYDkqNVomc78AUctYfRM,参数：question_id:2140,内容：呵呵呵呵,  订单号:576a4ee25dbf0    金额： 9
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:40:10 -------------------------------
+
+异常信息：http://huahua.ncywjd.com/home.php?p=guess&q=2140--答错了您的《马到成功》，您获得9元，他提交的答案是《呵呵呵呵》--hUqJ_priw5uhoDfcNcuy1Q98KizIj0aIwwKJ17F65C0aliggFPW05IB_hiMGCjDQDJ7PB8wcvmEefx5oD1jagQ-6cVBfzPL_T9wsQ41GYgfmD_MnETRh9lTjB1d5AZe4UVQdACAYZU---oYNn6wi2Lg4qvvQDOFFTMXpY6ulY---123
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:42:34 -------------------------------
+
+异常信息：答题——用户id：oYNn6wg0qYDkqNVomc78AUctYfRM,参数：question_id:2140,内容：呵呵呵呵,  订单号:576a4f72b57bf    金额： 9
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:42:34 -------------------------------
+
+异常信息：get_根据openid获取用户名:李钊鸿
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:42:34 -------------------------------
+
+异常信息：http://huahua.ncywjd.com/home.php?p=guess&q=2140--李钊鸿答错了您的《马到成功》，您获得0.09元，他提交的答案是《呵呵呵呵》--hUqJ_priw5uhoDfcNcuy1Q98KizIj0aIwwKJ17F65C0aliggFPW05IB_hiMGCjDQDJ7PB8wcvmEefx5oD1jagQ-6cVBfzPL_T9wsQ41GYgfmD_MnETRh9lTjB1d5AZe4UVQdACAYZU---oYNn6wi2Lg4qvvQDOFFTMXpY6ulY---123
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:43:01 -------------------------------
+
+异常信息：答题——用户id：oYNn6wg0qYDkqNVomc78AUctYfRM,参数：question_id:2140,内容：马到成功,  订单号:576a4f8fd4007    金额： 9
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:43:01 -------------------------------
+
+异常信息：get_根据openid获取用户名:李钊鸿
+
+错误等级：DEBUG
+
+-------------------------------  2016-06-22 16:44:19 -------------------------------
+
+异常信息：充值——用户id：oYNn6wg0qYDkqNVomc78AUctYfRM,参数：order:1330867001576a4fde0da33,金额：0.3,  数量:1
+
+错误等级：DEBUG

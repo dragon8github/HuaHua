@@ -160,6 +160,7 @@ class Mysql
 				$count++;
 			}
 			$s = "insert into {$this->table}({$key}) values({$bind})";
+		 
 			//发送语句
 			if($type != 1){
 				$this->pre = self::$SQL->prepare($s);
@@ -221,6 +222,7 @@ class Mysql
 	public function sum($key,$num){
 		try{
 			$s = "update {$this->table} set {$key}={$key}+{$num} {$this->opt['where']}";	
+			
 			//发送语句
 			$this->pre = self::$SQL->prepare($s);
 			//执行语句

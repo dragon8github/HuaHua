@@ -5,15 +5,16 @@ $_SESSION["STATIC_ROOT"] = "http://".dirname($_SERVER["HTTP_HOST"].$_SERVER['PHP
 
 
 
-
 //测试人员的调试模式
 if(@$_GET["model"] == "test")
 { 
+   
+    
     $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
     $_SESSION["nickname"] = "李钊鸿";      //昵称
     $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Draw.php?q=1&word=金蝉脱壳";
-     $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Guess.php?q=1144";
+    $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Guess.php?q=2094";
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/UserList.php"; 
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/List.php"; 
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/User.php";
@@ -51,6 +52,16 @@ if(@$_GET["model"] == "admin2")
 }
 
 
+if(@$_GET["model"] == "pending")
+{
+    $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
+    $_SESSION["nickname"] = "李钊鸿";      //昵称
+    $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
+    header("Location:"."http://huahua.ncywjd.com/Admin_5114405E07BC4D23A61B28D9E8BAFD57/Pending.php");
+    exit();
+}
+
+
 
 $p = @$_GET["p"];           //页面名称，如list,user,draw,guess
 $q = "";                            //参数名称，如q=1
@@ -76,8 +87,8 @@ foreach($_GET as $key => $value)
 if($p != null)
 {
     $state = rand(0,9999);  //随机数解决缓存问题；
-    $appid = "wx911ae27f5e1197c3";
-    $url= sprintf("http://hh.ncywjd.com/Module/HuaHua/%s.php%s",$p,$q);
+    $appid = "wx92ea69e479013e3d";
+    $url= sprintf("http://huahua.ncywjd.com/Module/HuaHua/%s.php%s",$p,$q);
     $Wxurl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.$appid.'&redirect_uri='.$url.'&response_type=code&scope=snsapi_userinfo&state='.$state.'#wechat_redirect';
     header("Location:".$Wxurl);
 }

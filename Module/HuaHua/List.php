@@ -63,8 +63,9 @@ else
     	<div data-role="page">
         	    <div role="main" class="ui-content">
 
-	                 <div id="box">
-                            <a id="refresh"   href="#" >刷新题库</a>      
+	                 <div id="box" style="text-align:center">
+                            <a id="refresh"   href="#" >刷新题库</a>     
+							<span style="font-size:12px;color:ff0000">总成语库约3000条，如不适用请刷新</span> 
                      </div>
         	    	<?php for ($i=0;$i<count($arr);$i++){ 	?>
         	    	          <a href="Draw.php?q=<?php echo $arr[$i]["id"]; ?>&word=<?php echo $arr[$i]["answer"]; ?>" class="ui-btn ui-shadow"><?php echo $arr[$i]["answer"]; ?></a>

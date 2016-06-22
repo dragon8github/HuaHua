@@ -68,7 +68,7 @@ GuessDir.UpdateWxResult2 = function(res,myData)
 	{				
 		//先关闭原来的弹窗
 		$("#cy-tp-dialog2").popup('close');  
-		/*$.ajax
+		$.ajax
 		({
 			data: { type:"ChongXinTianJiaHongBao", order:myData.order,HongBaoJinE:myData.HongBaoJinE,HongBaoCount:myData.HongBaoCount,model:myData.model },
 			success:function(Resultdata)
@@ -77,16 +77,7 @@ GuessDir.UpdateWxResult2 = function(res,myData)
 				if (json.Status == '成功') { $("#reputHongBao").addClass("ui-state-disabled").unbind("click"); layer.open ({ title: "信息", content:json.Msg,btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); }  }); }
 				else { alert(json.Msg);  }
 			}
-		})*/
-		 layer.open ({ title: "信息", 
-					 content:'奖金充值成功',
-					 btn: ['好的'],
-					 yes:function(index) { 
-					 location.reload(); 
-					 layer.close(index); 
-					 },end:function(index) { 
-					 location.reload(); 
-					 layer.close(index); }  }); 
+		})
 	}
 	else if(res.err_msg.indexOf("fail") >= 0)
 	{
@@ -173,30 +164,30 @@ GuessDir.DialogYes2 = function()
 
 	var myData = {};																//发送给回调函数的参数
 	myData.HongBaoJinE = $("#HongBaoJinE").val();				//红包金额
-	myData.HongBaoCount = $("#HongBaoCount").val();		//红包个数
+	myData.HongBaoCount = 1;  											//红包个数$("#HongBaoCount").val();
 	//是否推荐
 	 var checkbox = $("#tuijiansf")[0];
 	 var n=0;  //0 接受审核
-	if(checkbox.checked)
+	if(checkbox.checked) 
 	{
 		n="-1"; 
-		}else
-		{
-			n=2;
-			}
+	}
+	else
+	{
+		n=2;
+	}
 	
 	
-	//数据验证
-	if(myData.HongBaoJinE.length == 0 ||  /^[1-9]+/.test(myData.HongBaoJinE) == false)
+	//数据验证 ||  /^[1-9]+/.test(myData.HongBaoJinE) == false  
+	// || /^[1-9]+/.test(myData.HongBaoCount) == false  
+	if(myData.HongBaoJinE.length == 0)
 	{
 		layer.open({ title: '信息', content: '金额必须为正整数',btn:["好的"],yes:function(){layer.closeAll();}  });
-		//layer.tips("请输入整数型的数据",$("#HongBaoJinE"), { tips: [2, '#000'], time: 4000 }) 
 		return false;
-	} 
-	else if(myData.HongBaoCount.length == 0 || /^[1-9]+/.test(myData.HongBaoCount) == false  )
+	}  
+	else if(myData.HongBaoCount.length == 0) 
 	{
 		layer.open({ title: '信息', content: '红包数量必须为正整数',btn:["好的"],yes:function(){layer.closeAll();} });
-		//layer.tips("请输入整数型的数据",$("#HongBaoCount"), { tips: [2, '#000'], time: 4000 })
 		return false;
 	}
 	
@@ -262,34 +253,11 @@ function Send()
 	var v = $("#search").val();
 	if(v.length < 4 || v.length == 0 || !/^[\u4E00-\u9FA5]+$/.test(v))
 	{
-		//layer.tips("请输入四字成语",$("#search"), { tips: [1, '#000'], time: 4000 })
-		//layer.open({ title: '信息', content: '请输入四字成语',btn:["好的"],yes:function(){layer.closeAll();} });
+		layer.open({ title: '信息', content: '请输入四字成语',btn:["好的"],yes:function(){layer.closeAll();}  });
 		return false;
 	} 
 	else
 	{
-		/* 这里根据应该根据模式来判断 
-		 * 首先同样AJAX发送后台，先插入一条流水数据，然后返回一个Orderno.流水的type=7
-		 * IF(model == "XXXX")
-		 * {
-		 * 		$.ajax
-				({   
-						data: { type:"DaTiHuaXiao"},
-						success:function(data)
-						{  
-							var obj = JSON.parse(data);
-							var order = obj["Result"].order;			//流水订单号
-							var money = obj["Result"].money;	    //需要花销的金额
-							var myobj = new Object();				   //新建一个对象
-							myobj.order = order;						   //将”流水号“插入数据集中传递给回调函数
-							myobj.content = v;						   //将”用户提交的答案“插入数据集中传递给回调函数
-						    myobj.money = money;				   //将”答题花销“插入数据集中传递给回调函数	
-							callpay(wxjson,myobj,GuessDir.UpdateWxResult3);
-						}
-				})
-			}
-		 * */
-		
 		$.ajax
 		({   
 				data: { type:"DaTiHuaXiao"},
@@ -313,40 +281,8 @@ function Send()
 			    	{
 				    	layer.open({ title: '信息', content: '题目红包为0，答题失败!',btn:["好的"],yes:function(){layer.closeAll();} });
 			    	}
-				    	
-				    
-					
 				}
 		})
-			
-		/*
-		$.ajax
-		({
-			data: { type:"TiJiaoDaAn", content:v },
-			success:function(mydata)
-			{
-				var json = JSON.parse(mydata);
-				var price = json["Result"].price;
-				var info = "";
-				//if(price != 0) { info = "获得 ￥" + (price/100) + "元红包，请前往<a href='http://huahua.ncywjd.com/Home.php?p=user'>用户中心</a>查看"; }
-				if(price != 0) { info = "获得 ￥" + (price/100) + "元红包，请前往<a href='http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd'>用户中心</a>查看"; }
-				$("#submit").addClass("ui-state-disabled").unbind("tap",Send);	 
-				if(json.Status == "成功")
-				{
-					if(json.Result.flag == 0)
-					{
-						//...回答错误
-						layer.open ({  title:"信息", content:"回答错误 </br> 你可以购买并使用道具帮助你解决问题",btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); }  });
-					}
-					else
-					{
-						//...回答正确
-						layer.open ({ title:"信息", content:"回答正确 </br>" + info,btn: ['好的'],yes:function(index) { location.reload(); layer.close(index); },end:function(index) { location.reload(); layer.close(index); } });
-					}
-				} 
-			}
-		})
-		*/
 	}
 }
 

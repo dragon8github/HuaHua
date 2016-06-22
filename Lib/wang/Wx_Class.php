@@ -10,8 +10,8 @@ require_once    $_SESSION["APP_ROOT"]."/Lib/wang/wxpay/api_test.php";  //用户�
 class WX_INT  
 {  
 
-	public $appid = "wx911ae27f5e1197c3";  
-	public $secret= "f9eeb3c923f9f700031b907f5f953a51";
+	public $appid = "wx92ea69e479013e3d";  
+	public $secret= "814dcdacf3d9c92dd72bfab7914c1bd9";
 	//服务号页面授权获取openid
 	public function getOpenid($code) {
 			$appid=$this->appid;  
@@ -44,7 +44,33 @@ class WX_INT
 			return $signPackage;
 	}  
 				
-				
+		public function SendMessage($website,$message,$token,$openid) 
+	{
+			
+			$lianjie='<a href=\"'.$website.'\">'.$message.'</a>';;
+			$data ='{
+				"touser":"'.$openid.'",
+				"msgtype":"text",
+				"text":
+				{
+				  "content":"'.$lianjie.'"
+				}
+			}';
+			
+			$url="https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={$token}";
+			 $curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+			if (!empty($data)){
+				curl_setopt($curl, CURLOPT_POST, 1);
+				curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+			}
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+				$output = curl_exec($curl);
+				curl_close($curl);
+				return '123';
+	}  		
 				
    //获取用户头像 名称等信息
 	public function GetWeixinMessage($openids,$access_token) {
@@ -94,7 +120,7 @@ class WX_INT
 	{
 			//echo "<br/>"."-----".$openids."*****";
 			$mch_appid=$this->appid;
-			$mchid='1332747501';//商户号
+			$mchid='1330867001';//商户号
 			$nonce_str='qyzf'.rand(100000, 999999);//随机数
 			$partner_trade_no='HW'.time().rand(10000, 99999);//商户订单号
 			$openid=$openid;//用户唯一标识
@@ -167,7 +193,9 @@ class WX_INT
 
 $code = @$_GET["code"];
 
-if(@$code != null && @$_SESSION["openid"] == null)
+
+
+if(@$code != null && @$_SESSION["openid"] == null )
 {
     //实例化
     $ko=new WX_INT();
@@ -189,10 +217,12 @@ if(@$code != null && @$_SESSION["openid"] == null)
     $_SESSION["openid"] = $openid;
     //code
     $_SESSION["code"] = $code;
+
+	
+ 
 } 
  
- 
- 
+  
 //  IF($_SESSION["openid"] != "oYNn6wg0qYDkqNVomc78AUctYfRM" && $_SESSION["openid"] != "oYNn6wi2Lg4qvvQDOFFTMXpY6ulY" &&  $_SESSION["openid"] != "oYNn6wq36uud61x_9U3jSDpTN0bo")
  //{
   //    exit("<style type=\"text/css\">#face{margin:0px auto;background: #9ee675;/* for Webkit */background: -webkit-gradient(linear, left top, left bottom, from(#9ee675), to(#78cb4c));/* for Firefox */background: -moz-linear-gradient(top,  #9ee675,  #78cb4c);/* for IE */filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#9ee675',endColorstr='#78cb4c'); color:#fff;border:1px solid #fff;border-radius:200px;text-align:center;width:200px;height:200px;font-size:126px;letter-spacing: 5px;padding-top: 5px;}  *{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: \"微软雅黑\"; color: #333;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 3.8em;text-align: center; font-size: 36px }</style><div style=\"padding: 24px 48px;\"> <h1 id=\"face\">:(</h1><p style='font-size:66px'>程序正在升级中<br /><br />感谢您对我们的支持</p></div>");

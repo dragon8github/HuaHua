@@ -19,7 +19,13 @@ class JsLoader
        echo  sprintf("<script type='text/javascript' src='%s'></script>","https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js");
     }
     
-    public static function Jqm()
+    public static function autoComplete()
+    {
+        //...
+        echo  sprintf("<script src='//cdn.bootcss.com/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js'></script>");
+    }
+    
+    public static function Jqm()    
     {
         //...
         echo  sprintf("<script type='text/javascript' src='%s'></script>","https://cdn.bootcss.com/jquery-mobile/1.4.5/jquery.mobile.min.js");
