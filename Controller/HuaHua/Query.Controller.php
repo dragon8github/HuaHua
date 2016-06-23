@@ -22,9 +22,11 @@ class QueryCtrl
     function __construct()
     {
         
-        //引入核心sql类库
-        include $_SESSION["APP_ROOT"].'/Lib/Class/Mysql.class.php';
-     
+        if(!class_exists("Mysql"))
+        {
+            //引入核心sql类库
+            include $_SESSION["APP_ROOT"].'/Lib/Class/Mysql.class.php';
+        }
         
         //引入数据库配置
         $dsn = include $_SESSION["APP_ROOT"].'/Lib/Config/Sql.config.php';

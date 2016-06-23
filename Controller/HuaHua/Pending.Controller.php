@@ -27,20 +27,20 @@ class PendingCtrl
         $this->Sql->table = 'statements';
         //条件语句
         $mysql = sprintf("
-                                    SELECT
-                            					sum(price) / 100 as user_balance
-                            		FROM
-                            					statements
-                            		where
-                            					happen_time >(SELECT happen_time from statements where type = '4' and uid = '%s' order by happen_time desc limit 1)
-                            			AND
-                            					flag = '1'
-                            			AND
-                            					(
-                                                        uid = '%s' AND (type = '5' or type = '6' or type = '8')
-                                    			OR
-                                    					bid = '%s' AND type = '7'
-                                                )
+                                            SELECT
+                                    					sum(price) / 100 as user_balance
+                                    		FROM
+                                    					statements
+                                    		where
+                                    					happen_time >(SELECT happen_time from statements where type = '4' and uid = '%s' order by happen_time desc limit 1)
+                                    			AND
+                                    					flag = '1'
+                                    			AND
+                                    					(
+                                                                uid = '%s' AND (type = '5' or type = '6' or type = '8')
+                                            			OR
+                                            					bid = '%s' AND type = '7'
+                                                        )
                             ",$openid,$openid,$openid);
     
         //发送语句
@@ -122,22 +122,30 @@ class PendingCtrl
                 $this->Sql->reset();
                 //条件语句
                 $where =  sprintf(" id = '%s' ",$orderid);
-                //更新标识
-                $mydata["flag"] = "1"; 
-                //更新数据 
-                $this->Sql->where($where)->save($mydata); 
-                
-                
-                
-                
-                
-                //获取微信错误信息
-                $msg = $XMLOBJ->err_code_des;
-                //拼接数组
-                $arr = array('Msg' => "审核成功" , 'Result' => '' , 'Status' => '成功' );
-                //返回为json
-                exit(json_encode($arr));
-                
+                //获取数据
+                $rets =   $this->Sql->where($where)->field("price,flag")->find();
+                 
+                IF($balance == $rets["price"] && $rets["flag"] == "0")
+                {
+                    //更新标识
+                    $mydata["flag"] = "1"; 
+                    //更新数据 
+                    $this->Sql->where($where)->save($mydata); 
+                    
+                    //获取微信错误信息
+                    $msg = $XMLOBJ->err_code_des;
+                    //拼接数组
+                    $arr = array('Msg' => "审核成功" , 'Result' => '' , 'Status' => '成功' );
+                    //返回为json
+                    exit(json_encode($arr));
+                }
+                ELSE
+                {
+                    //拼接数组
+                    $arr = array('Msg' => "审核失败，该条申请已经审核过了" , 'Result' => '' , 'Status' => '失败' );
+                    //返回为json
+                    exit(json_encode($arr));
+                }
         }
         else IF($XMLOBJ->result_code == "FAIL")
         {
@@ -147,7 +155,7 @@ class PendingCtrl
                 $arr = array('Msg' => $msg , 'Result' => '' , 'Status' => '失败' );
                 //返回为json
                 exit(json_encode($arr));
-        }     
+        }      
         
         exit();
     } 
@@ -162,7 +170,7 @@ IF(@$_POST["type"] == "clear_balance")
     $_PendingCtrl->clear_balance($openid);
 }
 
-
+        
 IF(@$_POST["type"] == "Add_balance")
 {
     $_PendingCtrl = new PendingCtrl();

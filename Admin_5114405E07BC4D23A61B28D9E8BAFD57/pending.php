@@ -65,7 +65,7 @@ $arr = $_PendingCtrl->get_所有信息();
               <td><?php echo $wx_name; ?></td>
               <td><img width="100" height="100" src="<?php echo $wx_litpic; ?>" /></td>
               <td><?php echo $balance; ?></td>
-              <td><?php echo $release_time; ?></td>
+              <td><?php echo date("Y-m-d H:i:s",$release_time); ?></td>
               <td><?php echo $Cankao_balance; ?></td>
               <td><?php echo $balance1; ?></td>
               <td>
@@ -152,9 +152,11 @@ $arr = $_PendingCtrl->get_所有信息();
             					{
                 					var json = JSON.parse(data);
                 					if(json.Status == "失败")
-                					{
-                    					var msg = JSON.parse(json.Msg);
-                    					layer.msg(msg["0"]);
+                					{                	 
+                    					var content = json.Msg;
+                						if(typeof(obj.Msg) == "object") { content = content[0]; };
+                    					layer.msg(content);		           
+                    					return false;
                     				} 
                 					else
                 					{

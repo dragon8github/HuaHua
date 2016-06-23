@@ -330,11 +330,7 @@ $(function()
 			update_balance();
 		}
 	})
-
-	$("#user_balance").bind("change", function(e) 
-	{
-		update_balance();
-	})
+	
 })
 
 

@@ -676,21 +676,20 @@ class GuessCtrl extends Lee
          return  $this->Sql->where($where)->getCount();
    }
    
+   function get_根据openid获取用户名($openid)
+   {
+       //选择表
+       $this->Sql->table = "user";
+       //条件语句
+       $where = sprintf( " openid = '%s' ",$openid);
+       //发送查找
+       $ret = $this->Sql->where($where)->field("wx_name")->find();
+       //记录一下
+       //Lee::WriteLog("get_根据openid获取用户名:".$ret["wx_name"]);
+       //返回结果
+       return $ret["wx_name"];
+   }
     
-      function get_根据openid获取用户名($openid)
-    {
-        //选择表
-        $this->Sql->table = "user";
-        //条件语句
-        $where = sprintf( " openid = '%s' ",$openid);
-        //发送查找
-        $ret = $this->Sql->where($where)->field("wx_name")->find();
-        //记录一下
-        //Lee::WriteLog("get_根据openid获取用户名:".$ret["wx_name"]);        
-        //返回结果
-        return $ret["wx_name"];
-    }
-
     public function Ajax_提交答案($id,$content,$orderid,$money)
     {
         //选择流水表
@@ -752,13 +751,20 @@ class GuessCtrl extends Lee
         //获取答题花销比例
         $datihuaxiaobili = $this->get_获取答题花销比例();
         
+        /*
+        IF($this->Openid == "oYNn6wg0qYDkqNVomc78AUctYfRM")
+        { 
+             Lee::WriteLog(sprintf("参数1：%s \r\n money:%s \r\n flag:%s  \r\n  Is_Use:%s \r\n",($datihuaxiaobili * $question_price),$money,$flag,$Is_Use));
+        } 
+        */
+        
         
         //如果用户未支付或者提交的金额不等于需要花销的金额、或者该订单已经使用过了，那么终止程序。并且考虑记录日志
-        if($flag != 1 && ($datihuaxiaobili * $question_price) != $money && $Is_Use == "1")
+        if($flag != 1 || ($datihuaxiaobili * $question_price) != $money || $Is_Use == "1")
         {
             exit();
         }
-        
+         
         $tips = "";
         $Is_Real = false;        
         $Is_ok = false;
@@ -782,9 +788,7 @@ class GuessCtrl extends Lee
         
         /*如果有红包并且答对*/
         if($Is_ok == true && $Is_Real == true)
-        {     
-		
-		  
+        {       
 			//减掉红包数量
             $this->Cut_根据question_id减少红包数量();
             //访客答对了
@@ -806,19 +810,17 @@ class GuessCtrl extends Lee
             $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "7", $uid);
             //添加画主余额
             $this->Add_给指定id的用户从user表中添加余额($uid,$money);
-        		//uid 通知画主    
-				
-				
-				$data2 = json_decode(file_get_contents("../../Module/HuaHua/access_token.json"));
-				$access_token = $data2->access_token;
-					$wx_ko= new WX_INT();
-				//	$hz_ming=$this->get_根据openid获取用户名($uid);
-					$cz_ming=$this->get_根据openid获取用户名($this->Openid);
-					$mes_ko=$cz_ming."答对了您的《".$answer."》获得".($question_price/100)."元";
-					$website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
-					$wx_ko->SendMessage($website,$mes_ko,$access_token,$uid);
-					
-				
+            
+            //uid 通知画主
+            $data2 = json_decode(file_get_contents("../../Module/HuaHua/access_token.json"));
+            $access_token = $data2->access_token;
+            $wx_ko= new WX_INT();
+            //	$hz_ming=$this->get_根据openid获取用户名($uid);
+            $cz_ming=$this->get_根据openid获取用户名($this->Openid);
+            //$mes_ko=$cz_ming."答对了您的【".$answer."】获得".($question_price/100)."元";
+            $mes_ko=$cz_ming."支付了给您【".($question_price/100)."】元，并答对了您的【".$answer."】";
+            $website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
+            $wx_ko->SendMessage($website,$mes_ko,$access_token,$uid);
         }
         /*如果有红包但是打错了*/
         else if($Is_ok == true && $Is_Real == false)
@@ -840,23 +842,16 @@ class GuessCtrl extends Lee
                 $this->Daoju_添加道具购买标识($tips_index,$tips); 
                 $this->Daoju_添加访客道具购买标识(); 
             }
-					//uid 通知画主 
-					
-				
-				$data2 = json_decode(file_get_contents("../../Module/HuaHua/access_token.json"));
-				$access_token = $data2->access_token;
-					$wx_ko= new WX_INT();
-					$cz_ming=$this->get_根据openid获取用户名($this->Openid);
-					
-					//$wx_ko->SendMessage("http://baidu.com","大家好",$access_token,"oYNn6wg0qYDkqNVomc78AUctYfRM");
-					$mes_ko=$cz_ming."答错了您的《".$answer."》，您获得".($money/100)."元，他提交的答案是《".$content."》";
-					//$mes_ko="谁谁谁答多了您的万箭穿心，您获得多少元，他提交的答案是晚间穿心";
-					$website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
-					$yes=$wx_ko->SendMessage($website,$mes_ko,$access_token,$uid);
-					//Lee::WriteLog($website."--".$mes_ko."--".$access_token."---".$uid."---".$yes);  
-					
-					
-				
+            
+            //uid 通知画主
+            $data2 = json_decode(file_get_contents("../../Module/HuaHua/access_token.json"));
+            $access_token = $data2->access_token;
+            $wx_ko= new WX_INT();
+            $cz_ming=$this->get_根据openid获取用户名($this->Openid);
+            //$mes_ko=$cz_ming."答错了您的【".$answer."】，您获得".($money/100)."元，他提交的答案是【".$content."】";
+            $mes_ko=$cz_ming."支付了给您【".($money/100)."】元，并答错了您的【".$answer."】，他提交的答案是【".$content."】";
+            $website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
+            $yes=$wx_ko->SendMessage($website,$mes_ko,$access_token,$uid);
         }
        /*没有红包，但是答对了*/
         else if($Is_ok == false && $Is_Real == true)
@@ -1076,7 +1071,19 @@ class GuessCtrl extends Lee
         //用户提交的金额
         $rett_count= $HongBaoJinE * $HongBaoCount;
         
-         
+        /*
+        IF($this->Openid == "oYNn6wg0qYDkqNVomc78AUctYfRM")
+        {        
+             Lee::WriteLog(           $rett_Is_Use . ",".
+                                             $rett_flag. ",".
+                                             $rett_price. ",".
+                                             $rett_count. ",".
+                                             $HongBaoJinE. ",".
+                                             $HongBaoCount); 
+        }  
+        */
+        
+        
         //$rett_Is_Use如果为0，说明订单未使用
         if($rett_Is_Use == "0" && $rett_flag == 1 && $rett_price != null && $rett_price >= 0 && ($rett_price / 100) == $rett_count && ($rett_hongbao_price / 100) == $HongBaoJinE && $rett_hongbao_count  ==$HongBaoCount)
         {                           
@@ -1328,8 +1335,7 @@ class GuessCtrl extends Lee
        $arr = array('Msg' => '请求成功！' , 'Result' => array('order' => $orderid,'money' => $model_price,"wxjson"=>$jsApiParameters) , 'Status' => '成功' );
        //返回为json
        exit(json_encode($arr));
-    }
-   
+    }    
 }
 
 
@@ -1370,12 +1376,16 @@ IF(@$_POST["type"] == 'DaTiHuaXiao')
     $_GuessCtrl->Ajax_答题花销($id);
 }
 
+
+/*
 //调用微信支付接口，返回核心json
 IF(@$_POST['type'] == 'weixinzhifu')
 {
     $_GuessCtrl = new GuessCtrl();
     $_GuessCtrl->Ajax_微信支付json();
 }
+*/
+
 
 //调用微信支付接口，返回核心json
 IF(@$_POST['type'] == 'weixinzhifu2')

@@ -154,7 +154,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                     				<?php if(@$IsRealButNotMoney) { ?>
                                     				        <a style="margin-top:8px;margin: auto;" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了</a>
                                     				 <?php } else { //如果你已经答对这道题，那么无法再次回答，只能去个人中心兑换奖励  ?>
-                                				            <a style="margin-top:8px;margin: auto;" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了，去提现</a>  
+                                				            <a style="margin-top:8px;margin: auto;" href="http://huahua.ncywjd.com/home.php?p=user" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" id="hhhh"  >答对了，去提现</a>  
                                     		          <?php } ?>
                                     		<?php } else { //你终于可以正常回答了  ?>
                     	    				 		<a href="#" data-role="none" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a <?php if($Time != '' && $Time < 0 || $Is_Out )  echo "ui-state-disabled"; ?>"  style="margin: auto;font-size:18px;" id="submit">提交答案 <span style="font-size:13px; color:#ffff00;display:block;margin-top:5px "><?php if(!$Is_Out) {echo "须支付".$price/100 * $model_prop."元，猜中奖".($price/100)."元";}else{echo " 奖金已领完";} ?></span></a>                	    				
@@ -169,13 +169,13 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
 										<div style="clear:both;margin:15px auto;height:45px;max-width:96%;">
     								       	<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
                     								<a href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id="huahua1" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" style="float: left; width: 19%;margin-right:2%;">去画题</a>
-                                                    <a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="" style="float: left; width: 19%;margin-right:2%;">去提现</a>
+                                                    <a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="http://huahua.ncywjd.com/home.php?p=user" style="float: left; width: 19%;margin-right:2%;">去提现</a>
 													<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=Maidan" style="float: left; width: 19%;">更多题</a>
                                     		<?php } ?>
                                     		<?php   if(!$IsDrawer)  {    //如果猜主已经答对了，无法参与答题 ?>
                                     				<!-- <a href="<?php //echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id='huahua2' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  >我也要画一题</a> -->
-                                    				<a href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=1&sn=4ccd46aa6b0833bf8b4a485253a6d416#rd" id='huahua2' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  style="float: left; width: 19%;margin-right:2%;" >去画题</a>
-                                    				<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd" style="float: left; width: 19%;margin-right:2%">去提现</a>
+                                    				<a href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=list" id='huahua2' class="ui-btn  ui-corner-all ui-shadow  ui-btn-a"  style="float: left; width: 19%;margin-right:2%;" >去画题</a>
+                                    				<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="http://huahua.ncywjd.com/home.php?p=user" style="float: left; width: 19%;margin-right:2%">去提现</a>
 													<a id="huahua1" class="ui-btn ui-corner-all ui-shadow ui-btn-a" href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=Maidan" style="float: left; width: 19%;">更多题</a>
                                     		<?php } ?>          
                                     	  </div>
@@ -312,45 +312,47 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                         				    </div> 
                         				    <div role="main" class="ui-content">
                                                     <div id="Cy-tp-DialogInfo" style="margin:0px;font-size:16px;">
-                                                    		<table>
-                                                    				<tr>
-                                                    					<td width='30%'>奖金金额:</td>
-                                                    					<td><input style="display:none" data-role="none" class='wbkk' name="HongBaoJinE" disabled = "disabled" id="HongBaoJinE"  placeholder="请输入红包金额" value="5"  type="text">
+                                                    		<p style="text-align:center;font-size:20px;font-weight:bold">奖金金额</p>
+																<p style="margin:2pxpx auto;padding:0;font-size:12px;text-align:center;color:#ff0000">24小时内奖金未领完退回到你的余额</p>
+                                                    					<input style="display:none" data-role="none" class='wbkk' name="HongBaoJinE" disabled = "disabled" id="HongBaoJinE"  placeholder="请输入红包金额" value="5"  type="text">
                                                     						 <p>
-																			    <span class='jsj' style="float:left;width:50px" val='0.3'>0.3元</span> 	
-                                                    						    <span class='jsj' style="float:left;width:50px"  val='1'>1元</span> 	
-                                                    							<span class='jsj '  style="float:left;width:50px" val='3'>3元</span>
+																			    <span class='jsj' style="float:left;width:17%" val='0.3'>0.3元</span> 	
+                                                    						    <span class='jsj' style="float:left;width:17%"  val='1'>1元</span> 	
+                                                    							<span class='jsj '  style="float:left;width:17%" val='3'>3元</span>
+																				<span class='jsj crrtt' style="float:left;width:17%"  val='5'>5元</span> 
 																				
 																				</p>
 																				<p style="margin-top:10px;">
 																				
-                                                    						 	<span class='jsj crrtt' style="float:left;width:50px"  val='5'>5元</span> 	
-                                                    							<span class='jsj' style="float:left;width:50px" val='10'>10元</span> 
-																				<span class='jsj' style="float:left;width:50px" val='20'>20元</span> 
+                                                    						 		
+                                                    							<span class='jsj' style="float:left;width:17%" val='10'>10元</span> 
+																				<span class='jsj' style="float:left;width:17%" val='20'>20元</span> 
+																				<span class='jsj' style="float:left;width:17%" val='50'>50元</span> 
+																				<span class='jsj' style="float:left;width:17%" val='100'>100元</span> 
                                                     						</p> 
-                                                    					</td>
-                                                    				</tr>
-                                                    			    <tr style="display:none">
-                                                    					<td>奖金份数:</td><td>
+                                                    				<div style="clear:both"></div>
+                                                    			    <div style="display:none">
+                                                    			
                                                     			    	<input maxlength="2" onKeyUp="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" data-role="none" class='wbkk' name="HongBaoCount" id="HongBaoCount" placeholder="请输入红包个数" value="1"  type="text">
-                                                    					</td>
-                                                    				</tr>
-                                                    			     <tr>
-                                                    				<td>是否推荐：</td><td><input style="width:14px;height:14px;margin-top:1px;" id="tuijiansf" type="checkbox" checked="checked"  /><span style="font-size:11px;display:inline;margin-left:30px">(有诚意的题有几率推荐至首页)</span></td>
-                                                    				</tr>                                                    			
-                                                    			</table>
+                                                    			</div>
+                                                    			
+																<p style="margin:0 auto"><input style="width:14px;height:14px;margin-top:1px;margin-left:15%" id="tuijiansf" type="checkbox" checked="checked"  /><span style="font-size:11px;display:inline;margin-left:24%">(有诚意的题有几率推荐至首页)</span></p>
                                                     			<!--  <p class='ziti'>(提示售价为单份奖金的30%，收入你可百分百提现)</p>-->
                                                     			<p style="margin:8px auto 2px auto;padding:0;font-size:12px;text-align:center">别人每猜一次，须向您支付<span id="model_price">0.9</span>元</p>
-																<p style="margin:2pxpx auto;padding:0;font-size:12px;text-align:center;color:#ff0000">24小时内奖金未领完退回到你的余额</p>
+															
 																<p style="margin:2px auto;padding:0;font-size:12px;text-align:center">所有金额可100%提现</p>
                                                     </div>					          
                                                     <p style="margin:0px auto;text-align:center;">
                             					               <a href="#" id="Cy-tp-DialogYes2" data-role="none" >充值奖金<span style='color:#FEFF00'><font id='jinddd'>5</font>元</span></a> 
                                                     </p>
                         				    </div>
-                    			    </div>    
+                    			    </div> 
+									<div style="text-align:center"><img width="200" src="<?php echo $_SESSION["STATIC_ROOT"]?>/Img/qrcode_for_gh_0399f3f16327_430.jpg" />
+				</br><span>长按二维码，识别关注</span>
+				</div>   
                 	    </div><!-- /content -->
             	</div><!-- /page -->
+				
 				<div id="zhezhaocheng" style="background-color:#191919;display:none;position:absolute;left:0;top:0"><img width="100%" src="<?php echo $_SESSION["STATIC_ROOT"]?>/Img/83358PICrqB_1024.jpg" /></div>	
 	 	</body>
 		<style type="text/css">

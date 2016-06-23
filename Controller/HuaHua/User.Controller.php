@@ -250,7 +250,7 @@ class UserCtrl extends Lee
         {
             //AJAX接受的信息
             $arr = array('Msg' => '提现失败，您的余额不足以满足微信提现条件（金额 >=1）！' , 'Result' => '' , 'Status' => '失败' );
-            //返回为json
+            //返回为json 
             exit(json_encode($arr));
         }      
        
@@ -429,6 +429,9 @@ class UserCtrl extends Lee
             case 4:
                 $Reuslt = "提现 <span style='color:red'>-</span>";
                 break;
+            case 4.1:
+                $Reuslt = "提现 <span style='color:red'>-</span>";
+                break;
             case 5:
                 $Reuslt = "猜中谜题 <span style='color:red'>+</span>";
                 break;
@@ -451,6 +454,7 @@ class UserCtrl extends Lee
         
         //选择表
         $this->Sql->table = 'statements';
+        
         //查询语句
         $mysql = sprintf("
                                     SELECT 
@@ -467,7 +471,7 @@ class UserCtrl extends Lee
                                     WHERE 
                                                     A.type 
                                             IN 
-                                                    (2,3,4,5,6,7,8)
+                                                    (4,5,6,7,8) 
                                 		 AND 
                                 					(
                                 								uid =  '%s'
@@ -475,10 +479,8 @@ class UserCtrl extends Lee
                                 								A.flag =  '1'  
                                 						AND 
                                 								A.type<>7 
-                                						AND 
-                                								A.type<>2
                                 					)
-                                      OR 
+                                            OR 
                                 					( 
                                 									bid = '%s' 
                                 						AND 
@@ -486,10 +488,49 @@ class UserCtrl extends Lee
                                 					)
                                 ORDER BY 
                                 					happen_time 
-                                		DESC 
-                                
-                                    LIMIT 30
+                                		DESC                                 
+                                                    LIMIT 30
                                  ",$openid,$openid,$openid);
+        
+        /*
+        $mysql2 = sprintf("           
+                                    SELECT 
+                                    				A.price,
+                                    				A.happen_time,
+                                    				A.uid,
+                                    				A.bid,
+                                    				A.type,
+                                    				B.wx_litpic,
+                                    				B.wx_name,
+                                    				CASE WHEN type = '4' AND flag  = '0' THEN '4.1' 
+                                    						 WHEN type = 7 AND bid = '%s' THEN '7' 
+                                    						 WHEN type IN (4,5,6,8) AND uid = '%s' THEN type 
+                                    				END AS realtype			
+                                    FROM 
+                                    				statements  AS A
+                                     JOIN
+                                    				`user` AS B
+                                    	ON
+                                    				 A.uid = B.openid
+                                    where 		
+                                    				(uid = '%s' 
+                                    or  
+                                    				bid = '%s')
+                                    AND			
+                                    				type IN (4,5,6,7,8)
+                                    ORDER BY
+                                    				happen_time
+                                    DESC
+                                    				LIMIT 30
+                                    ",$openid,$openid,$openid,$openid);
+        */
+        
+        if($this->Openid == "oYNn6wg0qYDkqNVomc78AUctYfRM")
+        {
+            //发送语句
+           // return $this->Sql->query($mysql2);
+        }
+        
         
         //发送语句
         return $this->Sql->query($mysql); 
@@ -504,14 +545,17 @@ if(@$_POST["type"] == "UserYuE")
 {
     $_UserCtrl = new UserCtrl();
     
-    IF($_SESSION["openid"] == "oYNn6wg0qYDkqNVomc78AUctYfRM")
+    $_UserCtrl->Ajax_提现();
+    
+    /*
+    IF($_SESSION["openid"] == "oYNn6wg0qYDkqNVomc78AUctYfRM" || $_SESSION["openid"] == "oYNn6wi2Lg4qvvQDOFFTMXpY6ulY")
     {
         $_UserCtrl->Ajax_提现(); 
-    } 
+    }  
     else
     {
        $_UserCtrl->Ajax_获取用户余额();
-    }
+    }*/
 }
 
 ?>

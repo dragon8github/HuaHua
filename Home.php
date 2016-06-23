@@ -8,8 +8,17 @@ $_SESSION["STATIC_ROOT"] = "http://".dirname($_SERVER["HTTP_HOST"].$_SERVER['PHP
 //测试人员的调试模式
 if(@$_GET["model"] == "test")
 { 
-   
+    /*
+    $hour = date("G");
+    if($hour < 9 || $hour > 18)
+    {
+        echo "工作时间9:00~18:00";
+    }
     
+    echo "正常运营";
+    
+    exit();
+ */
     $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
     $_SESSION["nickname"] = "李钊鸿";      //昵称
     $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像

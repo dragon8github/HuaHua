@@ -55,6 +55,9 @@ class MaidanCtrl
                                         ORDER BY
                                         		            price 
                                         DESC
+            
+                                        LIMIT 30
+            
                                   ",$this->Openid) ;
         //发送语句
         return $this->Sql->query($mysql);
@@ -89,7 +92,8 @@ class MaidanCtrl
                                         ORDER BY
                                         		            release_time
                                         DESC
-            
+                        
+                                        LIMIT 30
                                   ",$this->Openid) ;
         //发送语句
         return $this->Sql->query($mysql);
@@ -124,6 +128,8 @@ class MaidanCtrl
                                         ORDER BY
                                         		            COUNT
                                         DESC
+                        
+                                        LIMIT 30
     
                                   ",$this->Openid) ;
         //发送语句
