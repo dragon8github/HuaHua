@@ -126,18 +126,28 @@ class PendingCtrl
                 $rets =   $this->Sql->where($where)->field("price,flag")->find();
                  
                 IF($balance == $rets["price"] && $rets["flag"] == "0")
-                {
+                {   
                     //更新标识
                     $mydata["flag"] = "1"; 
                     //更新数据 
-                    $this->Sql->where($where)->save($mydata); 
+                    $rett = $this->Sql->where($where)->save($mydata); 
                     
-                    //获取微信错误信息
-                    $msg = $XMLOBJ->err_code_des;
-                    //拼接数组
-                    $arr = array('Msg' => "审核成功" , 'Result' => '' , 'Status' => '成功' );
-                    //返回为json
-                    exit(json_encode($arr));
+                    if($rett > 0)
+                    {
+                            //获取微信错误信息
+                            $msg = $XMLOBJ->err_code_des;
+                            //拼接数组
+                            $arr = array('Msg' => "审核成功" , 'Result' => '' , 'Status' => '成功' );
+                            //返回为json
+                            exit(json_encode($arr));
+                    }
+                    else
+                    {
+                        //拼接数组
+                        $arr = array('Msg' => "充值成功，但是更新失败" , 'Result' => '' , 'Status' => '失败' );
+                        //返回为json
+                        exit(json_encode($arr));
+                    }
                 }
                 ELSE
                 {

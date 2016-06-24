@@ -1,16 +1,17 @@
 var GuessDir = {};
 
 GuessDir.SetTimeOutObj =  new Array();
+
+GuessDir.HongBaoChongZhi_Lock = false;
+
+GuessDir.TiJiaoDaAn_Lock = false;
  
-//遵循模式===========================================
-GuessDir.ReadMe = function()
-{
-	console.log("避免污染全局空间，请开发者遵循我的做法");
-}
 
 //微信回调：正式提交答案
 GuessDir.UpdateWxResult3 = function(res,myData)
 {
+	//解锁
+	GuessDir.TiJiaoDaAn_Lock = false;
 	
 	if(res.err_msg.indexOf("ok") >= 0)
 	{				
@@ -52,6 +53,7 @@ GuessDir.UpdateWxResult3 = function(res,myData)
 	else if(res.err_msg.indexOf("fail") >= 0)
 	{
 		//...失败
+		layer.open ({  title:"信息", content:"微信支付失败",yes:function(index) {  layer.close(index); } });
 		return false;   
 	}
 	else if(res.err_msg.indexOf("cancel") >= 0)
@@ -63,7 +65,10 @@ GuessDir.UpdateWxResult3 = function(res,myData)
 
 //微信回调：正式添加红包或者更新画画题目的数据
 GuessDir.UpdateWxResult2 = function(res,myData)
-{	
+{			
+	//解锁
+	GuessDir.HongBaoChongZhi_Lock = false;
+	
 	if(res.err_msg.indexOf("ok") >= 0)
 	{				
 		//先关闭原来的弹窗
@@ -82,6 +87,7 @@ GuessDir.UpdateWxResult2 = function(res,myData)
 	else if(res.err_msg.indexOf("fail") >= 0)
 	{
 		//...失败
+		layer.open ({  title:"信息", content:"微信支付失败",yes:function(index) {  layer.close(index); } });
 		return false;   
 	}
 	else if(res.err_msg.indexOf("cancel") >= 0)
@@ -161,6 +167,16 @@ GuessDir.UpdateWxResult = function(res,myData)
 //提交画画的红包和模式的数据更新
 GuessDir.DialogYes2 = function()
 {
+	
+	if(GuessDir.HongBaoChongZhi_Lock == true)
+	{
+		return false; 
+	}
+	else
+	{
+		//加锁
+		GuessDir.HongBaoChongZhi_Lock = true;
+	}
 
 	var myData = {};																//发送给回调函数的参数
 	myData.HongBaoJinE = $("#HongBaoJinE").val();				//红包金额
@@ -210,13 +226,6 @@ GuessDir.DialogYes2 = function()
 
 
 
-//非遵循模式=========================================
-function ReadMe()
-{
-	console.log("不建议这样使用，但特殊情况譬如为了开发速度也无需顾虑");
-}
-
-
 
 function showtime(t)
 { 		
@@ -249,7 +258,7 @@ function update_p(num,t)
 }
 
 function Send()
-{
+{	
 	var v = $("#search").val();
 	if(v.length < 4 || v.length == 0 || !/^[\u4E00-\u9FA5]+$/.test(v))
 	{
@@ -258,6 +267,17 @@ function Send()
 	} 
 	else
 	{
+		
+		if(GuessDir.TiJiaoDaAn_Lock == true)
+		{
+			return false;
+		}
+		else
+		{
+			GuessDir.TiJiaoDaAn_Lock = true;
+		}
+		
+		
 		$.ajax
 		({   
 				data: { type:"DaTiHuaXiao"},

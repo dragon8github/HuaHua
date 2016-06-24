@@ -51,7 +51,7 @@ CssLoader::autoComplete();
       <div class="form-group">
         <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
         <div class="input-group">
-          <input type="text" class="form-control" style="width:270px;" name="openid" id="exampleInputAmount" placeholder="Openid">
+          <input type="text" class="form-control" style="width:270px;" name="openid" id="exampleInputAmount"  placeholder="<?php echo trim(@$_POST["openid"]); ?>">
         </div>
       </div>
       <button type="submit" class="btn btn-primary" data-role = 'none'>Query</button>

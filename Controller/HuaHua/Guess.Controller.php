@@ -818,10 +818,10 @@ class GuessCtrl extends Lee
             //	$hz_ming=$this->get_根据openid获取用户名($uid);
             $cz_ming=$this->get_根据openid获取用户名($this->Openid);
             //$mes_ko=$cz_ming."答对了您的【".$answer."】获得".($question_price/100)."元";
-            $mes_ko=$cz_ming."支付了给您【".($question_price/100)."】元，并答对了您的【".$answer."】";
+            $mes_ko=$cz_ming."支付了给您【".($money/100)."元】，并答对了您的【".$answer."】,Ta获得了奖金【".($question_price/100)."元】";  
             $website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
             $wx_ko->SendMessage($website,$mes_ko,$access_token,$uid);
-        }
+        } 
         /*如果有红包但是打错了*/
         else if($Is_ok == true && $Is_Real == false)
         {
@@ -849,7 +849,7 @@ class GuessCtrl extends Lee
             $wx_ko= new WX_INT();
             $cz_ming=$this->get_根据openid获取用户名($this->Openid);
             //$mes_ko=$cz_ming."答错了您的【".$answer."】，您获得".($money/100)."元，他提交的答案是【".$content."】";
-            $mes_ko=$cz_ming."支付了给您【".($money/100)."】元，并答错了您的【".$answer."】，他提交的答案是【".$content."】";
+            $mes_ko=$cz_ming."支付了给您【".($money/100)."元】，并答错了您的【".$answer."】，Ta提交的答案是【".$content."】";
             $website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
             $yes=$wx_ko->SendMessage($website,$mes_ko,$access_token,$uid);
         }

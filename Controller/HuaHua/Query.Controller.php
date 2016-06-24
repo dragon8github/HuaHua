@@ -199,7 +199,8 @@ class QueryCtrl
 IF(@$_GET["action"] == "query")
 {
     $_query =  new QueryCtrl();
-    $openid = $_POST["openid"];
+    $openid =trim($_POST["openid"]);
+    
     $_query->get_获取answer_details($openid);
     $_query->get_获取question($openid);
     $_query->get_获取statements($openid);

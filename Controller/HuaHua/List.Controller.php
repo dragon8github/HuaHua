@@ -51,7 +51,7 @@ class ListCtrl
     	     //题库表
     	     $this->Sql-> table = 'question_library';
     	     //随机抽取十条
-    	     $arr =  $this->Sql->query("SELECT *,(select change_next_question_time from setting) as LengQueTime FROM question_library ORDER BY RAND() LIMIT 10");
+    	     $arr =  $this->Sql->query("SELECT *,(select change_next_question_time from setting) as LengQueTime FROM question_library where id > 1000 ORDER BY RAND() LIMIT 10");
     	     //返回结果
     	    return $arr;
 	}
@@ -63,7 +63,7 @@ class ListCtrl
 	    //题库表
 	    $this->Sql->table = 'question_library';
 	    //条件语句
-	    $where = sprintf(" id IN (%s) AND id NOT IN (SELECT distinct(answer) FROM question where uid = '%s')",$question,$this->Openid);
+	    $where = sprintf(" id IN (%s) AND id NOT IN (SELECT distinct(answer) FROM question where  uid = '%s')",$question,$this->Openid);
 	    //发送语句
 	    $arr = $this->Sql->where($where)->select();
 	    //返回结果
