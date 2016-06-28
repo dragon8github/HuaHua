@@ -58,7 +58,7 @@ class MaidanCtrl
         $this->Sql->add($data);
     }
     
-    public function SET_用户($openid,$name,$pic)
+    public function SET_用户($myopenid,$name,$pic)
     {
         //用户表
         $this->Sql-> table = 'user';
@@ -75,12 +75,12 @@ class MaidanCtrl
         //如果为新用户
         IF($openid == "")
         {
-            $this-> Insert_新增用户($openid,$name,$pic);
+            $this-> Insert_新增用户($myopenid,$name,$pic);
         }
         //如果为推广用户
         else if($openid != "" && $wx_litpic == "")
         {
-            $this-> Update_更新用户($openid,$name,$pic);
+            $this-> Update_更新用户($myopenid,$name,$pic);
         }
     }
     

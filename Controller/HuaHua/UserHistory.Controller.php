@@ -24,9 +24,6 @@ class UserHistoryCtrl
         $this->Sql =  Mysql::start($dsn);
     }
     
-    
-
-
     public function Update_更新用户($openid,$name,$pic)
     {
         //选择数据库
@@ -60,7 +57,7 @@ class UserHistoryCtrl
         $this->Sql->add($data);
     }
     
-    public function SET_用户($openid,$name,$pic)
+    public function SET_用户($myopenid,$name,$pic)
     {
         //用户表
         $this->Sql-> table = 'user';
@@ -73,16 +70,16 @@ class UserHistoryCtrl
         //获取结果
         $wx_litpic = $ret["wx_litpic"];  //微信头像（推广用户默认为空）
         $openid = $ret["openid"];       //openid(推广用户不为空)
-    
+      
         //如果为新用户
         IF($openid == "")
         {
-            $this-> Insert_新增用户($openid,$name,$pic);
+            $this-> Insert_新增用户($myopenid,$name,$pic);
         }
         //如果为推广用户
         else if($openid != "" && $wx_litpic == "")
         {
-            $this-> Update_更新用户($openid,$name,$pic);
+            $this-> Update_更新用户($myopenid,$name,$pic);
         }
     }
     

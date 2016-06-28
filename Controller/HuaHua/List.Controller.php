@@ -62,7 +62,7 @@ class ListCtrl
 	
 	
 	
-	public function SET_用户($question,$openid,$name,$pic)
+	public function SET_用户($question,$myopenid,$name,$pic)
 	{
 	    //用户表
 	    $this->Sql-> table = 'user';
@@ -79,12 +79,12 @@ class ListCtrl
 	    //如果为新用户
 	    IF($openid == "")
 	    {
-	        $this-> Insert_新增用户($question,$openid,$name,$pic);
+	        $this-> Insert_新增用户($question,$myopenid,$name,$pic);
 	    }
 	    //如果为推广用户
 	    else if($openid != "" && $wx_litpic == "")
 	    { 
-	        $this-> Update_更新用户($question,$openid,$name,$pic);
+	        $this-> Update_更新用户($question,$myopenid,$name,$pic);
 	    }
 	}
 	
@@ -135,7 +135,7 @@ class ListCtrl
 	    return $arr;
 	}
 	
-	public function Insert_新增用户($question,$nickname,$headimgurl)
+	public function Insert_新增用户($question,$openid,$nickname,$headimgurl)
 	{
     	    //选择数据库
     	    $this->Sql->table = 'user';
