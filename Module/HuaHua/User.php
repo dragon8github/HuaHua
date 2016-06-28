@@ -26,19 +26,34 @@ $arr_ls = $_UserCtrl->get_获取流水列表();
  
 
 
-//判断openid是否存在用户表，没有的话先插入
-if(!$_UserCtrl->Openid是否存在用户表中())
-{
-    //新用户
-    $_UserCtrl->Insert_新增用户($openid,$nickname,$headimgurl);   //添加到数据库
-}
-else 
-{
-    //老用户
-    $_UserCtrl->Is_如果用户存在过期的信息就归还金钱();
-    $arr =  $_UserCtrl->get_获取用户资料();
-    $balance = $arr["balance"];  //余额    
-}
+
+
+// //判断openid是否存在用户表，没有的话先插入
+// if(!$_UserCtrl->Openid是否存在用户表中())
+// {
+//     //新用户
+//     $_UserCtrl->Insert_新增用户($openid,$nickname,$headimgurl);   //添加到数据库
+// }
+// else 
+// {
+//     //老用户    
+//     $_UserCtrl->Is_如果用户存在过期的信息就归还金钱();
+//     $arr =  $_UserCtrl->get_获取用户资料();
+//     $balance = $arr["balance"];  //余额    
+// }
+
+
+  
+
+$_UserCtrl->SET_用户($openid, $nickname, $headimgurl);
+
+ 
+
+$_UserCtrl->Is_如果用户存在过期的信息就归还金钱();
+$arr =  $_UserCtrl->get_获取用户资料();
+$balance = $arr["balance"];  //余额 
+
+ 
 
 /*
 $Is_OkforBalance = false;
@@ -82,12 +97,13 @@ CssLoader::LoadCss("Copy", "User.css");
                             <span class="nick"> <?php echo $nickname ?></span>
                             <span class="tip">欢迎回来~</span>
                         </div>
-						<a  id='sdfw3e' style="display:block;float:right;margin-right:35px;margin-top:35px;" href="<?php echo $_SESSION["STATIC_ROOT"]?>/Home.php?p=UserHistory">历史作品</a>
+						
                     </div>
-                    <div class="stat clearfix" style="position:relative">
-					<span style="font-size:12px;position:absolute;top:55px;left:18px;color:#999999">微信规则限制最少需要1元才能提现</span>
+                    <div class="stat clearfix" style="position:relative;padding: 30px 0 20px;">
+					<span style="font-size:12px;position:absolute;top:60px;left:18px;color:#999999">微信规则限制最少需要1元才能提现</span>
+					<span style="font-size:12px;position:absolute;top:74px;left:18px;color:#999999">平台将收取您收入的5%作为平台运营资金</span>
 					<!--<span style="font-size:12px;position:absolute;top:55px;left:18px;color:#999999">提现时间为9:30～18:00</span> -->
-                        <div class="yyee" style="position:relative">余额: <?php echo $balance/100; ?></div> 
+                        <div class="yyee" style="position:relative;margin-top:10px" >余额: <?php echo $balance/100; ?></div> 
             			<div class="ssyy"><span id="laod" style="display: none;">30</span><span id="old_jine" style="display: none;">30</span><i style="background-position: 0px -120px;"></i><i style="background-position: 0px 0px;"></i></div>
                         <div class="xgmm"><a href="javascript:;" id="tixian">提现</a></div>        </div>
                 </div>

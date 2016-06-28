@@ -6,7 +6,7 @@ SESSION_START();
 include $_SESSION["APP_ROOT"].'/Lib/Class/Lee.class.php';                                   //加载辅助类库
 include $_SESSION["APP_ROOT"].'/Lib/wang/wx_class.php';                                  //加载微信类
 include $_SESSION["APP_ROOT"].'/Lib/Class/Log.class.php';                                  //加载微信类
-include $_SESSION["APP_ROOT"].'/Controller/HuaHua/Pending.Controller.php';      //加载List页面控制器
+include $_SESSION["APP_ROOT"].'/Controller/Admin/Pending.Controller.php';      //加载List页面控制器
 include $_SESSION["APP_ROOT"].'/Inc/CssLoader.inc.php';                                  //加载CSS组件库
 include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                                   //加载JS组件库
 
@@ -69,7 +69,7 @@ $arr = $_PendingCtrl->get_所有信息();
               <td><?php echo $Cankao_balance; ?></td>
               <td><?php echo $balance1; ?></td>
               <td>
-                <button type="button" class="btn btn-warning qingkongyue"  data-orderid = "<?php echo $orderid; ?>" data-id="<?php echo $id; ?>" data-username="<?php echo $wx_name; ?>"  data-balance = "<?php echo $balance1; ?>"  >清空余额</button>
+                <!-- <button type="button" class="btn btn-warning qingkongyue"  data-orderid = "<?php // echo $orderid; ?>" data-id="<?php // echo $id; ?>" data-username="<?php echo $wx_name; ?>"  data-balance = "<?php echo $balance1; ?>"  >清空余额</button>  -->
                 <button type="button" class="btn btn-primary shenhetongguo "  data-orderid = "<?php echo $orderid; ?>"  data-id="<?php echo $id; ?>"  data-username="<?php echo $wx_name; ?>" data-balance = "<?php echo $balance; ?>"  >审核通过</button>   
               </td>
         </tr>
@@ -150,11 +150,14 @@ $arr = $_PendingCtrl->get_所有信息();
             					},
             					success: function(data) 
             					{
+									
+									//console.log(data);return false;
+									
                 					var json = JSON.parse(data);
                 					if(json.Status == "失败")
                 					{                	 
                     					var content = json.Msg;
-                						if(typeof(obj.Msg) == "object") { content = content[0]; };
+                						if(typeof(json.Msg) == "object") { content = content[0]; };
                     					layer.msg(content);		           
                     					return false;
                     				} 

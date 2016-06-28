@@ -21,7 +21,7 @@ class GuessCtrl extends Lee
         $dsn = include $_SESSION["APP_ROOT"].'/Lib/Config/Sql.config.php';
         	
         //Openid
-        $this->Openid = $_SESSION["openid"];       
+        $this->Openid = $_SESSION["openid"];              
         
         //返回数据库对象
         $this->Sql =  Mysql::start($dsn);
@@ -150,6 +150,15 @@ class GuessCtrl extends Lee
 	    $prop =  @$dd[0]["model_prop"];
 	    return $prop;
 	}
+	
+	public function get_获取抽水比例()
+	{
+	    $this->Sql->table = "setting";
+	    $this->Sql->reset();
+	    $dd=$this->Sql->where("id=1")->select();
+	    $prop =  @$dd[0]["water"];
+	    return $prop;
+	}
     
      public function  C_金额转换($money)
      {
@@ -219,7 +228,46 @@ class GuessCtrl extends Lee
         exit(json_encode($arr));
     }
     
+    public function SET_用户($openid,$name,$pic)
+    {
+        //用户表
+        $this->Sql-> table = 'user';
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf("openid = '%s' ",$this->Openid);
+        //发送语句
+        $ret = $this->Sql->field("openid,wx_litpic")->where($where)->find();
+        //获取结果
+        $wx_litpic = $ret["wx_litpic"];  //微信头像（推广用户默认为空）
+        $openid = $ret["openid"];       //openid(推广用户不为空)
+        
+        //如果为新用户
+        IF($openid == "")
+        {
+           $this-> Insert_新增用户($openid,$name,$pic);
+        }
+        //如果为推广用户
+        else if($openid != "" && $wx_litpic == "")
+        {
+            $this-> Update_更新用户($openid,$name,$pic);
+        }
+    } 
     
+   public function Update_更新用户($openid,$name,$pic)
+   {
+       //选择数据库
+       $this->Sql->table = 'user';
+       //重置
+       $this->Sql->reset();
+       //条件语句
+       $where = sprintf("openid = '%s' ",$this->Openid);
+       //数组对象
+       $data['wx_name'] = $name;                               //微信名称
+       $data['wx_litpic'] = $pic;                                  //微信头像
+       //插入数据库
+       $this->Sql->where($where)->save($data);
+   }
     
     
     public  function Add_插入访客($openid,$pic,$name)
@@ -251,6 +299,8 @@ class GuessCtrl extends Lee
     {
         //选择数据库
         $this->Sql->table = 'user';
+        //重置
+        $this->Sql->reset();
         //数组对象
         $data['openid'] = $openid;                                  //微信号
         $data['wx_name'] = $name;                               //微信名称
@@ -475,7 +525,7 @@ class GuessCtrl extends Lee
        $this->Sql->where($where)->sum('shengyu_count',-1);
    }
    
-   public function Add_根据指定orderid添加statements表的流水($type,$price,$statements_balance,$bid)
+   public function Add_根据指定orderid添加statements表的流水($type,$price,$statements_balance,$bid,$water = 0)
    {
        //猜主添加收益流水
        $this->Sql->table = 'statements';
@@ -491,6 +541,7 @@ class GuessCtrl extends Lee
        $data["question_id"] = $_GET["q"];
        $data["bid"] = $bid;
        $data["balance"] = $statements_balance + $price;
+       $data["water"] = $water;
        //发送语句
        $this->Sql->add($data);
    }
@@ -750,13 +801,9 @@ class GuessCtrl extends Lee
         $Is_Use = $_result[0]["Is_Use"];
         //获取答题花销比例
         $datihuaxiaobili = $this->get_获取答题花销比例();
-        
-        /*
-        IF($this->Openid == "oYNn6wg0qYDkqNVomc78AUctYfRM")
-        { 
-             Lee::WriteLog(sprintf("参数1：%s \r\n money:%s \r\n flag:%s  \r\n  Is_Use:%s \r\n",($datihuaxiaobili * $question_price),$money,$flag,$Is_Use));
-        } 
-        */
+        //获取抽水比例
+        $water_bili = $this->get_获取抽水比例();
+ 
         
         
         //如果用户未支付或者提交的金额不等于需要花销的金额、或者该订单已经使用过了，那么终止程序。并且考虑记录日志
@@ -784,6 +831,12 @@ class GuessCtrl extends Lee
             $Is_Real = true;
             $Is_Real_flag = 1;
         }
+        
+        
+        
+        //抽水
+        $water_question_price =  $question_price - ($question_price * $water_bili);
+        $water_money = $money - ($money * $water_bili);
  
         
         /*如果有红包并且答对*/
@@ -798,18 +851,18 @@ class GuessCtrl extends Lee
 			//获取用户余额
             $statements_balance = $this->get_根据用户id获取余额($this->Openid); 	
             //给猜主添加流水
-            $this->Add_根据指定orderid添加statements表的流水("5", $question_price, $statements_balance, "");			
+            $this->Add_根据指定orderid添加statements表的流水("5", $water_question_price, $statements_balance, "",$question_price * $water_bili);			
             //给猜主添加用户余额
-            $this->Add_给指定id的用户从user表中添加余额($this->Openid,$question_price);	
+            $this->Add_给指定id的用户从user表中添加余额($this->Openid,$water_question_price);	
 			
 			
 			
             //获取用户余额
             $statements_balance = $this->get_根据用户id获取余额($uid);
             //更新流水
-            $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "7", $uid);
+            $this->Update_根据指定的orderid更新statements表中的流水($orderid, $water_money, $statements_balance, "7", $uid,$money * $water_bili);
             //添加画主余额
-            $this->Add_给指定id的用户从user表中添加余额($uid,$money);
+            $this->Add_给指定id的用户从user表中添加余额($uid,$water_money);
             
             //uid 通知画主
             $data2 = json_decode(file_get_contents("../../Module/HuaHua/access_token.json"));
@@ -818,9 +871,9 @@ class GuessCtrl extends Lee
             //	$hz_ming=$this->get_根据openid获取用户名($uid);
             $cz_ming=$this->get_根据openid获取用户名($this->Openid);
             //$mes_ko=$cz_ming."答对了您的【".$answer."】获得".($question_price/100)."元";
-            $mes_ko=$cz_ming."支付了给您【".($money/100)."元】，并答对了您的【".$answer."】,Ta获得了奖金【".($question_price/100)."元】";  
+            $mes_ko=$cz_ming."支付了给您【".($water_money/100)."元】，并答对了您的【".$answer."】,Ta获得了奖金【".($water_question_price/100)."元】";  
             $website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
-            $wx_ko->SendMessage($website,$mes_ko,$access_token,$uid);
+            $wx_ko->SendMessage("快点击查看，有人答对了你的题目：",$website,$mes_ko,$access_token,$uid);
         } 
         /*如果有红包但是打错了*/
         else if($Is_ok == true && $Is_Real == false)
@@ -828,9 +881,9 @@ class GuessCtrl extends Lee
             //获取用户余额(画主)
             $statements_balance = $this->get_根据用户id获取余额($uid);			       
             //更新流水余额和其他信息（画主）
-            $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "7", $uid);
+            $this->Update_根据指定的orderid更新statements表中的流水($orderid, $water_money, $statements_balance, "7", $uid,$money * $water_bili);
 			//给画主添加用户余额(画主)
-            $this->Add_给指定id的用户从user表中添加余额($uid,$money); 
+            $this->Add_给指定id的用户从user表中添加余额($uid,$water_money); 
 			
             //获取tips的索引
             $tips_index = rand(0, 3);
@@ -849,13 +902,13 @@ class GuessCtrl extends Lee
             $wx_ko= new WX_INT();
             $cz_ming=$this->get_根据openid获取用户名($this->Openid);
             //$mes_ko=$cz_ming."答错了您的【".$answer."】，您获得".($money/100)."元，他提交的答案是【".$content."】";
-            $mes_ko=$cz_ming."支付了给您【".($money/100)."元】，并答错了您的【".$answer."】，Ta提交的答案是【".$content."】";
+            $mes_ko= $cz_ming."支付了给您【".($water_money/100)."元】，并答错了您的【".$answer."】，Ta提交的答案是【".$content."】";
             $website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
-            $yes=$wx_ko->SendMessage($website,$mes_ko,$access_token,$uid);
+            $yes=$wx_ko->SendMessage("快点击查看，有人答错了你的题目：",$website,$mes_ko,$access_token,$uid);
         }
        /*没有红包，但是答对了*/
         else if($Is_ok == false && $Is_Real == true)
-        {
+        {            
             //获取用户余额
             $statements_balance = $this->get_根据用户id获取余额($this->Openid); 
             //退还用户流水
@@ -906,7 +959,7 @@ class GuessCtrl extends Lee
         $this->Sql->where($where)->sum("balance",$money);
     }
     
-    public function Update_根据指定的orderid更新statements表中的流水($orderid,$money,$statements_balance,$type,$bid)
+    public function Update_根据指定的orderid更新statements表中的流水($orderid,$money,$statements_balance,$type,$bid,$water = 0)
     {
         //选择流水表
         $this->Sql->table = 'statements';
@@ -919,8 +972,10 @@ class GuessCtrl extends Lee
         $data2["flag"] = '1';
         $data2["type"] =$type;
         $data2["bid"] = $bid;
+        $data2["price"] = $money;
         $data2["balance"] = $statements_balance + $money;
         $data2["Is_Use"] = '1';
+        $data2["water"] = $water;
         //发送语句
         $this->Sql->where($where)->save($data2);
     }
@@ -1394,6 +1449,12 @@ IF(@$_POST['type'] == 'weixinzhifu2')
     $openid = $_SESSION["openid"]; 
 	$cot = $_POST["cot"];
     $_GuessCtrl = new GuessCtrl();
+	
+	  if(in_array($_SESSION["openid"], array("oYNn6wlH0ISNU6La_sVB5aD_V7HE","oYNn6wg0qYDkqNVomc78AUctYfRM","oYNn6wo-I9w4ZoFwWHVgYa5LGIco","oYNn6wnbqFJFCSrVZ_POsKlQDQPQ","oYNn6wuIPaeN5zYuMbuu6B2p4xs4","oYNn6wr9wYVnLSpczb2TQFjqHu-Y")))
+    {       
+        $str = sprintf("模拟传值id：%s,金额：%s,  数量:%s",$_SESSION["openid"],$price,$cot);
+        Lee::WriteLog($str);
+    } 
     $_GuessCtrl->Ajax_流水记录和微信支付json($price, $openid,$cot);
 }
 

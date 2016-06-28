@@ -13,6 +13,8 @@ include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                          
 //公共变量 开始==============================================
 $Title = "分享历史";                                    //设置页面Title
 $openid = $_SESSION["openid"];                //openid
+$nickname = $_SESSION["nickname"];              //昵称
+$headimgurl = $_SESSION["headimgurl"];        //头像
 $_UserHistoryCtrl = new UserHistoryCtrl();
 
 
@@ -20,7 +22,7 @@ $_UserHistoryCtrl = new UserHistoryCtrl();
 
 $arr = $_UserHistoryCtrl->get_获取分享列表();
 
-
+$_UserHistoryCtrl->SET_用户($openid, $nickname, $headimgurl);
 
 ?>
 

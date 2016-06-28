@@ -6,7 +6,7 @@ SESSION_START();
 include $_SESSION["APP_ROOT"].'/Lib/Class/Lee.class.php';                                   //加载辅助类库
 include $_SESSION["APP_ROOT"].'/Lib/wang/wx_class.php';                                  //加载微信类
 include $_SESSION["APP_ROOT"].'/Lib/Class/Log.class.php';                                  //加载微信类
-include $_SESSION["APP_ROOT"].'/Controller/HuaHua/Admin2.Controller.php';      //加载List页面控制器
+include $_SESSION["APP_ROOT"].'/Controller/Admin/Admin2.Controller.php';      //加载List页面控制器
 include $_SESSION["APP_ROOT"].'/Inc/CssLoader.inc.php';                                  //加载CSS组件库
 include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                                   //加载JS组件库
 
@@ -66,6 +66,7 @@ $all_tixian = $arr_tixian[2]["IFNULL(sum(price),0)"] / 100;
           <th>用户id</th>
           <th>用户名</th>  
           <th>用户头像</th>
+          <th>用户充值总额</th>
           <th>真实余额（statements）</th>
           <th><a href="?orderby=yonghuyue">用户余额（user）</a></th>
           <th>
@@ -98,12 +99,14 @@ $all_tixian = $arr_tixian[2]["IFNULL(sum(price),0)"] / 100;
                 $myanswer_count = $arr[$i]["myanswer_count"];
                 $myquestion_cont = $arr[$i]["myquestion_cont"];                
                 $user_balance =  $_Admin2Ctrl->get_获取真实正确的需要提现的数据($openid); 
+                $chongzhi_balance = $_Admin2Ctrl->get_获取用户充值的总额($openid);
         ?>
-        <tr <?php if($user_balance != $balance) echo "class='danger'" ?>>                 
+        <tr <?php /* if($user_balance != $balance) echo "class='danger'"*/ ?>>                 
               <td><?php echo $i; ?></td>
               <td><?php echo $openid; ?></td>
               <td><?php echo $wx_name; ?></td>
               <td><img width="100" height="100" src="<?php echo $wx_litpic; ?>" /></td>
+              <td><?php echo $chongzhi_balance; ?></td>
               <td><?php echo $user_balance; ?></td>
               <td><?php echo $balance; ?></td>
               <td><?php echo $mysum; ?></td>

@@ -32,16 +32,81 @@ class ListCtrl
     		//用户表
     		$this->Sql-> table = 'user';  
     		//条件语句
-    		$where = sprintf("openid = '%s' ",$this->Openid);
-    		//获取总数
-    		$count = $this->Sql->where($where)->getCount();
-            
-    		if($count > 0)
+    		$where = sprintf("openid = '%s'  ",$this->Openid);
+    		
+    		//发送语句
+    		$ret = $this->Sql->field("openid,wx_litpic")->where($where)->find();
+    		//获取结果
+    		$wx_litpic = $ret["wx_litpic"];  //微信头像（推广用户默认为空）
+    		$openid = $ret["openid"];       //openid(推广用户不为空)
+    		
+    		IF($wx_litpic != "" && $openid != "")
     		{
-    			return true;
+    		    return true;
     		}
     		
     		return false;
+    		
+//     		//获取总数
+//     		$count = $this->Sql->where($where)->getCount();
+            
+//     		if($count > 0)
+//     		{
+//     			return true;
+//     		}
+    		
+//     		return false;
+	}
+	
+	
+	
+	
+	
+	public function SET_用户($question,$openid,$name,$pic)
+	{
+	    //用户表
+	    $this->Sql-> table = 'user';
+	    //重置
+	    $this->Sql->reset();
+	    //条件语句
+	    $where = sprintf("openid = '%s' ",$this->Openid);
+	    //发送语句
+	    $ret = $this->Sql->field("openid,wx_litpic")->where($where)->find();
+	    //获取结果
+	    $wx_litpic = $ret["wx_litpic"];  //微信头像（推广用户默认为空）
+	    $openid = $ret["openid"];       //openid(推广用户不为空)
+	
+	    //如果为新用户
+	    IF($openid == "")
+	    {
+	        $this-> Insert_新增用户($question,$openid,$name,$pic);
+	    }
+	    //如果为推广用户
+	    else if($openid != "" && $wx_litpic == "")
+	    { 
+	        $this-> Update_更新用户($question,$openid,$name,$pic);
+	    }
+	}
+	
+	
+	
+	
+	
+	public function Update_更新用户($question,$openid,$name,$pic)
+	{
+	    //选择数据库
+	    $this->Sql->table = 'user';
+	    //重置
+	    $this->Sql->reset();
+	    //条件语句
+	    $where = sprintf("openid = '%s' ",$this->Openid);
+	    //数组对象
+	    $data['wx_name'] = $name;                               //微信名称
+	    $data['wx_litpic'] = $pic;                                  //微信头像
+	    $data['update_time'] = time();                         //刷新冷却时间
+	    $data['question'] = $question;                       //历史题库
+	    //插入数据库
+	    $this->Sql->where($where)->save($data);
 	}
 	
    
@@ -74,6 +139,8 @@ class ListCtrl
 	{
     	    //选择数据库
     	    $this->Sql->table = 'user';
+    	    //重置
+    	    $this->Sql->reset();
     	    //数组对象
     	    $data['openid'] = $this->Openid;                      //微信号
     	    $data['wx_name'] = $nickname;                       //微信名称
@@ -83,8 +150,7 @@ class ListCtrl
     	    $data['update_time'] = time();                         //刷新冷却时间
     	    $data['question'] = $question;                       //历史题库
     	    //插入数据库
-    	     $this->Sql->add($data);          
-    	    
+    	     $this->Sql->add($data);        
 	}
 	    
 	public function Update_更新用户的历史题库和冷却时间($question)

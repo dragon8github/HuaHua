@@ -49,25 +49,44 @@ $model = $arr["model"];                                                  //该�
 
 
 //判断openid是否存在用户表，没有的话先插入
-if(!$_GuessCtrl->Openid是否存在用户表中())
+// if(!$_GuessCtrl->Openid是否存在用户表中())
+// {
+//     //添加新用户到数据库
+//     $_GuessCtrl->Insert_新增用户($openid,$nickname,$headimgurl);      
+// }
+// else 
+// {
+//     //获取画主标识
+//     $IsDrawer = $_GuessCtrl->Is_是否是画主($q);
+//     //获取是否答对的标识
+//     $IsReal = $_GuessCtrl->Is_是否用户已经回答正确过();
+//     //获取非奖励但答对的标识
+//     $IsRealButNotMoney = $_GuessCtrl->Is_是否为回答正确但没有获取红包的用户();
+//     //获取时间间隔
+//     if(!$IsDrawer)
+//     {
+//         $Time = $_GuessCtrl->get_距离下一次答题的时间();
+//     }
+// }
+ 
+ 
+$_GuessCtrl->SET_用户($openid,$nickname,$headimgurl);
+
+
+//获取画主标识
+$IsDrawer = $_GuessCtrl->Is_是否是画主($q);
+//获取是否答对的标识
+$IsReal = $_GuessCtrl->Is_是否用户已经回答正确过();
+//获取非奖励但答对的标识
+$IsRealButNotMoney = $_GuessCtrl->Is_是否为回答正确但没有获取红包的用户();
+//获取时间间隔
+if(!$IsDrawer)
 {
-    //添加新用户到数据库
-    $_GuessCtrl->Insert_新增用户($openid,$nickname,$headimgurl);      
+    $Time = $_GuessCtrl->get_距离下一次答题的时间();
 }
-else 
-{
-    //获取画主标识
-    $IsDrawer = $_GuessCtrl->Is_是否是画主($q);
-    //获取是否答对的标识
-    $IsReal = $_GuessCtrl->Is_是否用户已经回答正确过();
-    //获取非奖励但答对的标识
-    $IsRealButNotMoney = $_GuessCtrl->Is_是否为回答正确但没有获取红包的用户();
-    //获取时间间隔
-    if(!$IsDrawer)
-    {
-        $Time = $_GuessCtrl->get_距离下一次答题的时间();
-    } 
-}
+
+
+
 
 //插入访客
 $_GuessCtrl->Add_插入访客($openid,$headimgurl,$nickname);
@@ -147,7 +166,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                             			 <!-- 各种场景下的按钮 -->     
                                 		<?php   if($IsDrawer&&$Is_Out) {   //如果是画主自己，可继续添加红包 ?>
                                 								<a href="#" class="ui-btn  ui-corner-all ui-shadow  ui-btn-a" data-role="none"  id="reputHongBao" onClick="reputHongBao()" style="max-width:90%;">充值奖金</a>
-                                							    <p  class='ziti' style='text-align: center;color:#747485'>(充值奖金后可销售提示，收入你可100%提现)</p>
+                                							    <p  class='ziti' style='text-align: center;color:#747485'>(充值奖金后别人答题需向您支付奖金的30%)</p>
                     					<?php } ?>
 										<?php   if($IsDrawer) {   //如果是画主自己，无法参与答题 ?>
                                     		<?php } else if (@$IsReal) {    //如果猜主已经答对了，无法参与答题 ?>
@@ -217,7 +236,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                     				<?php  if(!$Is_Out) { ?>                                                    	
                                                     	<p>2、答对可获得 <span style="font-size:20px;color:red">￥ <?php echo $price/100;?> </span>元现金奖励</p>                                                 	
                                                   		<p>3、奖励剩余时间 <span id="suoshengshijian" style="font-size:16px;color:red"><?php echo $expire_time; ?></span></p>
-                                                  		<p>4、所有奖金可去<a data-role="none" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd">个人中心</a>100%提现</p>
+                                                  		<p>4、所得奖金可去<a data-role="none" href="http://mp.weixin.qq.com/s?__biz=MzI3MTIxOTU1Mg==&mid=100000002&idx=2&sn=6e5b8b35f2d2724fab8b5f42a8d53bed#rd">个人中心</a>提现</p>
                                                   <?php } ?>
                                                     </div>
                                           </div>		
@@ -314,20 +333,15 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                                     <div id="Cy-tp-DialogInfo" style="margin:0px;font-size:16px;">
                                                     		<p style="text-align:center;font-size:20px;font-weight:bold">奖金金额</p>
 																<p style="margin:2pxpx auto;padding:0;font-size:12px;text-align:center;color:#ff0000">24小时内奖金未领完退回到你的余额</p>
-                                                    					<input style="display:none" data-role="none" class='wbkk' name="HongBaoJinE" disabled = "disabled" id="HongBaoJinE"  placeholder="请输入红包金额" value="5"  type="text">
+                                                    					<input style="display:none" data-role="none" class='wbkk' name="HongBaoJinE" disabled = "disabled" id="HongBaoJinE"  placeholder="请输入红包金额" value="3"  type="text">
                                                     						 <p>
 																			    <span class='jsj' style="float:left;width:17%" val='0.3'>0.3元</span> 	
-                                                    						    <span class='jsj' style="float:left;width:17%"  val='1'>1元</span> 	
-                                                    							<span class='jsj '  style="float:left;width:17%" val='3'>3元</span>
-																				<span class='jsj crrtt' style="float:left;width:17%"  val='5'>5元</span> 
-																				
-																				</p>
-																				<p style="margin-top:10px;">
-																				
-                                                    						 		
-                                                    							<span class='jsj' style="float:left;width:17%" val='10'>10元</span> 
+                                                    						
+                                                    							<span class='jsj crrtt'  style="float:left;width:17%" val='3'>3元</span>
+																			
+                                                    						
 																				<span class='jsj' style="float:left;width:17%" val='20'>20元</span> 
-																				<span class='jsj' style="float:left;width:17%" val='50'>50元</span> 
+																				
 																				<span class='jsj' style="float:left;width:17%" val='100'>100元</span> 
                                                     						</p> 
                                                     				<div style="clear:both"></div>
@@ -340,10 +354,10 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                                     			<!--  <p class='ziti'>(提示售价为单份奖金的30%，收入你可百分百提现)</p>-->
                                                     			<p style="margin:8px auto 2px auto;padding:0;font-size:12px;text-align:center">别人每猜一次，须向您支付<span id="model_price">0.9</span>元</p>
 															
-																<p style="margin:2px auto;padding:0;font-size:12px;text-align:center">所有金额可100%提现</p>
+																<p style="margin:2px auto;padding:0;font-size:12px;text-align:center">您的收益可提现</p>
                                                     </div>					          
                                                     <p style="margin:0px auto;text-align:center;">
-                            					               <a href="#" id="Cy-tp-DialogYes2" data-role="none" >充值奖金<span style='color:#FEFF00'><font id='jinddd'>5</font>元</span></a> 
+                            					               <a href="#" id="Cy-tp-DialogYes2" data-role="none" >充值奖金<span style='color:#FEFF00'><font id='jinddd'>3</font>元</span></a> 
                                                     </p>
                         				    </div>
                     			    </div> 

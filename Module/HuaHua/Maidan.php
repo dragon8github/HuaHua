@@ -13,6 +13,8 @@ include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                          
 //公共变量 开始==============================================
 $Title = "看图猜成语";                                    //设置页面Title
 $openid = $_SESSION["openid"];                //openid
+$nickname = $_SESSION["nickname"];              //昵称
+$headimgurl = $_SESSION["headimgurl"];        //头像
 $_MaidanCtrl = new MaidanCtrl();
 
 //微信类 开始==============================================
@@ -20,6 +22,10 @@ $ko=new WX_INT();
 $signPackage = $ko->GetSignPackage();   //获取分享接口 相关信息
 //业务逻辑 开始=================================================
 
+
+$_MaidanCtrl->SET_用户($openid, $nickname, $headimgurl);
+
+  
 
 $px=isset($_GET['px'])?$_GET['px']:0;
 //0 最新  1奖金最高 2最多人答

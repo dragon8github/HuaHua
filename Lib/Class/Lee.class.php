@@ -111,6 +111,95 @@ header("Content-type: text/html; charset=utf-8");
 }
 
 
+function pkcs5_pad ($text, $blocksize)
+{
+    $pad = $blocksize - (strlen($text) % $blocksize);
+    return $text . str_repeat(chr($pad), $pad);
+}
+
+function myCrypt($input,$key)
+{
+    $size = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
+    $input =pkcs5_pad($input, $size);
+    $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_ECB, '');
+    $iv = mcrypt_create_iv (mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
+    mcrypt_generic_init($td, $key, $iv);
+    $data = mcrypt_generic($td, $input);
+    mcrypt_generic_deinit($td);
+    mcrypt_module_close($td);
+    $data = base64_encode($data);
+    return $data;
+}
+
+function myDecrypt($str,$key)
+{
+    $decrypted= mcrypt_decrypt(
+        MCRYPT_RIJNDAEL_128,
+        $key,
+        base64_decode($str),
+        MCRYPT_MODE_ECB
+    );
+
+    $dec_s = strlen($decrypted);
+    $padding = ord($decrypted[$dec_s-1]);
+    $decrypted = substr($decrypted, 0, -$padding);
+    return $decrypted;
+}
+
+
+function POST($get_key)
+{
+
+    $str=$_POST[$get_key];
+    return Validata($str);
+}
+
+function GET($get_key)
+{
+    $str=$_GET[$get_key];
+    return Validata($str);
+}
+
+function Validata($str)
+{
+    //如果值为空，那么返回空字符串
+    if(!isset($str)) return "";
+    //过滤html标记
+    $farr = array("/<(\/?)(script|i?frame|style|html|body|title|link|meta|\?|\%)([^>]*?)>/isU");
+    //过滤类似 <script>  <style> <object>  <meta> <iframe> 等
+    $str = preg_replace($farr,"",$str);
+    //对单引号、双引号等预定义字符 前面加上反斜杠 如'变成\'
+    $str=addslashes($str);
+    //过滤敏感词汇
+    $str=str_replace(explode(",", UNSAFE_WORD),"***",$str);
+    //返回结果
+    return trim($str);
+}
+
+
+function IP()
+{
+    if(!empty($_SERVER["HTTP_CLIENT_IP"])){
+        $cip = $_SERVER["HTTP_CLIENT_IP"];
+    }
+    elseif(!empty($_SERVER["HTTP_X_FORWARDED_FOR"])){
+        $cip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+    }
+    elseif(!empty($_SERVER["REMOTE_ADDR"])){
+        $cip = $_SERVER["REMOTE_ADDR"];
+    }
+    else{
+        $cip = "";
+    }
+    return $cip;
+}
+
+
+function AJAX($Msg,$Result,$Status)
+{
+    $arr = array("Msg" => $Msg,"Result" => $Result,"Status" => $Status);
+    exit(json_encode($arr));
+}
 
 
 ?>

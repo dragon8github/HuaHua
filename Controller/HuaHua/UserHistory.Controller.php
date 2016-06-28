@@ -24,6 +24,70 @@ class UserHistoryCtrl
         $this->Sql =  Mysql::start($dsn);
     }
     
+    
+
+
+    public function Update_更新用户($openid,$name,$pic)
+    {
+        //选择数据库
+        $this->Sql->table = 'user';
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf("openid = '%s' ",$this->Openid);
+        //数组对象
+        $data['wx_name'] = $name;                               //微信名称
+        $data['wx_litpic'] = $pic;                                  //微信头像
+        //插入数据库
+        $this->Sql->where($where)->save($data);
+    }
+    
+    public function Insert_新增用户($openid,$name,$pic)
+    {
+        //选择数据库
+        $this->Sql->table = 'user';
+        //重置
+        $this->Sql->reset();
+        //数组对象
+        $data['openid'] = $openid;                                  //微信号
+        $data['wx_name'] = $name;                               //微信名称
+        $data['wx_litpic'] = $pic;                                  //微信头像
+        $data['balance'] = '';                                        //账户余额
+        $data['register_time'] = time();                        //注册时间
+        $data['update_time'] = time();                         //刷新冷却时间
+        $data['question'] = '';                                         //历史题库
+        //插入数据库
+        $this->Sql->add($data);
+    }
+    
+    public function SET_用户($openid,$name,$pic)
+    {
+        //用户表
+        $this->Sql-> table = 'user';
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf("openid = '%s' ",$this->Openid);
+        //发送语句
+        $ret = $this->Sql->field("openid,wx_litpic")->where($where)->find();
+        //获取结果
+        $wx_litpic = $ret["wx_litpic"];  //微信头像（推广用户默认为空）
+        $openid = $ret["openid"];       //openid(推广用户不为空)
+    
+        //如果为新用户
+        IF($openid == "")
+        {
+            $this-> Insert_新增用户($openid,$name,$pic);
+        }
+        //如果为推广用户
+        else if($openid != "" && $wx_litpic == "")
+        {
+            $this-> Update_更新用户($openid,$name,$pic);
+        }
+    }
+    
+    
+    
     public function get_获取用户余额()
     {
         //选择表

@@ -5,30 +5,50 @@ $_SESSION["STATIC_ROOT"] = "http://".dirname($_SERVER["HTTP_HOST"].$_SERVER['PHP
 
 
 
+
+//测试人员的调试模式
+if(@$_GET["model"] == "channel")
+{    
+    $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
+    $_SESSION["nickname"] = "李钊鸿";      //昵称
+    $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
+    header("Location:"."http://huahua.ncywjd.com/ChannelAdmin_EA7E72403C4E4230A4157C65E2ABAA17/ChannelLogin.php");
+    exit();
+}   
+
+
+
+//KO的调试模式
+if(@$_GET["model"] == "ewm")
+{    
+    header("Location:"."http://huahua.ncywjd.com/ChannelAdmin_EA7E72403C4E4230A4157C65E2ABAA17/ewm.php");
+    exit();
+}     
+
+if(@$_GET["model"] == "op")
+{    
+    header("Location:"."http://huahua.ncywjd.com/ChannelAdmin_EA7E72403C4E4230A4157C65E2ABAA17/openid.php");
+    exit();
+}     
+
+
+
+
 //测试人员的调试模式
 if(@$_GET["model"] == "test")
 { 
-    /*
-    $hour = date("G");
-    if($hour < 9 || $hour > 18)
-    {
-        echo "工作时间9:00~18:00";
-    }
-    
-    echo "正常运营";
-    
-    exit();
- */
+   
     $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
     $_SESSION["nickname"] = "李钊鸿";      //昵称
     $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Draw.php?q=1&word=金蝉脱壳";
-    $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Guess.php?q=2747";
+    //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Guess.php?q=2747";
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/UserList.php"; 
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/List.php"; 
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/User.php";
+    $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Maidan.php";
     header("Location:".$Wxurl);  
-    exit();
+    exit(); 
 }   
 
 
@@ -51,6 +71,8 @@ if(@$_GET["model"] == "admin")
     exit();
 }
 
+
+
 if(@$_GET["model"] == "admin2")
 {
     $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
@@ -59,6 +81,7 @@ if(@$_GET["model"] == "admin2")
     header("Location:"."http://huahua.ncywjd.com/Admin_5114405E07BC4D23A61B28D9E8BAFD57/Admin2.php");
     exit();
 }
+
 
 
 if(@$_GET["model"] == "pending")

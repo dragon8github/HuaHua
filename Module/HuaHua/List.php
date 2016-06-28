@@ -25,12 +25,13 @@ $headimgurl = $_SESSION["headimgurl"]; //头像
 
 if(!$_ListCtrl->Openid是否存在用户表中())
 {
-        //...新用户
+        //...新用户        
         $arr =   $_ListCtrl->get_获取随机的十条历史记录和这十条记录的id();   //获取随机的十条数据以及偷偷带上的question 
         $ids = Lee::get_获取数组中指定键的值按照逗号隔开返回($arr, "id");     //获取这十条数据的id
-        $_ListCtrl->Insert_新增用户($ids,$nickname,$headimgurl);                //添加到数据库
+        $_ListCtrl-> SET_用户($ids,$openid,$nickname,$headimgurl);  
+       // $_ListCtrl->Insert_新增用户($ids,$nickname,$headimgurl);                //添加到数据库      
         $LengQueTime = -$arr[0]["LengQueTime"];                                     //冷却时间
-} 
+}  
 else
 {
         //...旧用户

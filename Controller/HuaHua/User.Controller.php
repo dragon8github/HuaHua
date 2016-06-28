@@ -24,6 +24,72 @@ class UserCtrl extends Lee
         $this->Sql =  Mysql::start($dsn);
     }
     
+    
+
+    public function Update_更新用户($openid,$name,$pic)
+    {
+        //选择数据库
+        $this->Sql->table = 'user';
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf("openid = '%s' ",$this->Openid);
+        //数组对象
+        $data['wx_name'] = $name;                               //微信名称
+        $data['wx_litpic'] = $pic;                                  //微信头像
+        //插入数据库
+        $this->Sql->where($where)->save($data);
+    }
+    
+    public function Insert_新增用户($openid,$name,$pic)
+    {
+        //选择数据库
+        $this->Sql->table = 'user';
+        //重置
+        $this->Sql->reset();
+        //数组对象
+        $data['openid'] = $openid;                                  //微信号
+        $data['wx_name'] = $name;                               //微信名称
+        $data['wx_litpic'] = $pic;                                  //微信头像
+        $data['balance'] = '';                                        //账户余额
+        $data['register_time'] = time();                        //注册时间
+        $data['update_time'] = time();                         //刷新冷却时间
+        $data['question'] = '';                                         //历史题库
+        //插入数据库
+        $this->Sql->add($data);
+    }
+    
+    public function SET_用户($openid,$name,$pic)
+    { 
+        //用户表
+        $this->Sql-> table = 'user';
+        //重置
+        $this->Sql->reset();
+        //条件语句
+        $where = sprintf("openid = '%s' ",$this->Openid);
+        //发送语句
+        $ret = $this->Sql->field("openid,wx_litpic")->where($where)->find();
+        //获取结果
+        $wx_litpic = $ret["wx_litpic"];  //微信头像（推广用户默认为空）
+        $openid = $ret["openid"];       //openid(推广用户不为空)
+    
+        //如果为新用户
+        IF($openid == "")
+        {
+            $this-> Insert_新增用户($openid,$name,$pic);
+        }
+        //如果为推广用户
+        else if($openid != "" && $wx_litpic == "")
+        {
+            $this-> Update_更新用户($openid,$name,$pic);
+        } 
+    }
+    
+    
+    
+    
+    
+    
     //根据传入的id，找到用户的余额，然后根据
     public function get_根据用户id获取余额($uid)
     {
@@ -56,21 +122,6 @@ class UserCtrl extends Lee
         return false;
     }
 
-    public function Insert_新增用户($openid,$name,$pic)
-    {
-        //选择数据库
-        $this->Sql->table = 'user';
-        //数组对象
-        $data['openid'] = $openid;                                  //微信号
-        $data['wx_name'] = $name;                               //微信名称
-        $data['wx_litpic'] = $pic;                                  //微信头像
-        $data['balance'] = '';                                        //账户余额
-        $data['register_time'] = time();                        //注册时间
-        $data['update_time'] = time();                         //刷新冷却时间
-        $data['question'] = '';                                         //历史题库
-        //插入数据库
-        $this->Sql->add($data);
-    }
     
     
     public function Is_如果用户存在过期的信息就归还金钱()
@@ -79,25 +130,12 @@ class UserCtrl extends Lee
         $this->Sql->table = 'question';
         //sql语句
         $mysql = sprintf("
-                                            SELECT 
-                                            A.uid,B.type,A.shengyu_count,A.price,A.price_count,A.id
-                                            ###sum(A.shengyu_count * A.price) as money
-                                            FROM
-                                            `question` AS A
-                                            JOIN
-                                            statements AS B
-                                            ON 
-                                            A.id = B.question_id
-                                            where 
-                                            UNIX_TIMESTAMP() > expire_time    #####必须是过期题目
-                                            AND 
-                                            B.type = '1'					 ########首先必须是“画主充值”类型
-                                            AND
-                                            B.flag = '1'					 ######## 必须是充值成功
-                                            AND 
-                                            A.flag = '0' 					  ### 必须还没有过期
-                                            AND
-                                            A.uid = '%s'
+                                        SELECT price,shengyu_count,id FROM question where
+                                        uid = '%s' 
+                                        AND price_count > 0 
+                                        AND shengyu_count > 0 
+                                        AND flag = 0 
+                                        AND UNIX_TIMESTAMP() > expire_time
         ",$this->Openid);
         //发送语句
         $arr =  $this->Sql->query($mysql);    

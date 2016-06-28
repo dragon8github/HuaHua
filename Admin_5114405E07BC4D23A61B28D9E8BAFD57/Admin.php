@@ -6,7 +6,7 @@ SESSION_START();
 include $_SESSION["APP_ROOT"].'/Lib/Class/Lee.class.php';                                   //加载辅助类库
 include $_SESSION["APP_ROOT"].'/Lib/wang/wx_class.php';                                  //加载微信类
 include $_SESSION["APP_ROOT"].'/Lib/Class/Log.class.php';                                  //加载微信类
-include $_SESSION["APP_ROOT"].'/Controller/HuaHua/Admin.Controller.php';      //加载List页面控制器
+include $_SESSION["APP_ROOT"].'/Controller/Admin/Admin.Controller.php';      //加载List页面控制器
 include $_SESSION["APP_ROOT"].'/Inc/CssLoader.inc.php';                                  //加载CSS组件库
 include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                                   //加载JS组件库
 
@@ -79,19 +79,24 @@ $arr = $_AdminCtrl->get_所有信息();
               <?php if($model == "" || $model == "-1") { ?>
                     <td>
                             <button type="button" class="btn btn-warning jinzhita" data-id="<?php echo $id; ?>" data-model="0">禁止它</button>
-                            <button type="button" class="btn btn-primary kaiqita" data-id="<?php echo $id; ?>" data-model="1">开启它</button>                            
+                            <button type="button" class="btn btn-primary kaiqita" data-id="<?php echo $id; ?>" data-model="1">开启它</button>      
+                              <button type="button" class="btn btn-primary tuisong" data-id="<?php echo $id; ?>" data-model="1">推送这道题</button>                                
                     </td>
               <?php } else if($model == "0") { ?>
                    <td>
                              <button type="button" class="btn btn-danger" data-id="<?php echo $id; ?>">作弊者，已禁止</button>
                             <button type="button" class="btn btn-primary kaiqita" data-id="<?php echo $id; ?>" data-model="1">开启它</button>
+                              <button type="button" class="btn btn-primary tuisong" data-id="<?php echo $id; ?>" data-model="1">推送这道题</button>          
                     </td>   
                <?php } else if($model == "1"){ ?>
                     <td>
                             <button type="button" class="btn btn-warning jinzhita" data-id="<?php echo $id; ?>" data-model="0">禁止它</button>
-                            <button type="button" class="btn btn-default " data-id="<?php echo $id; ?>" >本题已开启</button>                            
+                            <button type="button" class="btn btn-default " data-id="<?php echo $id; ?>" >本题已开启</button>       
+                            <button type="button" class="btn btn-primary tuisong" data-id="<?php echo $id; ?>" data-model="1">推送这道题</button>                     
                     </td>
                <?php } ?>
+               
+               
         </tr>
       <?php } ?>
       </tbody>
@@ -136,6 +141,45 @@ $arr = $_AdminCtrl->get_所有信息();
 								{
 									//	alert(data);	 
 									self.html("修改完成");									
+								}
+						})
+						layer.closeAll();
+					} 
+				});
+		  })
+
+
+		  $(".tuisong").click(function()
+		{
+				var self = $(this);
+				var id = $(this).attr("data-id");
+				var content = "你确定要推送这道题吗？"; 
+
+				layer.open({
+					 title: '信息', 
+					 content: content, 
+					 btn:["确定","取消"],
+					yes:function()
+					{
+						$.ajax
+						({
+								type:"post",
+								data:
+								{
+									type:"Send_ALLUser",
+									 q: id
+								},
+								success:function(data)
+								{
+									layer.open
+									({
+									        type:0,
+									        content:"推送完成",
+									        icon:6,
+									        closeBtn: 2,
+									        btn1:function(index){layer.closeAll()},
+									        end:function(){layer.closeAll()}
+									});  					
 								}
 						})
 						layer.closeAll();

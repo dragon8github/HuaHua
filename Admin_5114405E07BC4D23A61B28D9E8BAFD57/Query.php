@@ -6,7 +6,7 @@ SESSION_START();
 include $_SESSION["APP_ROOT"].'/Lib/Class/Lee.class.php';                                   //加载辅助类库
 include $_SESSION["APP_ROOT"].'/Lib/wang/wx_class.php';                                  //加载微信类
 include $_SESSION["APP_ROOT"].'/Lib/Class/Log.class.php';                                  //加载微信类
-include $_SESSION["APP_ROOT"].'/Controller/HuaHua/Query.Controller.php';      //加载List页面控制器
+include $_SESSION["APP_ROOT"].'/Controller/Admin/Query.Controller.php';      //加载List页面控制器
 include $_SESSION["APP_ROOT"].'/Inc/CssLoader.inc.php';                                  //加载CSS组件库
 include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                                   //加载JS组件库
 
