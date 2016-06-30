@@ -101,7 +101,7 @@ CssLoader::LoadCss("Copy", "User.css");
                     </div>
                     <div class="stat clearfix" style="position:relative;padding: 30px 0 20px;">
 					<span style="font-size:12px;position:absolute;top:60px;left:18px;color:#999999">微信规则限制最少需要1元才能提现</span>
-					<span style="font-size:12px;position:absolute;top:74px;left:18px;color:#999999">平台将收取您收入的5%作为平台运营资金</span>
+					<span style="font-size:12px;position:absolute;top:74px;left:18px;color:#999999">平台将收取您收入的10%作为平台运营资金</span>
 					<!--<span style="font-size:12px;position:absolute;top:55px;left:18px;color:#999999">提现时间为9:30～18:00</span> -->
                         <div class="yyee" style="position:relative;margin-top:10px" >余额: <?php echo $balance/100; ?></div> 
             			<div class="ssyy"><span id="laod" style="display: none;">30</span><span id="old_jine" style="display: none;">30</span><i style="background-position: 0px -120px;"></i><i style="background-position: 0px 0px;"></i></div>

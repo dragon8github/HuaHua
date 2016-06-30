@@ -40,7 +40,6 @@ $arr = $_PendingCtrl->get_所有信息();
           <th>用户头像</th>
           <th>申请余额</th>
           <th>申请时间</th>
-          <th>参考金额</th>
           <th>用户当前余额</th>
           <th>操作</th>
         </tr>
@@ -55,7 +54,6 @@ $arr = $_PendingCtrl->get_所有信息();
                 $wx_litpic = $arr[$i]["wx_litpic"];
                 $balance = $arr[$i]["shenqing_balance"] / 100;         
                 $release_time = $arr[$i]["happen_time"];
-                $Cankao_balance = $_PendingCtrl->get_获取真实正确的需要提现的数据($id);
                 $balance1 = $arr[$i]["user_balance"] / 100;
         ?>
         <tr>                 
@@ -66,7 +64,6 @@ $arr = $_PendingCtrl->get_所有信息();
               <td><img width="100" height="100" src="<?php echo $wx_litpic; ?>" /></td>
               <td><?php echo $balance; ?></td>
               <td><?php echo date("Y-m-d H:i:s",$release_time); ?></td>
-              <td><?php echo $Cankao_balance; ?></td>
               <td><?php echo $balance1; ?></td>
               <td>
                 <!-- <button type="button" class="btn btn-warning qingkongyue"  data-orderid = "<?php // echo $orderid; ?>" data-id="<?php // echo $id; ?>" data-username="<?php echo $wx_name; ?>"  data-balance = "<?php echo $balance1; ?>"  >清空余额</button>  -->

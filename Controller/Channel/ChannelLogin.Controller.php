@@ -26,14 +26,16 @@ class ChannelLoginCtrl
     {
         $this->Sql->table = "channel";
         $where = sprintf(" channel_user = '%s' ",$username);
-        $ret = $this->Sql->find("channel_pwd,id")->find();
+        $ret = $this->Sql->where($where)->field("channel_pwd,id")->find();
         $channel_pwd = $ret["channel_pwd"];
         $id = $ret["id"];  //根据Id来划分模块，引导用户前往自己的地址
         if($channel_pwd != "")
         {
-            if($ret == $password)
+            if($channel_pwd == $password)
             {
-                AJAX("登录成功", "www.baidu.com", "成功");
+			$_SESSION['id']=$id;
+                AJAX("登录成功", "http://huahua.ncywjd.com/Home.php?model=Channel1", "成功");
+				
             }
             else
             {
@@ -50,9 +52,9 @@ class ChannelLoginCtrl
 
 IF(@$_POST["type"] == "login")
 {
-    $username = POST("username");
-    $password = POST("password");
-    $week = POST("week");
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+    $week = $_POST["week"];
     
     $_ChannelLoginCtrl = new ChannelLoginCtrl();
     $_ChannelLoginCtrl ->login($username, $password, $week);

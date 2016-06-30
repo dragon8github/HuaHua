@@ -1,5 +1,4 @@
 <?php 
-
 ini_set('date.timezone','Asia/Shanghai');
 
 //控制器专用累
@@ -24,12 +23,12 @@ class Channel1_Ctrl
         $this->Sql =  Mysql::start($dsn);
     }
 
-    public function get_今天的信息()
+    public function get_今天的信息($id)
     {
         //选择表
         $this->Sql->table = "user";
         //自定义语句
-        $mysql = "SELECT count(*) AS count,sum(balance) AS balance from `user` where DATE_FORMAT( FROM_UNIXTIME( `register_time` ) , '%Y-%m-%d' ) = DATE_FORMAT( NOW( ) , '%Y-%m-%d' ) AND channel = '0'";
+        $mysql = "SELECT count(*) AS count,sum(balance) AS balance from `user` where DATE_FORMAT( FROM_UNIXTIME( `register_time` ) , '%Y-%m-%d' ) = DATE_FORMAT( NOW( ) , '%Y-%m-%d' ) AND channel = '$id'";
         //获取今天的数据(引流人数，发生总金额)
         $rett = $this->Sql->query($mysql);
         //获取人数
@@ -40,12 +39,12 @@ class Channel1_Ctrl
         return array("count" => $count,"balance"=>$balance);
     }
     
-    public function get_昨天的信息()
+    public function get_昨天的信息($id)
     {
         //选择表
         $this->Sql->table = "user";
         //自定义语句
-        $mysql = "SELECT sum(balance) AS balance,count(*) AS count from `user` where DATEDIFF(now() , FROM_UNIXTIME(register_time)) = 1 AND channel = '0'";
+        $mysql = "SELECT sum(balance) AS balance,count(*) AS count from `user` where DATEDIFF(now() , FROM_UNIXTIME(register_time)) = 1 AND channel = '$id'";
         //获取今天的数据(引流人数，发生总金额)
         $rett = $this->Sql->query($mysql);
         //获取人数
@@ -56,12 +55,12 @@ class Channel1_Ctrl
         return array("count" => $count,"balance"=>$balance);
     }
     
-    public function get_所有的信息()
+    public function get_所有的信息($id)
     {
         //选择表
         $this->Sql->table = "user";
         //自定义语句
-        $mysql = "SELECT sum(balance) AS balance,count(*) AS count from `user` where channel = '0'";
+        $mysql = "SELECT sum(balance) AS balance,count(*) AS count from `user` where channel = '$id'";
         //获取今天的数据(引流人数，发生总金额)
         $rett = $this->Sql->query($mysql);
         //获取人数

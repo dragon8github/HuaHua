@@ -217,9 +217,13 @@ if(@$code != null && @$_SESSION["openid"] == null )
     $_SESSION["openid"] = $openid;
     //code
     $_SESSION["code"] = $code;
+    
+    
+
+
  
 }   
- 
+
    
 //  IF($_SESSION["openid"] != "oYNn6wg0qYDkqNVomc78AUctYfRM" &&  $_SESSION["openid"] != "oYNn6wi2Lg4qvvQDOFFTMXpY6ulY")
 //  {

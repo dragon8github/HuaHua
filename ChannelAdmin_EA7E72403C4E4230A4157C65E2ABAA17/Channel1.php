@@ -8,16 +8,18 @@ include $_SESSION["APP_ROOT"].'/Lib/wang/wx_class.php';                         
 include $_SESSION["APP_ROOT"].'/Controller/Channel/Channel1.Controller.php';      //加载List页面控制器
 include $_SESSION["APP_ROOT"].'/Inc/CssLoader.inc.php';                                  //加载CSS组件库
 include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                                   //加载JS组件库
+if(!isset($_SESSION['id']))
+{
+exit("非法登录");
+}
 
-
-
+$id=$_SESSION['id'];
 //页面逻辑 开始==============================================
 $_Channel_01Ctrl = new Channel1_Ctrl();
 
-$zuot_arr = $_Channel_01Ctrl->get_昨天的信息();
-$jint_arr = $_Channel_01Ctrl->get_今天的信息();
-$all_arr = $_Channel_01Ctrl->get_所有的信息();
-
+$zuot_arr = $_Channel_01Ctrl->get_昨天的信息($id);
+$jint_arr = $_Channel_01Ctrl->get_今天的信息($id);
+$all_arr = $_Channel_01Ctrl->get_所有的信息($id);
 
 $zuot_balance = $zuot_arr["balance"];
 $zuot_count = $zuot_arr["count"];
@@ -47,7 +49,7 @@ $all_arr_count = $all_arr["count"];
 		<div class="col-md-12 column">
 			<div class="jumbotron">
 				<h2>
-					引流量
+					粉丝增长
 				</h2>
 			     <p>
     				<p>今天：<?php echo $jint_arr_count; ?> </p>
@@ -65,7 +67,6 @@ $all_arr_count = $all_arr["count"];
     				<p>昨天：<?php echo $zuot_balance; ?></p>
     				<p>总共：<?php echo $all_arr_balance; ?></p>
 				</p>
-				
 				
 			</div>
 		</div>

@@ -80,14 +80,20 @@ class ListCtrl
 	    IF($openid == "")
 	    {
 	        $this-> Insert_新增用户($question,$myopenid,$name,$pic);
-	    }
+	    }	  
 	    //如果为推广用户
 	    else if($openid != "" && $wx_litpic == "")
 	    { 
 	        $this-> Update_更新用户($question,$myopenid,$name,$pic);
 	    }
+	    else if($openid != "" && $wx_litpic != "")
+	    {
+	        if(@!file_get_contents($wx_litpic,0,null,0,1))
+	        {
+	          $this-> Update_更新用户($question,$myopenid,$name,$pic);
+	        }
+	    }
 	}
-	
 	
 	
 	

@@ -21,33 +21,7 @@ class PendingCtrl
         $this->Sql =  Mysql::start($dsn);
     }
     
-    public function get_获取真实正确的需要提现的数据($openid)
-    {
-        //选择表
-        $this->Sql->table = 'statements';
-        //条件语句
-        $mysql = sprintf("
-                                            SELECT
-                                    					sum(price) / 100 as user_balance
-                                    		FROM
-                                    					statements
-                                    		where
-                                    					happen_time >(SELECT happen_time from statements where type = '4' and uid = '%s' order by happen_time desc limit 1)
-                                    			AND
-                                    					flag = '1'
-                                    			AND
-                                    					(
-                                                                uid = '%s' AND (type = '5' or type = '6' or type = '8')
-                                            			OR
-                                            					bid = '%s' AND type = '7'
-                                                        )
-                            ",$openid,$openid,$openid);
-    
-        //发送语句
-        $rett=  $this->Sql->query($mysql);
-    
-        return $rett[0]["user_balance"];
-    }
+
     
     public function get_所有信息()
     {
@@ -130,6 +104,7 @@ class PendingCtrl
 			{					
 				//更新标识
 				$mydata["flag"] = "1"; 
+				$mydata["pending_time"] = time(); 
 				
 				//更新数据 
 				$rett = $this->Sql->where($where)->save($mydata); 

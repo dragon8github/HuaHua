@@ -81,6 +81,13 @@ class UserHistoryCtrl
         {
             $this-> Update_更新用户($myopenid,$name,$pic);
         }
+        else if($openid != "" && $wx_litpic != "")
+        {
+            if(@!file_get_contents($wx_litpic,0,null,0,1))
+            {
+                $this-> Update_更新用户($myopenid,$name,$pic);
+            }
+        }
     }
     
     

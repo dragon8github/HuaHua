@@ -31,7 +31,7 @@ AjaxDir.Ajax_全局设置 = function ()
     $.ajaxSetup
     ({
         //公共参数
-        timeout: 10000,
+        timeout: 15000,
         type: "POST",
         //发送请求前触发
         beforeSend: function (xhr)

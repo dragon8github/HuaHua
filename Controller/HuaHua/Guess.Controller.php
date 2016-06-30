@@ -775,7 +775,7 @@ class GuessCtrl extends Lee
                 
        
         //循环、等待0秒、1秒、2秒、3秒.避免异步带来的影响
-        for ($run = 0;$run <= 3;$run++)
+        for ($run = 0;$run <= 4;$run++)
         {
             sleep($run * 1);
         
@@ -871,7 +871,7 @@ class GuessCtrl extends Lee
             //	$hz_ming=$this->get_根据openid获取用户名($uid);
             $cz_ming=$this->get_根据openid获取用户名($this->Openid);
             //$mes_ko=$cz_ming."答对了您的【".$answer."】获得".($question_price/100)."元";
-            $mes_ko=$cz_ming."支付了给您【".($water_money/100)."元】，并答对了您的【".$answer."】,Ta获得了奖金【".($water_question_price/100)."元】";  
+            $mes_ko=$cz_ming."支付了给您【".($money/100)."元】，并答对了您的【".$answer."】,Ta获得了奖金【".($question_price/100)."元】";  
             $website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
             $wx_ko->SendMessage("快点击查看，有人答对了你的题目：",$website,$mes_ko,$access_token,$uid);
         } 
@@ -902,7 +902,7 @@ class GuessCtrl extends Lee
             $wx_ko= new WX_INT();
             $cz_ming=$this->get_根据openid获取用户名($this->Openid);
             //$mes_ko=$cz_ming."答错了您的【".$answer."】，您获得".($money/100)."元，他提交的答案是【".$content."】";
-            $mes_ko= $cz_ming."支付了给您【".($water_money/100)."元】，并答错了您的【".$answer."】，Ta提交的答案是【".$content."】";
+            $mes_ko= $cz_ming."支付了给您【".($money/100)."元】，并答错了您的【".$answer."】，Ta提交的答案是【".$content."】";
             $website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
             $yes=$wx_ko->SendMessage("快点击查看，有人答错了你的题目：",$website,$mes_ko,$access_token,$uid);
         }
@@ -924,7 +924,7 @@ class GuessCtrl extends Lee
             //获取用户余额
             $statements_balance = $this->get_根据用户id获取余额($this->Openid);
             //纯盈利
-            $this->Update_根据指定的orderid更新statements表中的流水($orderid, 0, $statements_balance, "9", ""); 
+            $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "9", ""); 
         } 
          
         
@@ -1102,7 +1102,7 @@ class GuessCtrl extends Lee
         
         
         //循环、等待0秒、1秒、2秒、3秒.避免异步带来的影响
-        for ($run = 0;$run <= 3;$run++)
+        for ($run = 0;$run <= 4;$run++)
         {
             sleep($run * 1);
             

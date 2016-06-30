@@ -108,7 +108,7 @@ CssLoader::autoComplete();
                                             $balance = $statements_arr[$i]["balance"];
                                             $Is_Use = $statements_arr[$i]["Is_Use"];
                                     ?>
-                                    <tr>                 
+                                    <tr <?php if(($type == "7" || $type == "1") && $flag == "1" && $Is_Use == "0") { echo "class='warning'"; } ?>>                 
                                           <td><?php echo $i; ?></td> 
                                           <td><?php echo $id; ?></td> 
                                            <td><?php echo $question_id; ?></td>  

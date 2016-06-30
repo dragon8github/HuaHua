@@ -69,7 +69,7 @@ loginAction = function()
 	$.ajax
 	({                                                                                                                                              
 		type:"POST",
-		data:{"type":"login","username":$("#username").val(),"password":$("#password").val(),"IsWeek":_IsWeek},
+		data:{"type":"login","username":$("#username").val(),"password":$("#password").val(),"week":_IsWeek},
 		success:function(data)
 		{
 			console.log(data);

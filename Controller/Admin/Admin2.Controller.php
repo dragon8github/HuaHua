@@ -23,6 +23,16 @@ class Admin2Ctrl
         //返回数据库对象
         $this->Sql =  Mysql::start($dsn);
     }
+    
+    public function get_获取充值总额()
+    {
+        //选择表
+        $this->Sql->table = 'statements';
+        //条件语句
+        $mysql ="  CALL SP_CHONGZHI_COUNT();";
+        //发送语句
+        return  $this->Sql->query($mysql);
+    } 
 
     public function get_所有信息()
     {
@@ -143,11 +153,11 @@ class Admin2Ctrl
         $this->Sql->table = 'statements';
         //条件语句
         $mysql =" 
-                                    SELECT IFNULL(sum(price),0)  FROM `statements` WHERE DATE_FORMAT( FROM_UNIXTIME( `happen_time` ) , '%Y-%m-%d' ) = DATE_FORMAT( NOW( ) , '%Y-%m-%d' ) and type = '4'
-                                    UNION ALL
-                                    SELECT IFNULL(sum(price),0)  FROM statements WHERE DATE_FORMAT( FROM_UNIXTIME( `happen_time` ) , '%Y-%m-%d' ) = UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 DAY)) and type = '4'
-                                    UNION ALL
-                                    SELECT IFNULL(sum(price),0)  FROM statements where type = '4'
+                        SELECT IFNULL(sum(price),0)  FROM `statements` WHERE DATE_FORMAT( FROM_UNIXTIME( `pending_time` ) , '%Y-%m-%d' ) = DATE_FORMAT( NOW( ) , '%Y-%m-%d' ) and type = '4' and flag = '1'
+                        UNION ALL
+                        SELECT IFNULL(sum(price),0)  FROM statements WHERE DATE_FORMAT( FROM_UNIXTIME( `pending_time` ) , '%Y-%m-%d' ) = UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 DAY)) and type = '4'  and flag = '1'
+                        UNION ALL
+                        SELECT IFNULL(sum(price),0)  FROM statements where type = '4'  and flag = '1'
                        ";
         //发送语句
         return $this->Sql->query($mysql);

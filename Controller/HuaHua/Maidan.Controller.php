@@ -82,6 +82,13 @@ class MaidanCtrl
         {
             $this-> Update_更新用户($myopenid,$name,$pic);
         }
+        else if($openid != "" && $wx_litpic != "")
+        {
+            if(@!file_get_contents($wx_litpic,0,null,0,1))
+            {
+                $this-> Update_更新用户($myopenid,$name,$pic);
+            }
+        }
     }
     
     public  function get_money()
@@ -114,7 +121,7 @@ class MaidanCtrl
                                         		            price 
                                         DESC
             
-                                        LIMIT 30
+                                        LIMIT 50
             
                                   ",$this->Openid) ;
         //发送语句
@@ -151,7 +158,7 @@ class MaidanCtrl
                                         		            release_time
                                         DESC
                         
-                                        LIMIT 30
+                                        LIMIT 50
                                   ",$this->Openid) ;
         //发送语句
         return $this->Sql->query($mysql);
@@ -187,7 +194,7 @@ class MaidanCtrl
                                         		            COUNT
                                         DESC
                         
-                                        LIMIT 30
+                                        LIMIT 50
     
                                   ",$this->Openid) ;
         //发送语句

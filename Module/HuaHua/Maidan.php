@@ -17,13 +17,16 @@ $nickname = $_SESSION["nickname"];              //昵称
 $headimgurl = $_SESSION["headimgurl"];        //头像
 $_MaidanCtrl = new MaidanCtrl();
 
+
+$_MaidanCtrl->SET_用户($openid, $nickname, $headimgurl);
+
 //微信类 开始==============================================
 $ko=new WX_INT();
 $signPackage = $ko->GetSignPackage();   //获取分享接口 相关信息
 //业务逻辑 开始=================================================
 
 
-$_MaidanCtrl->SET_用户($openid, $nickname, $headimgurl);
+
 
   
 
@@ -87,6 +90,7 @@ height:180px;}
 			<ul class="tab_li"><li class="dds <?php if($px==0) echo "dddssss"; ?>"><a href="http://huahua.ncywjd.com/Home.php?p=Maidan&px=0">最新作品</a></li><li class="dds <?php if($px==1) echo "dddssss"; ?>"><a href="http://huahua.ncywjd.com/Home.php?p=Maidan&px=1">奖金最高</a></li><li class="dds <?php if($px==2) echo "dddssss"; ?>"><a href="http://huahua.ncywjd.com/Home.php?p=Maidan&px=2">最多人玩</a></li></ul>
                 	<div id="dds1" class="navigate clearfix currr">
 					<p style="text-align:center;color:#FF0000;margin:6px 0 0 0;padding:0">以下题目为小编推荐的有诚意的题目</p>
+					<p style="text-align:center;color:#FF0000;margin:6px 0 0 0;padding:0">★根据提示来答题成功率提升500%★</p>
                            		 <?php 
                            		   for($i = 0;$i<count($arr);$i++) 
                            		   {

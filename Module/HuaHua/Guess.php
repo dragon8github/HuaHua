@@ -205,8 +205,9 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
 										
 										<!-- 成语提示 -->
 										 <div  id="chengyutishi" class="ui-corner-all custom-corners"  style="margin:15px auto; <?php if($tips_word == null){ echo "display:none";} ?>">
-                                                      <div id="cyts_k" class="ui-bar ui-bar-a"> <h3>答案提示 </h3>  <span id="chengyutishilate" style="font-size:12px;color:#666;">下面<span id="chengyunum">4</span>个字有<span id="chengyunum2">1</span>个为成语的字</span> </div>
-                                                      <div class="ui-body ui-body-a"  id="panelbody">                                                            
+                                                      <div id="cyts_k" class="ui-bar ui-bar-a"> <h3>答案提示 </h3>  <span id="chengyutishilate" style="font-size:12px;color:#666;">亲，好好利用您的提示</span> </div>
+                                                      <div class="ui-body ui-body-a"  id="panelbody">         
+													  <p style="text-align:center;color:#FF0000;margin:0 0 0 0;padding:0;font-size:12px">★根据提示来答题成功率提升500%★</p>                                                   
 															<?php 
 															     if($tips_word != null)
 															     {
@@ -220,7 +221,7 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
     														              {
     														                  echo sprintf("<span class='tipsFont'>%s</span>",$re[$k]);
     														              }
-    														              echo "</div>";
+    														              echo "<a style='color:#666;font-size:12px'>←←(四字选一字)</a></div>";
     															      } 
 															     }
 															?>  
@@ -361,9 +362,19 @@ $model_prop = $_GuessCtrl->get_获取答题花销比例();
                                                     </p>
                         				    </div>
                     			    </div> 
-									<div style="text-align:center"><img width="200" src="<?php echo $_SESSION["STATIC_ROOT"]?>/Img/qrcode_for_gh_0399f3f16327_430.jpg" />
-				</br><span>长按二维码，识别关注</span>
-				</div>   
+										<div class="ui-corner-all custom-corners"  style="margin:15px auto;">
+    									 			 <div class="ui-bar ui-bar-a" style="border-top-left-radius: 0.3125em;
+    border-top-right-radius: 0.3125em;" > <h3>亲，关注微信不迷路</h3> </div>
+													   <div class="ui-body ui-body-a" style="border-bottom-left-radius: 0.3125em;
+    border-bottom-right-radius: 0.3125em;" >
+														<div style="text-align:center"><img width="200"  style="border-radius: 0;
+   " src="<?php echo $_SESSION["STATIC_ROOT"]?>/Img/qrcode_for_gh_0399f3f16327_430.jpg" />
+														</br>
+														<span style="color:#FF0000">长按二维码2秒，识别关注</span>
+														</div>
+														</div>  
+													
+									</div> 
                 	    </div><!-- /content -->
             	</div><!-- /page -->
 				
@@ -395,8 +406,8 @@ if(time < 0 && IsReal != "1")
 
 //通过js动态修改成语提示 
 var textlength = $("#panelbody").text().replace(/\s/g, "").length;
-$("#chengyunum").text(textlength);
-$("#chengyunum2").text(textlength/4);
+//$("#chengyunum").text(textlength);
+//$("#chengyunum2").text(textlength/4);
 
 
  

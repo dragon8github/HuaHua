@@ -37,13 +37,14 @@ $yestoday_dati = $arr_dati[1]["count(*)"];
 $all_dati = $arr_dati[2]["count(*)"];
 
 //今天的提现总金额
-$today_tixian= $arr_tixian[0]["IFNULL(sum(price),0)"] / 100;
+$today_tixian= Lee::round($arr_tixian[0]["IFNULL(sum(price),0)"] / 100);
 //昨天的提现总金额
-$yestoday_tixian = $arr_tixian[1]["IFNULL(sum(price),0)"] /100;
+$yestoday_tixian = Lee::round($arr_tixian[1]["IFNULL(sum(price),0)"] /100);
 //提现总金额
-$all_tixian = $arr_tixian[2]["IFNULL(sum(price),0)"] / 100;
+$all_tixian = Lee::round($arr_tixian[2]["IFNULL(sum(price),0)"] / 100);
 
-
+//获取充值总额
+$CHONGZHISUM = $_Admin2Ctrl->get_获取充值总额()[0]["CHONGZHISUM"];
 
 
 ?>
@@ -66,7 +67,9 @@ $all_tixian = $arr_tixian[2]["IFNULL(sum(price),0)"] / 100;
           <th>用户id</th>
           <th>用户名</th>  
           <th>用户头像</th>
-          <th>用户充值总额</th>
+          <th>用户充值总额
+          <br>总共：<?php echo Lee::round($CHONGZHISUM); ?>  
+          </th>
           <th>真实余额（statements）</th>
           <th><a href="?orderby=yonghuyue">用户余额（user）</a></th>
           <th>
@@ -93,13 +96,13 @@ $all_tixian = $arr_tixian[2]["IFNULL(sum(price),0)"] / 100;
             {
                 $openid = $arr[$i]["openid"];
                 $wx_name = $arr[$i]["wx_name"];
-                $wx_litpic = $arr[$i]["wx_litpic"];
-                $balance = $arr[$i]["balance"] / 100;
-                $mysum = $arr[$i]["mysum"] / 100;
+                $wx_litpic = $arr[$i]["wx_litpic"]; 
+                $balance = Lee::round( $arr[$i]["balance"] )/ 100;
+                $mysum = Lee::round( $arr[$i]["mysum"] )/ 100;
                 $myanswer_count = $arr[$i]["myanswer_count"];
                 $myquestion_cont = $arr[$i]["myquestion_cont"];                
-                $user_balance =  $_Admin2Ctrl->get_获取真实正确的需要提现的数据($openid); 
-                $chongzhi_balance = $_Admin2Ctrl->get_获取用户充值的总额($openid);
+                $user_balance =  Lee::round( $_Admin2Ctrl->get_获取真实正确的需要提现的数据($openid)); 
+                $chongzhi_balance = Lee::round( $_Admin2Ctrl->get_获取用户充值的总额($openid));
         ?>
         <tr <?php /* if($user_balance != $balance) echo "class='danger'"*/ ?>>                 
               <td><?php echo $i; ?></td>

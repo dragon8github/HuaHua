@@ -83,6 +83,13 @@ class UserCtrl extends Lee
         {
             $this-> Update_更新用户($myopenid,$name,$pic);
         } 
+        else if($openid != "" && $wx_litpic != "")
+        {
+            if(@!file_get_contents($wx_litpic,0,null,0,1))
+            {
+                $this-> Update_更新用户($myopenid,$name,$pic);
+            }
+        }
     }
     
     
@@ -584,16 +591,6 @@ if(@$_POST["type"] == "UserYuE")
     $_UserCtrl = new UserCtrl();
     
     $_UserCtrl->Ajax_提现();
-    
-    /*
-    IF($_SESSION["openid"] == "oYNn6wg0qYDkqNVomc78AUctYfRM" || $_SESSION["openid"] == "oYNn6wi2Lg4qvvQDOFFTMXpY6ulY")
-    {
-        $_UserCtrl->Ajax_提现(); 
-    }  
-    else
-    {
-       $_UserCtrl->Ajax_获取用户余额();
-    }*/
 }
 
 ?>

@@ -30,7 +30,7 @@ function https_post($url, $data = null){
         return array_merge(array('body' => $package), array('header' => $httpinfo));
     }
 	
-		$id='3';
+		$id='4';
 		     $data2 = json_decode(file_get_contents("../Module/HuaHua/access_token.json"));
             $access_token = $data2->access_token;
 	 	$qrcode = '{"action_name": "QR_LIMIT_SCENE", "action_info": {"scene": {"scene_id": "'.$id.'"}}}';

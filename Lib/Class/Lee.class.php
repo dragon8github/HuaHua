@@ -108,6 +108,12 @@ header("Content-type: text/html; charset=utf-8");
         $logLine .= "\r\n错误等级：$logLevel\r\n";
         fwrite($MyLogFile,$logLine);
     }
+    
+    
+    public static function round($num)
+    {
+        return round($num,2);
+    }
 }
 
 

@@ -9,6 +9,7 @@ $_SESSION["STATIC_ROOT"] = "http://".dirname($_SERVER["HTTP_HOST"].$_SERVER['PHP
 //测试人员的调试模式
 if(@$_GET["model"] == "channel")
 {    
+    
     $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
     $_SESSION["nickname"] = "李钊鸿";      //昵称
     $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
@@ -16,7 +17,15 @@ if(@$_GET["model"] == "channel")
     exit();
 }   
 
-
+if(@$_GET["model"] == "Channel1")
+{    
+    
+    $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
+    $_SESSION["nickname"] = "李钊鸿";      //昵称
+    $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
+    header("Location:"."http://huahua.ncywjd.com/ChannelAdmin_EA7E72403C4E4230A4157C65E2ABAA17/Channel1.php");
+    exit();
+}   
 
 //KO的调试模式
 if(@$_GET["model"] == "ewm")
@@ -37,16 +46,15 @@ if(@$_GET["model"] == "op")
 //测试人员的调试模式
 if(@$_GET["model"] == "test")
 { 
-   
     $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
     $_SESSION["nickname"] = "李钊鸿";      //昵称
     $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Draw.php?q=1&word=金蝉脱壳";
-    //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Guess.php?q=2747";
+    $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Guess.php?q=2747";
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/UserList.php"; 
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/List.php"; 
     //$Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/User.php";
-    $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Maidan.php";
+   // $Wxurl = "http://huahua.ncywjd.com/Module/HuaHua/Maidan.php";
     header("Location:".$Wxurl);  
     exit(); 
 }   
