@@ -19,6 +19,8 @@ class QueryCtrl
     
     public static $Tips_arr = array();
     
+    public static $mohu_name_arr = array();
+    
     function __construct()
     {
         
@@ -37,7 +39,17 @@ class QueryCtrl
     }   
     
     
-    
+    public function get_模糊查询用户名大全($username)
+    {
+        //选择表   
+        $this->Sql->table = 'user';
+        //查询语句
+        $mysql = "select * from `user` where wx_name like '%".$username."%'";
+        //结果
+        $rett = $this->Sql->field("wx_name,openid")->query($mysql);
+        //返回结果
+        $this::$mohu_name_arr = $rett;
+    }
     
     public function get_获取用户生成的tips大全($openid)
     {
@@ -195,6 +207,15 @@ class QueryCtrl
 
 
 //接受请求==================================
+
+IF(@$_GET["action"] == "queryusername")
+{
+    $_query =  new QueryCtrl();
+    $username =trim($_POST["username"]);
+    $_query->get_模糊查询用户名大全($username);
+}
+
+
 
 IF(@$_GET["action"] == "query")
 {

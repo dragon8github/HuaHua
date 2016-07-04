@@ -781,8 +781,10 @@ class GuessCtrl extends Lee
                                                 1
                                  ",$orderid);
        
+        
     
         $_result = $this->Sql->query($mysql);
+        
         
         //获取结果集
         $flag = $_result[0]["flag"];
@@ -799,8 +801,8 @@ class GuessCtrl extends Lee
         $water_bili = $this->get_获取抽水比例();
         
         
-        //如果用户未支付或者提交的金额不等于需要花销的金额、或者该订单已经使用过了，那么终止程序。并且考虑记录日志
-        if($flag != 1 || ($datihuaxiaobili * $question_price) != $money || $Is_Use == "1")
+        //如果用户未支付或者提交的金额不等于需要花销的金额、或者该订单已经使用过了，那么终止程序。并且考虑记录日志 $flag != 1 
+        if(($datihuaxiaobili * $question_price) != $money || $Is_Use == "1")
         {
             exit();
         }
@@ -875,10 +877,7 @@ class GuessCtrl extends Lee
             //uid 通知画主
             $data2 = json_decode(file_get_contents("../../Module/HuaHua/access_token.json"));
             $access_token = $data2->access_token;
-            $wx_ko= new WX_INT();
-            //	$hz_ming=$this->get_根据openid获取用户名($uid);
             $cz_ming=$this->get_根据openid获取用户名($this->Openid);
-            //$mes_ko=$cz_ming."答对了您的【".$answer."】获得".($question_price/100)."元";
             $mes_ko=$cz_ming."支付了给您【".($money/100)."元】，并答对了您的【".$answer."】,Ta获得了奖金【".($question_price/100)."元】";  
             $website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
             $wx_ko->SendMessage("快点击查看，有人答对了你的题目：",$website,$mes_ko,$access_token,$uid);
@@ -902,18 +901,15 @@ class GuessCtrl extends Lee
                 //插入数据库
                 $this->Daoju_添加道具购买标识($tips_index,$tips); 
                 $this->Daoju_添加访客道具购买标识(); 
-            }
-            
+            }            
             //uid 通知画主
             $data2 = json_decode(file_get_contents("../../Module/HuaHua/access_token.json"));
             $access_token = $data2->access_token;
-            $wx_ko= new WX_INT();
             $cz_ming=$this->get_根据openid获取用户名($this->Openid);
-            //$mes_ko=$cz_ming."答错了您的【".$answer."】，您获得".($money/100)."元，他提交的答案是【".$content."】";
             $mes_ko= $cz_ming."支付了给您【".($money/100)."元】，并答错了您的【".$answer."】，Ta提交的答案是【".$content."】";
             $website="http://huahua.ncywjd.com/home.php?p=guess&q=".$_GET["q"];
-            $yes=$wx_ko->SendMessage("快点击查看，有人答错了你的题目：",$website,$mes_ko,$access_token,$uid);
-        }
+            $wx_ko->SendMessage("快点击查看，有人答错了你的题目：",$website,$mes_ko,$access_token,$uid);
+        }        
        /*没有红包，但是答对了*/
         else if($Is_ok == false && $Is_Real == true)
         {            
@@ -925,7 +921,7 @@ class GuessCtrl extends Lee
             $this->Add_给指定id的用户从user表中添加余额($this->Openid,$money);
             //修改标识
             $question_price = 0;
-        }
+        }        
         /*没有红包，又答错*/
         else if($Is_ok == false && $Is_Real == false)
         {
@@ -935,10 +931,6 @@ class GuessCtrl extends Lee
             $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "9", ""); 
         } 
          
-
-
-
-
         //AJAX接受的信息
         $arr = array('Msg' => '请求成功！' , 'Result' => array('id' => $Result_id,'flag' => $Is_Real_flag,'price'=>$question_price,'tips'=>$tips), 'Status' => '成功' );
         //返回为json
@@ -1119,22 +1111,17 @@ class GuessCtrl extends Lee
         //用户提交的金额
         $rett_count= $HongBaoJinE * $HongBaoCount;
         
-   
-        
-        
-        //$rett_Is_Use如果为0，说明订单未使用
-        if($rett_Is_Use == "0" && $rett_flag == 1 && $rett_price != null && $rett_price >= 0 && ($rett_price / 100) == $rett_count && ($rett_hongbao_price / 100) == $HongBaoJinE && $rett_hongbao_count  ==$HongBaoCount)
+        //$rett_Is_Use如果为0，说明订单未使用  $rett_flag == 1 
+        if($rett_Is_Use == "0"  && $rett_price > 0  && ($rett_hongbao_price / 100) == $HongBaoJinE && $rett_hongbao_count  ==$HongBaoCount)
         {                           
                 //修改更新标识
-                //$data["flag"] = '1';   //(已更新版本为异步完成1)
                 $data["Is_Use"] = "1"; 
+                $data["flag"] = '1';
                 //发送语句
-                $this->Sql->where($where)->save($data);
-                
+                $this->Sql->where($where)->save($data);                
                 
                 //获取道具比例
-                $DaoJuBiLi = $this->get_获取道具比例();
-                
+                //$DaoJuBiLi = $this->get_获取道具比例();                //$this->C_金额转换($HongBaoJinE) * floatval($DaoJuBiLi);  
               
                 //选择流水表
                 $this->Sql->table = 'question';
@@ -1145,7 +1132,7 @@ class GuessCtrl extends Lee
                 $data2["price_count"] = $this->C_金额转换($HongBaoJinE)*$HongBaoCount;
                 $data2["hongbao_count"] = $HongBaoCount;
                 $data2["shengyu_count"] = $HongBaoCount;
-                $data2["prop"] = $this->C_金额转换($HongBaoJinE) * floatval($DaoJuBiLi);  
+                $data2["prop"] = "0";   
                 $data2["expire_time"] = strtotime("+24 hours");
                 $data2["release_time"] = time();
                 $data2["model"] = $model;
@@ -1161,8 +1148,14 @@ class GuessCtrl extends Lee
                 //返回结果
                 exit(json_encode($arr));
          }
+         else
+         {
+             //AJAX接受的信息
+             $arr = array('Msg' => '订单不存在,请联系客服！！！' , 'Result' => "", 'Status' => '失败' );
+             //返回为json
+             exit(json_encode($arr));
+         }
          
-         exit();
     }
     
     public function Update_访客是否答对($openid,$question_id)

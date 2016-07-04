@@ -232,6 +232,20 @@ class ListCtrl
 	}
 	
 	
+	public function get_获取用户已经画过的题库列表()
+	{
+	    //选择数据库
+	    $this->Sql->table = 'question';
+	    //还原配置,如where,order,limit,field
+	    $this->Sql->reset();
+	    //查询语句
+	    $SSSQL = sprintf("SELECT distinct(answer) AS answer FROM question where uid = '%s'",$this->Openid);
+	    //发送语句
+	    $arr = $this->Sql->query($SSSQL);
+	    //变换
+	   return  Lee::get_获取数组中指定键的值按照逗号隔开返回($arr, "answer");
+	}
+	
 	
 	public  function Get_根据冷却时间返回数据或者更新用户信息()
 	{
@@ -274,24 +288,26 @@ class ListCtrl
 	        }
 	        else
 	        {
+	           $history_list =  $this->get_获取用户已经画过的题库列表();
+	            
 	            //条件语句
 	            $asql = sprintf(" SELECT 
-										* 
+										              * 
 									FROM 
-										  question_library						
+										              question_library						
 									WHERE	
-										  id 
+										              id 
 								   Not IN 
-										  (%s) 
+										              (%s) 
 									  AND 
-									      id 
+									                    id 
 								   NOT IN 
-										  (SELECT distinct(answer) FROM question where uid = '%s')
+										              (%s)
 								 order by 
-										   rand() 
+										              rand() 
 									limit 
 										   10	  
-								 ",$question,$this->Openid);
+								 ",$question,$history_list);
 							    
 	             
 	            //根据id，获取随机并且不包含上一次历史题库的十条题并且未发布过的题目、

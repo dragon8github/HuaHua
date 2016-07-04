@@ -28,6 +28,8 @@ $user_arr = QueryCtrl::$user_arr;
 $tips_arr = QueryCtrl::$Tips_arr;
 
 
+//获取模糊用户名
+$mohu_name_arr = QueryCtrl::$mohu_name_arr;
 
 
 ?>
@@ -58,12 +60,30 @@ CssLoader::autoComplete();
 </form>
 
 
+<form class="form-inline"  method = "post" action="?action=queryusername" style=" margin: 10px; text-align: center;">
+      <div class="form-group">
+        <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+        <div class="input-group">
+          <input type="text" class="form-control" style="width:270px;" name="username" id="exampleInputAmount"  placeholder="<?php echo trim(@$_POST["username"]); ?>">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" data-role = 'none'>Queryusername</button>
+</form>
+
+<ul class="list-group">
+<?php for ($z = 0;$z<count($mohu_name_arr);$z++): ?>
+  <li class="list-group-item"><?php echo $mohu_name_arr[$z]["wx_name"];  ?> —— <?php echo $mohu_name_arr[$z]["openid"];  ?></li>
+<?php endfor; ?>
+</ul>
+
+
 <ul id="myTab" class="nav nav-tabs">
    <li class="active"> <a href="#statements" data-toggle="tab"> 流水表statements </a> </li>
    <li><a href="#user" data-toggle="tab">用户信息user</a></li>
    <li><a href="#question" data-toggle="tab">画画表question</a></li>
    <li><a href="#answer" data-toggle="tab">答题表answer</a></li>
     <li><a href="#tips" data-toggle="tab">道具提示表daojuinfo</a></li>
+   
 </ul>
 
 

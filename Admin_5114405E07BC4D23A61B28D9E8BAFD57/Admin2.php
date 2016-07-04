@@ -58,7 +58,23 @@ $CHONGZHISUM = $_Admin2Ctrl->get_获取充值总额()[0]["CHONGZHISUM"];
 </head>
 <body>
 
-	
+	<style type="text/css">
+	#kktt
+	{
+	height:40px;
+	}
+	#kktt a
+	{
+	width:25%;
+	text-align:center;
+	font-size:30px;
+	float:left;
+	margin:5px 0;
+	}
+</style>
+	<div id='kktt'><a href="http://huahua.ncywjd.com/Admin_5114405E07BC4D23A61B28D9E8BAFD57/Admin.php">题目审核</a><a href="http://huahua.ncywjd.com/Admin_5114405E07BC4D23A61B28D9E8BAFD57/Admin2.php">用户列表</a><a href="http://huahua.ncywjd.com/Admin_5114405E07BC4D23A61B28D9E8BAFD57/Query.php">用户流水查询</a><a href="http://huahua.ncywjd.com/Admin_5114405E07BC4D23A61B28D9E8BAFD57/pending.php">审核提现</a>
+	</div>
+
 	
 	<table class="table table-hover table-bordered" style="vertical-align: middle">
       <thead>
