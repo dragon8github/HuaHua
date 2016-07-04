@@ -9,7 +9,7 @@ include $_SESSION["APP_ROOT"].'/Lib/Class/Log.class.php';                       
 include $_SESSION["APP_ROOT"].'/Controller/Admin/Admin2.Controller.php';      //加载List页面控制器
 include $_SESSION["APP_ROOT"].'/Inc/CssLoader.inc.php';                                  //加载CSS组件库
 include $_SESSION["APP_ROOT"].'/Inc/JsLoader.inc.php';                                   //加载JS组件库
-
+include $_SESSION["APP_ROOT"].'/Inc/Page.inc.php';                                        //加载分页组件库
 
 
 //页面逻辑 开始==============================================

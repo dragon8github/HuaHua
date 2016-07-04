@@ -60,10 +60,6 @@ class Admin2Ctrl
             $DESC = "myanswer_count";
         } 
 
-         
-        
-        
-        
         
         //条件语句,A.balance AS user_balance
         $mysql = sprintf("
@@ -82,13 +78,11 @@ class Admin2Ctrl
                                 LEFT JOIN
                                      	          (SELECT uid,count(*) as myquestion_cont from question group by uid) AS D
                                           ON
-                                     	          A.openid = D.uid
-                                    WHERE
-                                    	           A.balance > 0          
+                                     	          A.openid = D.uid                        
                                ORDER BY                  
                                                     %s  DESC                                      
                                      LIMIT 
-                                                    100
+                                                    10
                             ",$DESC);  
         
         

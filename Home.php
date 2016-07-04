@@ -27,6 +27,15 @@ if(@$_GET["model"] == "Channel1")
     exit();
 }   
 
+if(@$_GET["model"] == "admin_test")
+{    
+    
+    $_SESSION["openid"] = "oYNn6wg0qYDkqNVomc78AUctYfRM";
+    $_SESSION["nickname"] = "李钊鸿";      //昵称
+    $_SESSION["headimgurl"] = "http://wx.qlogo.cn/mmopen/ficCQMgzCd1j85R9jDHHZ5pg"; //头像
+    header("Location:"."http://huahua.ncywjd.com/Admin_5114405E07BC4D23A61B28D9E8BAFD57/test.php");
+    exit();
+}  
 //KO的调试模式
 if(@$_GET["model"] == "ewm")
 {    

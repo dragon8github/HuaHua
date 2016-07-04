@@ -742,7 +742,17 @@ class GuessCtrl extends Lee
    }
     
     public function Ajax_提交答案($id,$content,$orderid,$money)
-    {
+    {       
+        $wx_ko= new WX_INT();        
+        $wx_msg = $wx_ko->CheckOrder($orderid);        
+        if($wx_msg != "SUCCESS")
+        {
+            //AJAX接受的信息
+            $arr = array('Msg' => '订单不存在,请联系客服' , 'Result' => "", 'Status' => '失败' );
+            //返回为json
+            exit(json_encode($arr));
+        }        
+                
         //选择流水表
         $this->Sql->table = 'statements';
         //我的sql
@@ -770,25 +780,9 @@ class GuessCtrl extends Lee
                                    LIMIT 
                                                 1
                                  ",$orderid);
-        //发送语句
-        $_result = array();
-                
        
-        //循环、等待0秒、1秒、2秒、3秒.避免异步带来的影响
-        for ($run = 0;$run <= 4;$run++)
-        {
-            sleep($run * 1);
-        
-            $_result = $this->Sql->query($mysql);
-        
-            $rett_flag = $_result[0]["flag"];                                        //是否充值完成
-        
-            if($rett_flag == 1)
-            {
-                break;
-            }
-        }
-        
+    
+        $_result = $this->Sql->query($mysql);
         
         //获取结果集
         $flag = $_result[0]["flag"];
@@ -803,7 +797,6 @@ class GuessCtrl extends Lee
         $datihuaxiaobili = $this->get_获取答题花销比例();
         //获取抽水比例
         $water_bili = $this->get_获取抽水比例();
- 
         
         
         //如果用户未支付或者提交的金额不等于需要花销的金额、或者该订单已经使用过了，那么终止程序。并且考虑记录日志
@@ -811,7 +804,7 @@ class GuessCtrl extends Lee
         {
             exit();
         }
-         
+
         $tips = "";
         $Is_Real = false;        
         $Is_ok = false;
@@ -826,11 +819,26 @@ class GuessCtrl extends Lee
         }
         
         //如果回答正确了
-        if($content == $answer)
+        if($content == $answer) 
         {
             $Is_Real = true;
             $Is_Real_flag = 1;
         }
+
+        
+        //选择表
+        $this->Sql->table = 'answer_details';
+        //还原配置,如where,order,limit,field
+        $this->Sql->reset();
+        //获取POST数据
+        $data["question_id"] = $id;
+        $data["user_id"] = $this->Openid;
+        $data["flag"] = $Is_Real_flag;
+        $data["answer_time"] = time();
+        $data["content"] = $content;
+        $data["Is_Hongbao"] = $Is_HongBao;
+        //发送语句,返回id
+        $Result_id =  $this->Sql->add($data);
         
         
         
@@ -927,20 +935,10 @@ class GuessCtrl extends Lee
             $this->Update_根据指定的orderid更新statements表中的流水($orderid, $money, $statements_balance, "9", ""); 
         } 
          
-        
-        //选择表
-        $this->Sql->table = 'answer_details';
-        //还原配置,如where,order,limit,field
-        $this->Sql->reset();
-        //获取POST数据
-        $data["question_id"] = $id;
-        $data["user_id"] = $this->Openid;
-        $data["flag"] = $Is_Real_flag;
-        $data["answer_time"] = time();
-        $data["content"] = $content;
-        $data["Is_Hongbao"] = $Is_HongBao;
-        //发送语句,返回id
-        $Result_id =  $this->Sql->add($data);
+
+
+
+
         //AJAX接受的信息
         $arr = array('Msg' => '请求成功！' , 'Result' => array('id' => $Result_id,'flag' => $Is_Real_flag,'price'=>$question_price,'tips'=>$tips), 'Status' => '成功' );
         //返回为json
@@ -1091,31 +1089,26 @@ class GuessCtrl extends Lee
     
     public function Ajax_重新添加红包($order,$HongBaoJinE,$HongBaoCount,$model)
     {
+        //============================ 在经历大量订单异常之后，加入的机制======================================
+        $wx_ko= new WX_INT();
+        $wx_msg = $wx_ko->CheckOrder($order); 
+        if($wx_msg != "SUCCESS")
+        {
+            //AJAX接受的信息
+            $arr = array('Msg' => '订单不存在,请联系客服' , 'Result' => "", 'Status' => '失败' );
+            //返回为json
+            exit(json_encode($arr));
+        }
+        
         
         //============================ 在经历bug攻击后，加入判断======================================
         //选择流水表
         $this->Sql->table = 'statements';
         //条件语句
         $where = sprintf(" id = '%s' AND type = '1' ",$order);
-        //待获取结果
-        $rett = array();    
-        
-        
-        //循环、等待0秒、1秒、2秒、3秒.避免异步带来的影响
-        for ($run = 0;$run <= 4;$run++)
-        {
-            sleep($run * 1);
-            
-            $rett = $this->Sql->field("price,hongbao_price,hongbao_count,flag,Is_Use")->where($where)->find();
-            
-            $rett_flag = $rett["flag"];                                         //是否充值完成
-            
-            if($rett_flag == 1)
-            {
-                break;
-            }
-        }  
-        
+                
+        $rett = $this->Sql->field("price,hongbao_price,hongbao_count,flag,Is_Use")->where($where)->find();
+                
         
         //获取用户充值完成的金额
         $rett_price = $rett["price"];                                      //用户充值的流水金额
@@ -1126,17 +1119,7 @@ class GuessCtrl extends Lee
         //用户提交的金额
         $rett_count= $HongBaoJinE * $HongBaoCount;
         
-        /*
-        IF($this->Openid == "oYNn6wg0qYDkqNVomc78AUctYfRM")
-        {        
-             Lee::WriteLog(           $rett_Is_Use . ",".
-                                             $rett_flag. ",".
-                                             $rett_price. ",".
-                                             $rett_count. ",".
-                                             $HongBaoJinE. ",".
-                                             $HongBaoCount); 
-        }  
-        */
+   
         
         
         //$rett_Is_Use如果为0，说明订单未使用
@@ -1432,14 +1415,6 @@ IF(@$_POST["type"] == 'DaTiHuaXiao')
 }
 
 
-/*
-//调用微信支付接口，返回核心json
-IF(@$_POST['type'] == 'weixinzhifu')
-{
-    $_GuessCtrl = new GuessCtrl();
-    $_GuessCtrl->Ajax_微信支付json();
-}
-*/
 
 
 //调用微信支付接口，返回核心json

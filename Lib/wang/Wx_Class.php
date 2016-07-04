@@ -6,7 +6,6 @@ require_once    $_SESSION["APP_ROOT"]."/Lib/wang/wxpay/example/WxPay.JsApiPay.ph
 require_once    $_SESSION["APP_ROOT"].'/Lib/wang/wxpay/example/log.php';
 require_once    $_SESSION["APP_ROOT"]."/Lib/wang/wxpay/api_test.php";  //用户提现
 
-
 class WX_INT  
 {  
 
@@ -114,6 +113,76 @@ class WX_INT
 		
 		return $jsApiParameters;
 	
+	}
+	
+	
+	
+	//订单查询
+	public function CheckOrder($order_id)
+	{
+	  
+			$appid=$this->appid;
+			$mchid='1330867001';//商户号
+			$nonce_str='qyzf'.rand(100000, 999999);//随机数
+			$out_trade_no=$order_id;//商户订单号
+		
+			$dataArr=array();
+		
+			$dataArr['appid']=$appid;
+			$dataArr['mch_id']=$mchid;
+			$dataArr['nonce_str']=$nonce_str;
+			$dataArr['out_trade_no']=$order_id;
+
+			$sign=getSign($dataArr);
+			
+
+
+			$data="<xml>
+					<appid>".$appid."</appid>
+					<mch_id>".$mchid."</mch_id>
+					<nonce_str>".$nonce_str."</nonce_str>
+					<out_trade_no>".$order_id."</out_trade_no>
+					<sign>".$sign."</sign>
+					</xml>";
+					//$nn->SetOut_trade_no($out_trade_no);
+					//return $nn->orderQuery($data);
+					//echo $data;
+					
+					//echo $data;
+			$ch = curl_init ();
+					$MENU_URL="https://api.mch.weixin.qq.com/pay/orderquery";
+					curl_setopt ( $ch, CURLOPT_URL, $MENU_URL );
+				curl_setopt ( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
+					curl_setopt ( $ch, CURLOPT_FOLLOWLOCATION, 1 );
+					curl_setopt ( $ch, CURLOPT_AUTOREFERER, 1 );
+						curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );
+					curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true);
+					curl_setopt ( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
+					curl_setopt ( $ch, CURLOPT_SSL_VERIFYHOST, FALSE );
+					
+					$info = curl_exec ( $ch );
+					
+					/*
+					if (curl_errno ( $ch )) {
+						return 'Errno' . curl_error ( $ch );
+					}
+					*/
+					//$json_obj = json_decode($info,true); 
+			//return $json_obj;
+				//	curl_close ( $ch );
+				//	
+				//	echo $data;
+
+			
+			
+			$arr_k=simplexml_load_string($info, 'SimpleXMLElement', LIBXML_NOCDATA);
+			
+				//var_dump($arr_k);
+				//exit($arr_k->result_code);
+				return $arr_k->result_code;
+					
+					
+			
 	}
 	
 	public function Zhifu($amount,$openid)
@@ -224,11 +293,12 @@ if(@$code != null && @$_SESSION["openid"] == null )
  
 }   
 
-   
-//  IF($_SESSION["openid"] != "oYNn6wg0qYDkqNVomc78AUctYfRM" &&  $_SESSION["openid"] != "oYNn6wi2Lg4qvvQDOFFTMXpY6ulY")
+ 
+
+//  IF($_SESSION["openid"] != "oYNn6wg0qYDkqNVomc78AUctYfRM" && $_SESSION["openid"] != "oYNn6wi2Lg4qvvQDOFFTMXpY6ulY")
 //  {
-//      exit("<style type=\"text/css\">#face{margin:0px auto;background: #9ee675;/* for Webkit */background: -webkit-gradient(linear, left top, left bottom, from(#9ee675), to(#78cb4c));/* for Firefox */background: -moz-linear-gradient(top,  #9ee675,  #78cb4c);/* for IE */filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#9ee675',endColorstr='#78cb4c'); color:#fff;border:1px solid #fff;border-radius:200px;text-align:center;width:200px;height:200px;font-size:126px;letter-spacing: 5px;padding-top: 5px;}  *{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: \"微软雅黑\"; color: #333;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 3.8em;text-align: center; font-size: 36px }</style><div style=\"padding: 24px 48px;\"> <h1 id=\"face\">:(</h1><p style='font-size:66px'>程序正在升级中<br /><br />感谢您对我们的支持，将在12点开启 <br  />客服电话：13728309103</p></div>");
+//     exit("<style type=\"text/css\">#face{margin:0px auto;background: #9ee675;/* for Webkit */background: -webkit-gradient(linear, left top, left bottom, from(#9ee675), to(#78cb4c));/* for Firefox */background: -moz-linear-gradient(top,  #9ee675,  #78cb4c);/* for IE */filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#9ee675',endColorstr='#78cb4c'); color:#fff;border:1px solid #fff;border-radius:200px;text-align:center;width:200px;height:200px;font-size:126px;letter-spacing: 5px;padding-top: 5px;}  *{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: \"微软雅黑\"; color: #333;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 3.8em;text-align: center; font-size: 36px }</style><div style=\"padding: 24px 48px;\"> <h1 id=\"face\">:(</h1><p style='font-size:66px'>程序维护中<br /><br />感谢您对我们的支持 <br  />客服电话：13728309103</p></div>");
 //  }  
-  
+
 
 ?>
